@@ -1,0 +1,238 @@
+export interface Letter {
+  id: string;
+  symbol: string;        // SVG key / display glyph
+  latin: string;         // Latin equivalent
+  pronunciation: string; // IPA or description
+  example: string;       // Example Manjak word
+  meaning: string;       // Translation
+  audio?: string;        // audio file path
+  category: "vowel" | "consonant" | "digraph";
+  toneMarks?: string[];
+}
+
+export const MANJAK_ALPHABET: Letter[] = [
+  {
+    id: "A", symbol: "A", latin: "A / a", pronunciation: "/a/",
+    example: "asin", meaning: "père (father)",
+    category: "vowel",
+  },
+  {
+    id: "A_GRAVE", symbol: "À / à", latin: "À / à", pronunciation: "/à/ (ton bas)",
+    example: "àbù", meaning: "maison (house)",
+    category: "vowel",
+  },
+  {
+    id: "E", symbol: "E / e", latin: "E / e", pronunciation: "/e/",
+    example: "epas", meaning: "poisson (fish)",
+    category: "vowel",
+  },
+  {
+    id: "E_UMLAUT", symbol: "Ë / ë", latin: "Ë / ë", pronunciation: "/ə/ (schwa)",
+    example: "ëga", meaning: "route (road)",
+    category: "vowel",
+  },
+  {
+    id: "I", symbol: "I / i", latin: "I / i", pronunciation: "/i/",
+    example: "inji", meaning: "moi (me, I)",
+    category: "vowel",
+  },
+  {
+    id: "O", symbol: "O / o", latin: "O / o", pronunciation: "/o/",
+    example: "oba", meaning: "roi (king)",
+    category: "vowel",
+  },
+  {
+    id: "O_CIRC", symbol: "Ô / ô", latin: "Ô / ô", pronunciation: "/ɔ/ (ouvert)",
+    example: "ôm", meaning: "quand (when)",
+    category: "vowel",
+  },
+  {
+    id: "OU", symbol: "OU / ou", latin: "U / u", pronunciation: "/u/",
+    example: "ùcaak", meaning: "pays (country)",
+    category: "vowel",
+  },
+  {
+    id: "U_GRAVE", symbol: "Ù / ù", latin: "Ù / ù", pronunciation: "/ù/ (ton bas)",
+    example: "ùgal", meaning: "chien (dog)",
+    category: "vowel",
+  },
+  {
+    id: "B", symbol: "B / b", latin: "B / b", pronunciation: "/b/",
+    example: "bëga", meaning: "route (road)",
+    category: "consonant",
+  },
+  {
+    id: "D", symbol: "D / d", latin: "D / d", pronunciation: "/d/",
+    example: "di", meaning: "chez / à (at, in)",
+    category: "consonant",
+  },
+  {
+    id: "F", symbol: "F / f", latin: "F / f", pronunciation: "/f/",
+    example: "ful", meaning: "Peul (Fula)",
+    category: "consonant",
+  },
+  {
+    id: "G", symbol: "G / g", latin: "G / g", pronunciation: "/g/ (toujours dur)",
+    example: "gë", meaning: "préfixe classe 4",
+    category: "consonant",
+  },
+  {
+    id: "H", symbol: "H / h", latin: "H / h", pronunciation: "/h/ (fortement aspiré)",
+    example: "hafur", meaning: "bateau (boat)",
+    category: "consonant",
+  },
+  {
+    id: "K", symbol: "K / k", latin: "K / k", pronunciation: "/k/",
+    example: "kamisa", meaning: "chemise (shirt)",
+    category: "consonant",
+  },
+  {
+    id: "L", symbol: "L / l", latin: "L / l", pronunciation: "/l/",
+    example: "lôm", meaning: "quand (when)",
+    category: "consonant",
+  },
+  {
+    id: "M", symbol: "M / m", latin: "M / m", pronunciation: "/m/",
+    example: "më", meaning: "préfixe classe 6 (liquides)",
+    category: "consonant",
+  },
+  {
+    id: "N", symbol: "N / n", latin: "N / n", pronunciation: "/n/",
+    example: "napats", meaning: "petit enfant (small child)",
+    category: "consonant",
+  },
+  {
+    id: "P", symbol: "P / p", latin: "P / p", pronunciation: "/p/",
+    example: "pats", meaning: "enfant (child)",
+    category: "consonant",
+  },
+  {
+    id: "R", symbol: "R / r", latin: "R / r", pronunciation: "/r/",
+    example: "ri", meaning: "de / chez (of, from)",
+    category: "consonant",
+  },
+  {
+    id: "S", symbol: "S / s", latin: "S / s", pronunciation: "/s/",
+    example: "sindjak", meaning: "Manjak (the people)",
+    category: "consonant",
+  },
+  {
+    id: "T", symbol: "T / t", latin: "T / t", pronunciation: "/t/",
+    example: "tsi", meaning: "chez / avec (with)",
+    category: "consonant",
+  },
+  {
+    id: "W", symbol: "W / w", latin: "W / w", pronunciation: "/w/",
+    example: "war", meaning: "bon (good)",
+    category: "consonant",
+  },
+  {
+    id: "Y", symbol: "Y / y", latin: "Y / y", pronunciation: "/j/",
+    example: "yam", meaning: "eau / eau de pluie",
+    category: "consonant",
+  },
+  // Digraphs
+  {
+    id: "CHE", symbol: "Ch / ch", latin: "Ch / ch", pronunciation: "/tʃ/",
+    example: "cha", meaning: "thé (tea)",
+    category: "digraph",
+  },
+  {
+    id: "DJE", symbol: "Dj / dj", latin: "Dj / dj", pronunciation: "/dʒ/",
+    example: "djak", meaning: "Mandjak (ancien nom)",
+    category: "digraph",
+  },
+  {
+    id: "GNE", symbol: "Gn / gn", latin: "Gn / gn", pronunciation: "/ɲ/ (ny)",
+    example: "gnapats", meaning: "enfants (children, pl.)",
+    category: "digraph",
+  },
+  {
+    id: "GUE", symbol: "Gu / gu", latin: "Gu / gu", pronunciation: "/ɡu/",
+    example: "gue", meaning: "et (and)",
+    category: "digraph",
+  },
+  {
+    id: "THE", symbol: "Th / th", latin: "Th / th", pronunciation: "/θ/ ou /t/",
+    example: "thadj", meaning: "ancêtre (ancestor)",
+    category: "digraph",
+  },
+  {
+    id: "NGHE", symbol: "Ng / ng", latin: "Ng / ng", pronunciation: "/ŋ/ (vélaire nasal)",
+    example: "ngë", meaning: "préfixe pluriel classe 4",
+    category: "digraph",
+  },
+  // Pre-nasalized consonants
+  {
+    id: "MB", symbol: "Mb / mb", latin: "Mb / mb", pronunciation: "/mb/",
+    example: "mban", meaning: "gros / grand (big)",
+    category: "digraph",
+  },
+  {
+    id: "ND", symbol: "Nd / nd", latin: "Nd / nd", pronunciation: "/nd/",
+    example: "ndam", meaning: "eau (water, variant)",
+    category: "digraph",
+  },
+  {
+    id: "NG", symbol: "Ng / ng", latin: "Ng / ng", pronunciation: "/ŋɡ/",
+    example: "nguru", meaning: "hippopotame (hippo)",
+    category: "digraph",
+  },
+];
+
+export const NOMINAL_CLASSES = [
+  {
+    number: 1, prefix: "a-, n-, na-",
+    description: "Noms de personnes",
+    examples: ["nandjak (mère)", "napats (enfant)", "nawar (femme)"],
+  },
+  {
+    number: 2, prefix: "ba-",
+    description: "Pluriels de la classe 1",
+    examples: ["basin (pères)", "bapats (enfants)", "bawar (femmes)"],
+  },
+  {
+    number: 3, prefix: "ù-",
+    description: "Animaux, pays, langues, collectifs",
+    examples: ["ùnguru (hippopotame)", "ùErop (Europe)", "ùcaak (pays)"],
+  },
+  {
+    number: 4, prefix: "gë-, ngë-",
+    description: "Pluriels de la classe 3",
+    examples: ["gëgal (chiens)", "ngëcaak (pays, pl.)", "gëbur (araignées)"],
+  },
+  {
+    number: 5, prefix: "bë-, ba-",
+    description: "Arbres, fruits, végétaux",
+    examples: ["bërol (rônier)", "bapam (palmier)", "bëga (forêt)"],
+  },
+  {
+    number: 6, prefix: "më-, m'-",
+    description: "Liquides et pluriels de classe 5",
+    examples: ["mëndur (eau)", "m'el (sable)", "mëgam (sueur)"],
+  },
+];
+
+export const TONES = [
+  { name: "Ton haut", mark: "´", description: "Montant, comme l'accent aigu: á, é, ó" },
+  { name: "Ton moyen", mark: "–", description: "Neutre, sans marque diacritique" },
+  { name: "Ton bas", mark: "`", description: "Descendant, comme l'accent grave: à, è, ù" },
+];
+
+export const PROVERBS = [
+  {
+    manjak: "Napats na war ku di asin.",
+    french: "Un bon enfant honore son père.",
+    english: "A good child honours their father.",
+  },
+  {
+    manjak: "Ùcaak di Sindjak war mban.",
+    french: "Le pays des Manjak est grand et bon.",
+    english: "The land of the Manjak people is great and good.",
+  },
+  {
+    manjak: "Bapats ba gue di asin.",
+    french: "Les enfants marchent avec leurs pères.",
+    english: "Children walk with their fathers.",
+  },
+];

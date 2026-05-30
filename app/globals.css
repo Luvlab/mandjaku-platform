@@ -1,26 +1,120 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ochre: #C8882A;
+  --color-ochre-light: #E8A94A;
+  --color-ochre-dark: #9B6810;
+  --color-terracotta: #B85C38;
+  --color-forest: #2D5016;
+  --color-forest-light: #4A7A28;
+  --color-cream: #F5EDD3;
+  --color-cream-dark: #E8D8B0;
+  --color-brown: #3B1F0A;
+  --color-brown-light: #6B3E1A;
+  --color-gold: #D4A017;
+  --color-sand: #C4A882;
+  --color-midnight: #0D1117;
+  --color-surface: #161B22;
+  --color-surface2: #1F2937;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #0D1117;
+  --foreground: #F5EDD3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter, "Inter", "Segoe UI", system-ui, sans-serif);
+  overflow-x: hidden;
+}
+
+/* African kente-inspired pattern background */
+.pattern-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C8882A' fill-opacity='0.07'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Kente stripe accent bar */
+.kente-stripe {
+  background: repeating-linear-gradient(
+    90deg,
+    #C8882A 0px, #C8882A 4px,
+    #D4A017 4px, #D4A017 8px,
+    #2D5016 8px, #2D5016 12px,
+    #B85C38 12px, #B85C38 16px,
+    #C8882A 16px, #C8882A 20px
+  );
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0D1117; }
+::-webkit-scrollbar-thumb { background: #C8882A; border-radius: 3px; }
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(200, 136, 42, 0.3); }
+  50% { box-shadow: 0 0 50px rgba(200, 136, 42, 0.7); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-float { animation: float 5s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-x 4s ease infinite;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(200, 136, 42, 0.15), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Letter card glow effect */
+.letter-glow { box-shadow: 0 0 20px rgba(200, 136, 42, 0.25); }
+.letter-glow:hover { box-shadow: 0 0 40px rgba(200, 136, 42, 0.5), 0 0 80px rgba(200, 136, 42, 0.2); }
+
+/* Glass morphism */
+.glass {
+  background: rgba(22, 27, 34, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(200, 136, 42, 0.15);
+}
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(135deg, #C8882A, #D4A017, #E8A94A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-green {
+  background: linear-gradient(135deg, #2D5016, #4A7A28, #6AB040);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
