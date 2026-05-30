@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navigation() {
   const t = useTranslations("nav");
@@ -12,106 +13,120 @@ export default function Navigation() {
   const pathname = usePathname();
 
   const NAV_LINKS = [
-    { href: "/", label: t("home"), icon: "🏠" },
-    { href: "/alphabet", label: t("alphabet"), icon: "🔤" },
-    { href: "/learn", label: t("learn"), icon: "📚" },
-    { href: "/history", label: t("history"), icon: "🏺" },
-    { href: "/culture", label: t("culture"), icon: "🎭" },
-    { href: "/dictionary", label: t("dictionary"), icon: "📖" },
-    { href: "/keyboard", label: t("keyboard"), icon: "⌨️" },
+    { href: "/", label: t("home") },
+    { href: "/alphabet", label: t("alphabet") },
+    { href: "/learn", label: t("learn") },
+    { href: "/history", label: t("history") },
+    { href: "/culture", label: t("culture") },
+    { href: "/dictionary", label: t("dictionary") },
+    { href: "/keyboard", label: t("keyboard") },
   ];
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 20);
+    const handler = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  useEffect(() => { setOpen(false); }, [pathname]);
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-[#0D1117]/95 backdrop-blur-md border-b border-[#C8882A]/20 shadow-lg shadow-black/30"
-          : "bg-transparent"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-200"
+      style={{
+        background: scrolled ? "var(--surface)" : "transparent",
+        borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
+        boxShadow: scrolled ? "var(--shadow)" : "none",
+      }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14">
+
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#C8882A] to-[#9B6810] flex items-center justify-center text-base font-black text-white shadow-lg group-hover:shadow-[#C8882A]/40 transition-shadow">
+          <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-white text-sm"
+              style={{ background: "linear-gradient(135deg, #009E49, #007A38)" }}>
               M
             </div>
-            <span className="font-bold text-lg text-gradient hidden sm:block">
-              Mandjaku
-            </span>
+            <div className="hidden sm:block">
+              <span className="font-bold text-base" style={{ color: "var(--text)" }}>Mandjaku</span>
+              <span className="ml-1.5 text-xs font-medium opacity-50" style={{ color: "var(--text)" }}>Kabu lëp Manjak</span>
+            </div>
           </Link>
 
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-1">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  pathname === link.href
-                    ? "bg-[#C8882A]/20 text-[#E8A94A] border border-[#C8882A]/30"
-                    : "text-[#F5EDD3]/70 hover:text-[#F5EDD3] hover:bg-white/5"
-                }`}
-              >
-                <span className="mr-1.5">{link.icon}</span>
-                {link.label}
-              </Link>
-            ))}
+          {/* Desktop nav links */}
+          <div className="hidden lg:flex items-center gap-0.5">
+            {NAV_LINKS.map((link) => {
+              const active = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="px-3 py-1.5 rounded-md text-sm font-medium transition-colors"
+                  style={{
+                    color: active ? "#009E49" : "var(--text-muted)",
+                    background: active ? "rgba(0,158,73,0.10)" : "transparent",
+                    fontWeight: active ? 600 : 500,
+                  }}
+                  onMouseEnter={e => { if (!active) e.currentTarget.style.color = "var(--text)"; }}
+                  onMouseLeave={e => { if (!active) e.currentTarget.style.color = "var(--text-muted)"; }}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Language switcher + mobile toggle */}
-          <div className="flex items-center gap-3">
-            <div className="hidden md:block h-6 w-16 rounded-full kente-stripe opacity-60" />
+          {/* Right controls */}
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
             <LanguageSwitcher />
+            {/* Mobile hamburger */}
             <button
-              className="md:hidden p-2 rounded-lg text-[#F5EDD3]/70 hover:text-[#F5EDD3] hover:bg-white/5 transition-colors"
+              className="lg:hidden ml-1 w-8 h-8 flex items-center justify-center rounded-md transition-colors"
+              style={{ color: "var(--text-muted)" }}
               onClick={() => setOpen(!open)}
               aria-label="Toggle menu"
             >
-              <div className="w-5 h-4 flex flex-col justify-between">
-                <span className={`block h-0.5 bg-current transition-all ${open ? "rotate-45 translate-y-1.5" : ""}`} />
-                <span className={`block h-0.5 bg-current transition-all ${open ? "opacity-0" : ""}`} />
-                <span className={`block h-0.5 bg-current transition-all ${open ? "-rotate-45 -translate-y-1.5" : ""}`} />
-              </div>
+              {open ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+              )}
             </button>
           </div>
         </div>
       </div>
 
       {/* Mobile menu */}
-      <div
-        className={`md:hidden transition-all duration-300 overflow-hidden ${
-          open ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="bg-[#0D1117]/98 border-t border-[#C8882A]/20 px-4 py-3 space-y-1">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                pathname === link.href
-                  ? "bg-[#C8882A]/20 text-[#E8A94A] border border-[#C8882A]/30"
-                  : "text-[#F5EDD3]/70 hover:text-[#F5EDD3] hover:bg-white/5"
-              }`}
-            >
-              <span className="text-xl">{link.icon}</span>
-              {link.label}
-            </Link>
-          ))}
-          <div className="h-1 mx-4 mt-3 rounded-full kente-stripe opacity-40" />
+      {open && (
+        <div style={{ background: "var(--surface)", borderTop: "1px solid var(--border)" }}>
+          <div className="max-w-7xl mx-auto px-4 py-3 grid grid-cols-2 gap-1">
+            {NAV_LINKS.map((link) => {
+              const active = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                  style={{
+                    color: active ? "#009E49" : "var(--text-muted)",
+                    background: active ? "rgba(0,158,73,0.10)" : "transparent",
+                    fontWeight: active ? 600 : 500,
+                  }}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
+          <div className="h-1 kente-stripe" />
         </div>
-      </div>
+      )}
     </nav>
   );
 }

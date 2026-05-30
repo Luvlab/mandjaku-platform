@@ -1,120 +1,267 @@
 @import "tailwindcss";
 
+/* ─── Tailwind theme tokens ─────────────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-ochre: #C8882A;
-  --color-ochre-light: #E8A94A;
-  --color-ochre-dark: #9B6810;
-  --color-terracotta: #B85C38;
-  --color-forest: #2D5016;
-  --color-forest-light: #4A7A28;
-  --color-cream: #F5EDD3;
-  --color-cream-dark: #E8D8B0;
-  --color-brown: #3B1F0A;
-  --color-brown-light: #6B3E1A;
-  --color-gold: #D4A017;
-  --color-sand: #C4A882;
-  --color-midnight: #0D1117;
-  --color-surface: #161B22;
-  --color-surface2: #1F2937;
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+
+  /* Guinea-Bissau flag palette */
+  --color-gn-green:   #009E49;
+  --color-gn-red:     #CE1126;
+  --color-gn-yellow:  #FCD116;
+
+  /* Semantic aliases (theme-aware via CSS vars) */
+  --color-primary:    var(--primary);
+  --color-primary-dk: var(--primary-dk);
+  --color-accent:     var(--accent);
+  --color-surface:    var(--surface);
+  --color-surface2:   var(--surface2);
+  --color-border:     var(--border);
+  --color-muted:      var(--muted);
 }
 
+/* ─── Light mode (default) ─────────────────────────────────────────── */
 :root {
-  --background: #0D1117;
-  --foreground: #F5EDD3;
+  --bg:         #FFFFFF;
+  --bg-alt:     #F6F7F9;
+  --text:       #111827;
+  --text-muted: #6B7280;
+  --primary:    #009E49;
+  --primary-dk: #007A38;
+  --accent:     #CE1126;
+  --yellow:     #FCD116;
+  --surface:    #FFFFFF;
+  --surface2:   #F0F2F5;
+  --border:     #E5E7EB;
+  --border-str: #D1D5DB;
+  --shadow:     0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:  0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.05);
+  --shadow-lg:  0 10px 15px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04);
 }
 
-* {
-  box-sizing: border-box;
+/* ─── Dark mode ─────────────────────────────────────────────────────── */
+.dark {
+  --bg:         #0F1419;
+  --bg-alt:     #1A2230;
+  --text:       #F1F5F9;
+  --text-muted: #94A3B8;
+  --primary:    #00C45A;
+  --primary-dk: #009E49;
+  --accent:     #E8415A;
+  --yellow:     #FCD116;
+  --surface:    #1E2D3D;
+  --surface2:   #162032;
+  --border:     #2D3F55;
+  --border-str: #3D5068;
+  --shadow:     0 1px 3px rgba(0,0,0,.4), 0 1px 2px rgba(0,0,0,.3);
+  --shadow-md:  0 4px 6px rgba(0,0,0,.4), 0 2px 4px rgba(0,0,0,.3);
+  --shadow-lg:  0 10px 15px rgba(0,0,0,.5), 0 4px 6px rgba(0,0,0,.3);
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* ─── Base ──────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-inter, "Inter", "Segoe UI", system-ui, sans-serif);
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* African kente-inspired pattern background */
-.pattern-bg {
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C8882A' fill-opacity='0.07'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+/* ─── Scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #009E49; border-radius: 3px; }
+
+/* ─── Utility classes ───────────────────────────────────────────────── */
+
+/* Academic card — replaces heavy glass morphism */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
 }
 
-/* Kente stripe accent bar */
+.card-hover {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+.card-hover:hover {
+  box-shadow: var(--shadow-md);
+  border-color: #009E49;
+  transform: translateY(-1px);
+}
+
+/* Subtle section backgrounds */
+.section-alt { background: var(--bg-alt); }
+
+/* Guinea-Bissau kente — updated to flag colors */
 .kente-stripe {
   background: repeating-linear-gradient(
     90deg,
-    #C8882A 0px, #C8882A 4px,
-    #D4A017 4px, #D4A017 8px,
-    #2D5016 8px, #2D5016 12px,
-    #B85C38 12px, #B85C38 16px,
-    #C8882A 16px, #C8882A 20px
+    #009E49 0px,  #009E49 5px,
+    #FCD116 5px,  #FCD116 9px,
+    #CE1126 9px,  #CE1126 14px,
+    #FCD116 14px, #FCD116 18px,
+    #009E49 18px, #009E49 23px
   );
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0D1117; }
-::-webkit-scrollbar-thumb { background: #C8882A; border-radius: 3px; }
+/* Subtle dot pattern — light enough for academic feel */
+.pattern-bg {
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
 
-/* Animations */
+/* Primary gradient text */
+.text-gradient {
+  background: linear-gradient(135deg, #009E49, #00C45A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Accent gradient text */
+.text-gradient-red {
+  background: linear-gradient(135deg, #CE1126, #E8415A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass — kept for hero only */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.dark .glass {
+  background: rgba(30, 45, 61, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Badge / pill */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.badge-green {
+  background: rgba(0, 158, 73, 0.12);
+  color: #009E49;
+  border: 1px solid rgba(0, 158, 73, 0.25);
+}
+.dark .badge-green {
+  background: rgba(0, 196, 90, 0.15);
+  color: #00C45A;
+  border-color: rgba(0, 196, 90, 0.3);
+}
+
+.badge-red {
+  background: rgba(206, 17, 38, 0.10);
+  color: #CE1126;
+  border: 1px solid rgba(206, 17, 38, 0.20);
+}
+
+/* Letter glow — green themed */
+.letter-glow { box-shadow: 0 0 20px rgba(0, 158, 73, 0.20); }
+.letter-glow:hover { box-shadow: 0 0 40px rgba(0, 158, 73, 0.45); }
+
+/* ─── Animations ────────────────────────────────────────────────────── */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
 }
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(200, 136, 42, 0.3); }
-  50% { box-shadow: 0 0 50px rgba(200, 136, 42, 0.7); }
+  0%, 100% { box-shadow: 0 0 16px rgba(0, 158, 73, 0.25); }
+  50%       { box-shadow: 0 0 40px rgba(0, 158, 73, 0.55); }
 }
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
 }
-@keyframes gradient-x {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-.animate-float { animation: float 5s ease-in-out infinite; }
-.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-x 4s ease infinite;
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.shimmer {
-  background: linear-gradient(90deg, transparent, rgba(200, 136, 42, 0.15), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+.animate-float       { animation: float 5s ease-in-out infinite; }
+.animate-pulse-glow  { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-fade-up     { animation: fadeUp 0.5s ease-out forwards; }
+
+/* ─── Typography scale (academic) ──────────────────────────────────── */
+.heading-xl {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+.heading-lg {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.heading-md {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.body-lg {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+.body-sm {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-muted);
 }
 
-/* Letter card glow effect */
-.letter-glow { box-shadow: 0 0 20px rgba(200, 136, 42, 0.25); }
-.letter-glow:hover { box-shadow: 0 0 40px rgba(200, 136, 42, 0.5), 0 0 80px rgba(200, 136, 42, 0.2); }
-
-/* Glass morphism */
-.glass {
-  background: rgba(22, 27, 34, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(200, 136, 42, 0.15);
+/* ─── Button base styles ────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+  text-decoration: none;
 }
-
-/* Gradient text */
-.text-gradient {
-  background: linear-gradient(135deg, #C8882A, #D4A017, #E8A94A);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.btn-primary {
+  background: #009E49;
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(0,158,73,.3);
 }
-
-.text-gradient-green {
-  background: linear-gradient(135deg, #2D5016, #4A7A28, #6AB040);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.btn-primary:hover { background: #007A38; box-shadow: 0 4px 8px rgba(0,158,73,.35); }
+.btn-outline {
+  background: transparent;
+  color: #009E49;
+  border: 1.5px solid #009E49;
 }
+.btn-outline:hover { background: rgba(0,158,73,.08); }
+
+/* Alphabet chips on server-rendered pages */
+.alpha-chip {
+  background: rgba(0,158,73,0.08);
+  border: 1px solid rgba(0,158,73,0.20);
+  color: #009E49;
+  transition: background 0.15s ease;
+}
+.alpha-chip:hover { background: rgba(0,158,73,0.18); }
