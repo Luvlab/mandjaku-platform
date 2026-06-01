@@ -7,12 +7,53 @@ import type { Letter } from "@/data/alphabet";
 
 type Filter = "all" | "vowel" | "consonant" | "digraph";
 
+/** Renders a Manjaku script SVG or falls back to the Latin symbol text */
+function SymbolDisplay({
+  letter,
+  size = "sm",
+}: {
+  letter: Letter;
+  size?: "sm" | "lg";
+}) {
+  const [svgError, setSvgError] = useState(false);
+
+  if (letter.svg && !svgError) {
+    return (
+      <img
+        src={`/alphabet-svg/${letter.svg}`}
+        alt={`Symbole Manjaku pour ${letter.latin}`}
+        width={size === "lg" ? 120 : 56}
+        height={size === "lg" ? 120 : 56}
+        className={`rounded-lg ${size === "lg" ? "rounded-xl" : ""}`}
+        style={{
+          objectFit: "contain",
+          background: "#000",
+          display: "block",
+        }}
+        onError={() => setSvgError(true)}
+      />
+    );
+  }
+
+  // Fallback to text
+  return (
+    <div
+      className={`font-black text-gradient ${size === "lg" ? "text-5xl" : "text-2xl"}`}
+    >
+      {letter.symbol.split("/")[0].trim()}
+    </div>
+  );
+}
+
 export default function AlphabetTab({ isActive = true }: { isActive?: boolean }) {
   const t = useTranslations("alphabet");
   const [filter, setFilter] = useState<Filter>("all");
   const [selected, setSelected] = useState<Letter | null>(null);
+  const [sketchExpanded, setSketchExpanded] = useState<number | null>(null);
 
-  const filtered = MANJAK_ALPHABET.filter((l) => filter === "all" || l.category === filter);
+  const filtered = MANJAK_ALPHABET.filter(
+    (l) => filter === "all" || l.category === filter
+  );
 
   const filterBtns: { key: Filter; label: string }[] = [
     { key: "all", label: t("filter_all") },
@@ -22,7 +63,11 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
   ];
 
   const catLabel = (cat: string) =>
-    cat === "vowel" ? t("category_vowel") : cat === "consonant" ? t("category_consonant") : t("category_digraph");
+    cat === "vowel"
+      ? t("category_vowel")
+      : cat === "consonant"
+      ? t("category_consonant")
+      : t("category_digraph");
 
   const catStyle = (cat: string): React.CSSProperties =>
     cat === "vowel"
@@ -44,10 +89,110 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
         </p>
       </div>
 
-      {/* Filters */}
+      {/* ── Historical Sketches ─────────────────────────────────────── */}
+      <div className="mb-10">
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={{ border: "1px solid var(--border)", background: "var(--surface)" }}
+        >
+          {/* Header */}
+          <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black text-white"
+              style={{ background: "linear-gradient(135deg,#009E49,#007A38)" }}
+            >
+              ✍
+            </div>
+            <div>
+              <div className="font-bold text-sm" style={{ color: "var(--text)" }}>
+                Croquis originaux — Historique de l&apos;écriture Manjaku
+              </div>
+              <div className="text-xs" style={{ color: "var(--text-muted)" }}>
+                Esquisses à la main, août 2024 — à l&apos;origine du système d&apos;écriture
+              </div>
+            </div>
+            <span
+              className="ml-auto text-xs px-2 py-0.5 rounded-full"
+              style={{ background: "rgba(252,209,22,0.12)", color: "#B8960A", border: "1px solid rgba(252,209,22,0.3)" }}
+            >
+              Référence historique
+            </span>
+          </div>
+
+          {/* Sketches grid */}
+          <div className="grid grid-cols-2 gap-0">
+            {[1, 2].map((n) => (
+              <button
+                key={n}
+                onClick={() => setSketchExpanded(sketchExpanded === n ? null : n)}
+                className="relative group overflow-hidden"
+                style={{
+                  borderRight: n === 1 ? "1px solid var(--border)" : "none",
+                  aspectRatio: "1",
+                  background: "#111",
+                  cursor: "zoom-in",
+                }}
+              >
+                <img
+                  src={`/alphabet-svg/sketch_alphabet_${n}.jpg`}
+                  alt={`Croquis original de l'alphabet Manjaku — page ${n}`}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    opacity: 0.9,
+                    transition: "opacity 0.2s, transform 0.3s",
+                  }}
+                  className="group-hover:opacity-100 group-hover:scale-[1.02]"
+                />
+                <div
+                  className="absolute bottom-0 left-0 right-0 px-3 py-2 text-xs font-semibold"
+                  style={{
+                    background: "linear-gradient(transparent,rgba(0,0,0,0.75))",
+                    color: "#fff",
+                  }}
+                >
+                  Page {n} — Esquisse originale
+                </div>
+                <div
+                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ color: "#fff", fontSize: "18px" }}
+                >
+                  ⊕
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Expanded sketch lightbox */}
+          {sketchExpanded !== null && (
+            <div className="px-4 pb-4 pt-3" style={{ background: "#0a0a0a" }}>
+              <img
+                src={`/alphabet-svg/sketch_alphabet_${sketchExpanded}.jpg`}
+                alt={`Croquis alphabet Manjaku — page ${sketchExpanded}`}
+                style={{
+                  width: "100%",
+                  maxHeight: "70vh",
+                  objectFit: "contain",
+                  borderRadius: "8px",
+                }}
+              />
+              <p className="text-xs mt-3 text-center" style={{ color: "#888" }}>
+                Croquis à la main des symboles Manjaku, 12 août 2024.
+                Ces esquisses ont servi de base à la vectorisation du système d&apos;écriture.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Filters ───────────────────────────────────────────────────── */}
       <div className="flex flex-wrap gap-2 justify-center mb-8">
         {filterBtns.map((btn) => {
-          const count = btn.key === "all" ? MANJAK_ALPHABET.length : MANJAK_ALPHABET.filter((l) => l.category === btn.key).length;
+          const count =
+            btn.key === "all"
+              ? MANJAK_ALPHABET.length
+              : MANJAK_ALPHABET.filter((l) => l.category === btn.key).length;
           const active = filter === btn.key;
           return (
             <button
@@ -77,60 +222,103 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
         })}
       </div>
 
-      {/* Letter grid */}
+      {/* ── Letter grid ────────────────────────────────────────────────── */}
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 mb-12">
         {filtered.map((letter) => {
           const isSelected = selected?.id === letter.id;
+          const hasSvg = !!letter.svg;
           return (
             <button
               key={letter.id}
               onClick={() => setSelected(isSelected ? null : letter)}
-              className="card letter-glow rounded-xl p-3 text-center transition-all hover:scale-105"
+              className="card letter-glow rounded-xl p-2 text-center transition-all hover:scale-105 flex flex-col items-center"
               style={{
                 border: isSelected ? "2px solid #009E49" : "1px solid var(--border)",
                 background: isSelected ? "rgba(0,158,73,0.08)" : "var(--surface)",
+                gap: "6px",
               }}
             >
-              <div className="text-2xl font-black text-gradient">
-                {letter.symbol.split("/")[0].trim()}
+              {hasSvg ? (
+                <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
+                  <SymbolDisplay letter={letter} size="sm" />
+                </div>
+              ) : (
+                <div className="text-2xl font-black text-gradient w-14 h-14 flex items-center justify-center">
+                  {letter.symbol.split("/")[0].trim()}
+                </div>
+              )}
+              <div className="text-xs font-mono font-bold" style={{ color: "var(--text)" }}>
+                {letter.latin.split("/")[0].trim()}
               </div>
-              <div className="text-xs mt-1 font-mono" style={{ color: "var(--text-muted)" }}>{letter.latin}</div>
-              <div className="text-xs font-mono" style={{ color: "var(--text-muted)", opacity: 0.6 }}>{letter.pronunciation}</div>
+              <div className="text-xs font-mono" style={{ color: "var(--text-muted)", opacity: 0.7 }}>
+                {letter.pronunciation}
+              </div>
             </button>
           );
         })}
       </div>
 
-      {/* Selected letter detail */}
+      {/* ── Selected letter detail ─────────────────────────────────────── */}
       {selected && (
         <div className="card p-5 mb-12" style={{ border: "2px solid rgba(0,158,73,0.30)" }}>
           <div className="flex items-start gap-5">
-            <div className="text-5xl font-black text-gradient flex-shrink-0">
-              {selected.symbol.split("/")[0].trim()}
+            {/* SVG or text symbol */}
+            <div className="flex-shrink-0">
+              {selected.svg ? (
+                <div className="rounded-xl overflow-hidden" style={{ width: 100, height: 100 }}>
+                  <SymbolDisplay letter={selected} size="lg" />
+                </div>
+              ) : (
+                <div className="text-5xl font-black text-gradient w-[100px] h-[100px] flex items-center justify-center">
+                  {selected.symbol.split("/")[0].trim()}
+                </div>
+              )}
             </div>
+
             <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="font-bold text-lg" style={{ color: "var(--text)" }}>{selected.latin}</span>
+              <div className="flex items-center gap-3 mb-2 flex-wrap">
+                <span className="font-bold text-lg" style={{ color: "var(--text)" }}>
+                  {selected.latin}
+                </span>
                 <span
                   className="badge text-xs"
                   style={{ border: "1px solid", ...catStyle(selected.category) }}
                 >
                   {catLabel(selected.category)}
                 </span>
+                {selected.svg && (
+                  <span
+                    className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                    style={{ background: "rgba(0,158,73,0.1)", color: "#009E49", border: "1px solid rgba(0,158,73,0.3)" }}
+                  >
+                    Symbole Manjaku ✓
+                  </span>
+                )}
               </div>
-              <div className="font-mono text-base mb-3" style={{ color: "#009E49" }}>{selected.pronunciation}</div>
+              <div className="font-mono text-base mb-3" style={{ color: "#009E49" }}>
+                {selected.pronunciation}
+              </div>
               <div className="rounded-xl px-4 py-3" style={{ background: "var(--surface2)" }}>
-                <span className="font-bold" style={{ color: "#009E49" }}>{selected.example}</span>
+                <span className="font-bold" style={{ color: "#009E49" }}>
+                  {selected.example}
+                </span>
                 <span style={{ color: "var(--text-muted)" }}> → </span>
                 <span style={{ color: "var(--text)" }}>{selected.meaning}</span>
               </div>
             </div>
-            <button onClick={() => setSelected(null)} className="text-2xl leading-none" style={{ color: "var(--text-muted)" }}>×</button>
+
+            <button
+              onClick={() => setSelected(null)}
+              className="text-2xl leading-none"
+              style={{ color: "var(--text-muted)" }}
+            >
+              ×
+            </button>
           </div>
         </div>
       )}
 
-      {/* Tones */}
+      {/* ── Tones ──────────────────────────────────────────────────────── */}
       <div className="mb-12">
         <div className="badge badge-green mb-3">{t("tones_title")}</div>
         <p className="body-sm mb-5">{t("tones_sub")}</p>
@@ -145,7 +333,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
         </div>
       </div>
 
-      {/* Nominal classes */}
+      {/* ── Nominal classes ────────────────────────────────────────────── */}
       <div className="mb-12">
         <div className="badge badge-green mb-3">{t("classes_title")}</div>
         <p className="body-sm mb-5">{t("classes_sub")}</p>
@@ -153,16 +341,24 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
           {NOMINAL_CLASSES.map((cls) => (
             <div key={cls.number} className="card p-4">
               <div className="flex items-center gap-3 mb-3">
-                <span className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black"
-                  style={{ background: "rgba(0,158,73,0.15)", color: "#009E49" }}>
+                <span
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black"
+                  style={{ background: "rgba(0,158,73,0.15)", color: "#009E49" }}
+                >
                   {cls.number}
                 </span>
-                <code className="font-mono font-bold text-sm" style={{ color: "#009E49" }}>{cls.prefix}</code>
+                <code className="font-mono font-bold text-sm" style={{ color: "#009E49" }}>
+                  {cls.prefix}
+                </code>
               </div>
               <p className="body-sm mb-3">{cls.description}</p>
               <div className="space-y-1">
                 {cls.examples.map((ex) => (
-                  <div key={ex} className="text-xs rounded-lg px-3 py-1.5" style={{ background: "var(--surface2)", color: "var(--text-muted)" }}>
+                  <div
+                    key={ex}
+                    className="text-xs rounded-lg px-3 py-1.5"
+                    style={{ background: "var(--surface2)", color: "var(--text-muted)" }}
+                  >
                     {ex}
                   </div>
                 ))}
@@ -172,7 +368,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
         </div>
       </div>
 
-      {/* Proverbs */}
+      {/* ── Proverbs ───────────────────────────────────────────────────── */}
       <div>
         <div className="badge badge-green mb-3">{t("proverbs_title")}</div>
         <div className="space-y-4 mt-5">
@@ -181,8 +377,12 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
               <div className="text-lg font-bold italic mb-2" style={{ color: "#009E49" }}>
                 &ldquo;{proverb.manjak}&rdquo;
               </div>
-              <div className="text-sm mb-1" style={{ color: "var(--text)" }}>🇫🇷 {proverb.french}</div>
-              <div className="text-sm" style={{ color: "var(--text-muted)" }}>🇬🇧 {proverb.english}</div>
+              <div className="text-sm mb-1" style={{ color: "var(--text)" }}>
+                🇫🇷 {proverb.french}
+              </div>
+              <div className="text-sm" style={{ color: "var(--text-muted)" }}>
+                🇬🇧 {proverb.english}
+              </div>
             </div>
           ))}
         </div>

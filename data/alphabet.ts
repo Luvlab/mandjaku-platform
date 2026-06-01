@@ -6,6 +6,7 @@ export interface Letter {
   example: string;       // Example Manjak word
   meaning: string;       // Translation
   audio?: string;        // audio file path
+  svg?: string;          // path to Manjaku script SVG (under /alphabet-svg/)
   category: "vowel" | "consonant" | "digraph";
   toneMarks?: string[];
 }
@@ -14,6 +15,7 @@ export const MANJAK_ALPHABET: Letter[] = [
   {
     id: "A", symbol: "A", latin: "A / a", pronunciation: "/a/",
     example: "asin", meaning: "père (father)",
+    svg: "letter_A.svg",
     category: "vowel",
   },
   {
@@ -24,6 +26,13 @@ export const MANJAK_ALPHABET: Letter[] = [
   {
     id: "E", symbol: "E / e", latin: "E / e", pronunciation: "/e/",
     example: "epas", meaning: "poisson (fish)",
+    svg: "letter_E.svg",
+    category: "vowel",
+  },
+  {
+    id: "E_ACUTE", symbol: "É / é", latin: "É / é", pronunciation: "/é/ (ton haut)",
+    example: "épat", meaning: "enfant aîné (firstborn)",
+    svg: "letter_E_acute.svg",
     category: "vowel",
   },
   {
@@ -34,11 +43,13 @@ export const MANJAK_ALPHABET: Letter[] = [
   {
     id: "I", symbol: "I / i", latin: "I / i", pronunciation: "/i/",
     example: "inji", meaning: "moi (me, I)",
+    svg: "letter_I.svg",
     category: "vowel",
   },
   {
     id: "O", symbol: "O / o", latin: "O / o", pronunciation: "/o/",
     example: "oba", meaning: "roi (king)",
+    svg: "letter_O.svg",
     category: "vowel",
   },
   {
@@ -49,6 +60,7 @@ export const MANJAK_ALPHABET: Letter[] = [
   {
     id: "OU", symbol: "OU / ou", latin: "U / u", pronunciation: "/u/",
     example: "ùcaak", meaning: "pays (country)",
+    svg: "letter_OU.svg",
     category: "vowel",
   },
   {
@@ -59,16 +71,19 @@ export const MANJAK_ALPHABET: Letter[] = [
   {
     id: "B", symbol: "B / b", latin: "B / b", pronunciation: "/b/",
     example: "bëga", meaning: "route (road)",
+    svg: "letter_B.svg",
     category: "consonant",
   },
   {
     id: "D", symbol: "D / d", latin: "D / d", pronunciation: "/d/",
     example: "di", meaning: "chez / à (at, in)",
+    svg: "letter_D.svg",
     category: "consonant",
   },
   {
     id: "F", symbol: "F / f", latin: "F / f", pronunciation: "/f/",
     example: "ful", meaning: "Peul (Fula)",
+    svg: "letter_F.svg",
     category: "consonant",
   },
   {
@@ -79,46 +94,55 @@ export const MANJAK_ALPHABET: Letter[] = [
   {
     id: "H", symbol: "H / h", latin: "H / h", pronunciation: "/h/ (fortement aspiré)",
     example: "hafur", meaning: "bateau (boat)",
+    svg: "letter_HEU.svg",
     category: "consonant",
   },
   {
     id: "K", symbol: "K / k", latin: "K / k", pronunciation: "/k/",
     example: "kamisa", meaning: "chemise (shirt)",
+    svg: "letter_K.svg",
     category: "consonant",
   },
   {
     id: "L", symbol: "L / l", latin: "L / l", pronunciation: "/l/",
     example: "lôm", meaning: "quand (when)",
+    svg: "letter_L.svg",
     category: "consonant",
   },
   {
     id: "M", symbol: "M / m", latin: "M / m", pronunciation: "/m/",
     example: "më", meaning: "préfixe classe 6 (liquides)",
+    svg: "letter_M.svg",
     category: "consonant",
   },
   {
     id: "N", symbol: "N / n", latin: "N / n", pronunciation: "/n/",
     example: "napats", meaning: "petit enfant (small child)",
+    svg: "letter_N.svg",
     category: "consonant",
   },
   {
     id: "P", symbol: "P / p", latin: "P / p", pronunciation: "/p/",
     example: "pats", meaning: "enfant (child)",
+    svg: "letter_P.svg",
     category: "consonant",
   },
   {
     id: "R", symbol: "R / r", latin: "R / r", pronunciation: "/r/",
     example: "ri", meaning: "de / chez (of, from)",
+    svg: "letter_R.svg",
     category: "consonant",
   },
   {
     id: "S", symbol: "S / s", latin: "S / s", pronunciation: "/s/",
     example: "sindjak", meaning: "Manjak (the people)",
+    svg: "letter_S.svg",
     category: "consonant",
   },
   {
     id: "T", symbol: "T / t", latin: "T / t", pronunciation: "/t/",
     example: "tsi", meaning: "chez / avec (with)",
+    svg: "letter_T.svg",
     category: "consonant",
   },
   {
@@ -129,37 +153,44 @@ export const MANJAK_ALPHABET: Letter[] = [
   {
     id: "Y", symbol: "Y / y", latin: "Y / y", pronunciation: "/j/",
     example: "yam", meaning: "eau / eau de pluie",
+    svg: "letter_Y.svg",
     category: "consonant",
   },
   // Digraphs
   {
     id: "CHE", symbol: "Ch / ch", latin: "Ch / ch", pronunciation: "/tʃ/",
     example: "cha", meaning: "thé (tea)",
+    svg: "letter_CHE.svg",
     category: "digraph",
   },
   {
     id: "DJE", symbol: "Dj / dj", latin: "Dj / dj", pronunciation: "/dʒ/",
     example: "djak", meaning: "Mandjak (ancien nom)",
+    svg: "letter_DJE.svg",
     category: "digraph",
   },
   {
     id: "GNE", symbol: "Gn / gn", latin: "Gn / gn", pronunciation: "/ɲ/ (ny)",
     example: "gnapats", meaning: "enfants (children, pl.)",
+    svg: "letter_GNE.svg",
     category: "digraph",
   },
   {
     id: "GUE", symbol: "Gu / gu", latin: "Gu / gu", pronunciation: "/ɡu/",
     example: "gue", meaning: "et (and)",
+    svg: "letter_GUE.svg",
     category: "digraph",
   },
   {
     id: "THE", symbol: "Th / th", latin: "Th / th", pronunciation: "/θ/ ou /t/",
     example: "thadj", meaning: "ancêtre (ancestor)",
+    svg: "letter_THE.svg",
     category: "digraph",
   },
   {
     id: "NGHE", symbol: "Ng / ng", latin: "Ng / ng", pronunciation: "/ŋ/ (vélaire nasal)",
     example: "ngë", meaning: "préfixe pluriel classe 4",
+    svg: "letter_NGHE.svg",
     category: "digraph",
   },
   // Pre-nasalized consonants

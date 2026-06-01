@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000">
+  <rect width="1000" height="1000" fill="black"/>
+  
+  <g fill="none" stroke="white" stroke-width="70" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="500" cy="550" r="260" />
+    <path d="M360 690 L640 410" />
+  </g>
+  <circle cx="820" cy="260" r="70" fill="none" stroke="white" stroke-width="40"/>
+
+  <!-- Latin numeral in lower-left with more margin -->
+  <text x="120" y="950" fill="white" text-anchor="start"
+        style="font-family:Arial, sans-serif; font-size:150px; font-weight:700;">
+    1
+  </text>
+</svg>

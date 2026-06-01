@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000">
+  <rect width="1000" height="1000" fill="black"/>
+
+  <g fill="none" stroke="white" stroke-width="70" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M250 260 L780 260" />
+    <path d="M250 380 L780 380" />
+    <path d="M250 260 L250 620" />
+  </g>
+
+  <circle cx="710" cy="620" r="70" fill="none" stroke="white" stroke-width="40"/>
+
+  <text x="120" y="950" fill="white" text-anchor="start"
+        style="font-family:Arial, sans-serif; font-size:150px; font-weight:700;">2</text>
+</svg>
