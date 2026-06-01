@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeToggle from "./ThemeToggle";
+import UserMenu from "./UserMenu";
 
 export default function Navigation() {
   const t = useTranslations("nav");
@@ -14,12 +15,12 @@ export default function Navigation() {
 
   const NAV_LINKS = [
     { href: "/", label: t("home") },
-    { href: "/alphabet", label: t("alphabet") },
-    { href: "/learn", label: t("learn") },
-    { href: "/history", label: t("history") },
-    { href: "/culture", label: t("culture") },
-    { href: "/dictionary", label: t("dictionary") },
-    { href: "/keyboard", label: t("keyboard") },
+    { href: "/?tab=alphabet", label: t("alphabet") },
+    { href: "/?tab=learn", label: t("learn") },
+    { href: "/?tab=history", label: t("history") },
+    { href: "/?tab=culture", label: t("culture") },
+    { href: "/?tab=dictionary", label: t("dictionary") },
+    { href: "/?tab=keyboard", label: t("keyboard") },
   ];
 
   useEffect(() => {
@@ -56,31 +57,22 @@ export default function Navigation() {
 
           {/* Desktop nav links */}
           <div className="hidden lg:flex items-center gap-0.5">
-            {NAV_LINKS.map((link) => {
-              const active = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="px-3 py-1.5 rounded-md text-sm font-medium transition-colors"
-                  style={{
-                    color: active ? "#009E49" : "var(--text-muted)",
-                    background: active ? "rgba(0,158,73,0.10)" : "transparent",
-                    fontWeight: active ? 600 : 500,
-                  }}
-                  onMouseEnter={e => { if (!active) e.currentTarget.style.color = "var(--text)"; }}
-                  onMouseLeave={e => { if (!active) e.currentTarget.style.color = "var(--text-muted)"; }}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="px-3 py-1.5 rounded-md text-sm transition-colors nav-link"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
 
           {/* Right controls */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <ThemeToggle />
             <LanguageSwitcher />
+            <UserMenu />
             {/* Mobile hamburger */}
             <button
               className="lg:hidden ml-1 w-8 h-8 flex items-center justify-center rounded-md transition-colors"
@@ -106,23 +98,17 @@ export default function Navigation() {
       {open && (
         <div style={{ background: "var(--surface)", borderTop: "1px solid var(--border)" }}>
           <div className="max-w-7xl mx-auto px-4 py-3 grid grid-cols-2 gap-1">
-            {NAV_LINKS.map((link) => {
-              const active = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
-                  style={{
-                    color: active ? "#009E49" : "var(--text-muted)",
-                    background: active ? "rgba(0,158,73,0.10)" : "transparent",
-                    fontWeight: active ? 600 : 500,
-                  }}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                style={{ color: "var(--text-muted)" }}
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
           <div className="h-1 kente-stripe" />
         </div>

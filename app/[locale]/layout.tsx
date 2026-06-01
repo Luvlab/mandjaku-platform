@@ -4,6 +4,7 @@ import "../globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
+import { AuthProvider } from "@/components/AuthProvider";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -51,9 +52,11 @@ export default async function LocaleLayout({
       <body className="min-h-screen flex flex-col antialiased">
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
-            <Navigation />
-            <main className="flex-1">{children}</main>
-            <Footer />
+            <AuthProvider>
+              <Navigation />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </AuthProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

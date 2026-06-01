@@ -9,24 +9,24 @@ export default async function Footer() {
     {
       title: t("language"),
       links: [
-        { href: "/alphabet", label: tn("alphabet") },
-        { href: "/learn", label: tn("learn") },
-        { href: "/dictionary", label: tn("dictionary") },
-        { href: "/keyboard", label: tn("keyboard") },
+        { href: "/?tab=alphabet", label: tn("alphabet") },
+        { href: "/?tab=learn", label: tn("learn") },
+        { href: "/?tab=dictionary", label: tn("dictionary") },
+        { href: "/?tab=keyboard", label: tn("keyboard") },
       ],
     },
     {
       title: t("culture_history"),
       links: [
-        { href: "/history", label: tn("history") },
-        { href: "/culture", label: tn("culture") },
-        { href: "/media", label: tn("media") },
+        { href: "/?tab=history", label: tn("history") },
+        { href: "/?tab=culture", label: tn("culture") },
+        { href: "/?tab=media", label: tn("media") },
       ],
     },
     {
       title: t("project"),
       links: [
-        { href: "/keyboard", label: "QMK / VIA" },
+        { href: "/?tab=keyboard", label: "QMK / VIA" },
         { href: "mailto:info@luvlab.io", label: "Contact" },
       ],
     },
