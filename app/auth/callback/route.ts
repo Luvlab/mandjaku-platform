@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { checkCountryAccess } from "@/lib/admin-config";
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -9,24 +10,48 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     const cookieStore = await cookies();
+
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
-          getAll() { return cookieStore.getAll(); },
+          getAll() {
+            return cookieStore.getAll();
+          },
           setAll(cookiesToSet) {
             try {
               cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value, options)
+                cookieStore.set(name, value, options),
               );
             } catch {}
           },
         },
-      }
+      },
     );
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) {
+
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (!error && data.user) {
+      // ── IP / country check (second gate) ──────────────────────────────────
+      // Vercel injects x-vercel-ip-country; Cloudflare injects cf-ipcountry
+      const ipCountry =
+        request.headers.get("x-vercel-ip-country") ??
+        request.headers.get("cf-ipcountry") ??
+        null;
+
+      const email = data.user.email ?? "";
+      const countryError = checkCountryAccess(email, ipCountry);
+
+      if (countryError) {
+        // Sign the user back out and redirect to an error page
+        await supabase.auth.signOut();
+        const errorMsg = encodeURIComponent(countryError);
+        return NextResponse.redirect(
+          `${origin}/fr/admin?error=geo_blocked&msg=${errorMsg}`,
+        );
+      }
+
       return NextResponse.redirect(`${origin}${next}`);
     }
   }

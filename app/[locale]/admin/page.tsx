@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { useAuth, isAdminRole, canPostContent } from "@/components/AuthProvider";
 import { supabaseConfigured } from "@/lib/supabase-browser";
@@ -9,6 +9,104 @@ import MarketingPanel from "@/components/admin/MarketingPanel";
 import UsersPanel from "@/components/admin/UsersPanel";
 
 type AdminSection = "seo" | "marketing" | "users";
+
+// ── Magic Link form ────────────────────────────────────────────────────────────
+function MagicLinkForm() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setStatus("loading");
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/admin/magic-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim().toLowerCase() }),
+      });
+      const data = await res.json();
+
+      if (!res.ok && data.error && res.status === 403) {
+        // Geo-blocked or explicitly denied — show the message
+        setStatus("error");
+        setErrorMsg(data.error);
+      } else {
+        // Always show "sent" for other cases — avoids email enumeration
+        setStatus("sent");
+      }
+    } catch {
+      setStatus("error");
+      setErrorMsg("Erreur réseau. Veuillez réessayer.");
+    }
+  };
+
+  if (status === "sent") {
+    return (
+      <div
+        className="rounded-xl px-4 py-4 text-sm text-center"
+        style={{ background: "rgba(0,158,73,0.08)", border: "1px solid rgba(0,158,73,0.25)" }}
+      >
+        <div className="text-2xl mb-2">✉️</div>
+        <div className="font-semibold mb-1" style={{ color: "#009E49" }}>Lien envoyé !</div>
+        <div style={{ color: "var(--text-muted)" }}>
+          Si cette adresse est autorisée, vous recevrez un lien de connexion dans quelques instants.
+          <br />Vérifiez vos spams si besoin.
+        </div>
+        <button
+          onClick={() => { setStatus("idle"); setEmail(""); }}
+          className="mt-3 text-xs underline"
+          style={{ color: "var(--text-muted)" }}
+        >
+          Utiliser une autre adresse
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <p className="text-xs font-semibold" style={{ color: "var(--text-muted)" }}>
+        Connexion par lien magique
+      </p>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="votre@email.com"
+        required
+        className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
+        style={{
+          background: "var(--surface2)",
+          border: "1px solid var(--border)",
+          color: "var(--text)",
+        }}
+      />
+      {status === "error" && (
+        <p
+          className="text-xs rounded-lg px-3 py-2"
+          style={{ background: "rgba(206,17,38,0.08)", color: "#CE1126", border: "1px solid rgba(206,17,38,0.2)" }}
+        >
+          🔒 {errorMsg}
+        </p>
+      )}
+      <button
+        type="submit"
+        disabled={status === "loading"}
+        className="btn btn-primary w-full justify-center"
+        style={{ opacity: status === "loading" ? 0.6 : 1 }}
+      >
+        {status === "loading" ? "Envoi en cours…" : "Recevoir le lien de connexion"}
+      </button>
+      <p className="text-xs text-center" style={{ color: "var(--text-muted)", opacity: 0.7 }}>
+        🇫🇷 Certains accès sont restreints par zone géographique.
+      </p>
+    </form>
+  );
+}
 
 const SECTIONS = [
   { id: "seo",       label: "SEO",           emoji: "🔍", roles: ["superadmin","editor"] },
@@ -25,6 +123,19 @@ export default function AdminPage() {
   const [legacyAuthed, setLegacyAuthed] = useState(false);
   const [authError, setAuthError] = useState("");
   const [showLegacy, setShowLegacy] = useState(false);
+
+  // Geo-block error surfaced from the auth callback via URL param
+  const [geoError, setGeoError] = useState("");
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error") === "geo_blocked") {
+      const msg = params.get("msg") ?? "Accès refusé depuis votre pays.";
+      setGeoError(decodeURIComponent(msg));
+      // Clean the URL
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
 
   const role = profile?.role ?? "user";
   const hasAccess = legacyAuthed || (!!user && canPostContent(role));
@@ -47,44 +158,79 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "var(--bg)" }}>
         <div className="card p-10 w-full max-w-sm text-center">
-          <div className="w-12 h-12 rounded-xl mx-auto mb-6 flex items-center justify-center font-black text-white text-xl"
-            style={{ background: "linear-gradient(135deg,#009E49,#007A38)" }}>M</div>
+          {/* Logo */}
+          <div
+            className="w-12 h-12 rounded-xl mx-auto mb-6 flex items-center justify-center font-black text-white text-xl"
+            style={{ background: "linear-gradient(135deg,#009E49,#007A38)" }}
+          >M</div>
           <div className="badge badge-green mb-4 mx-auto">Admin CMS</div>
           <h1 className="heading-md mb-2" style={{ color: "var(--text)" }}>Mandjaku Admin</h1>
-          <p className="body-sm mb-8">Pour les éditeurs, ambassadeurs et partenaires</p>
+          <p className="body-sm mb-6">Pour les éditeurs, ambassadeurs et partenaires</p>
 
-          {/* Google Sign In — primary */}
-          {supabaseConfigured ? (
-            <button
-              onClick={() => signInWithGoogle()}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all mb-3"
-              style={{ background: "#fff", border: "1.5px solid #E5E7EB", color: "#374151", boxShadow: "0 1px 3px rgba(0,0,0,.08)" }}
+          {/* Geo-block error banner */}
+          {geoError && (
+            <div
+              className="rounded-xl px-4 py-3 text-sm mb-5 text-left"
+              style={{ background: "rgba(206,17,38,0.08)", border: "1px solid rgba(206,17,38,0.25)", color: "#CE1126" }}
             >
-              <GoogleIcon size={20} />
-              Se connecter avec Google
-            </button>
-          ) : (
-            <div className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm mb-3"
-              style={{ background: "rgba(252,209,22,0.1)", border: "1px solid rgba(252,209,22,0.3)", color: "#B8960A" }}>
+              🔒 {geoError}
+            </div>
+          )}
+
+          {/* ── Supabase not configured warning ── */}
+          {!supabaseConfigured && (
+            <div
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm mb-4"
+              style={{ background: "rgba(252,209,22,0.1)", border: "1px solid rgba(252,209,22,0.3)", color: "#B8960A" }}
+            >
               ⚠️ Supabase non configuré — utilisez le mot de passe
             </div>
           )}
 
-          {/* Divider */}
-          <div className="flex items-center gap-3 my-4">
-            <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
-            <span className="text-xs" style={{ color: "var(--text-muted)" }}>ou</span>
-            <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
-          </div>
+          {supabaseConfigured && (
+            <>
+              {/* Google Sign In */}
+              <button
+                onClick={() => signInWithGoogle()}
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all mb-4"
+                style={{ background: "#fff", border: "1.5px solid #E5E7EB", color: "#374151", boxShadow: "0 1px 3px rgba(0,0,0,.08)" }}
+              >
+                <GoogleIcon size={20} />
+                Se connecter avec Google
+              </button>
 
-          {/* Legacy password — auto-expanded when Supabase not configured */}
+              {/* Divider */}
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
+                <span className="text-xs" style={{ color: "var(--text-muted)" }}>ou</span>
+                <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
+              </div>
+
+              {/* Magic link — primary passwordless option */}
+              <MagicLinkForm />
+
+              {/* Divider */}
+              <div className="flex items-center gap-3 my-4">
+                <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
+                <span className="text-xs" style={{ color: "var(--text-muted)" }}>ou</span>
+                <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
+              </div>
+            </>
+          )}
+
+          {/* Legacy password — emergency fallback */}
           {(showLegacy || !supabaseConfigured) ? (
-            <form onSubmit={async (e) => {
-              e.preventDefault();
-              const res = await fetch("/api/admin/seo", { headers: { "x-admin-password": password } });
-              if (res.ok) { setLegacyAuthed(true); setAuthError(""); }
-              else setAuthError("Mot de passe incorrect");
-            }} className="space-y-3">
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const res = await fetch("/api/admin/seo", {
+                  headers: { "x-admin-password": password },
+                });
+                if (res.ok) { setLegacyAuthed(true); setAuthError(""); }
+                else setAuthError("Mot de passe incorrect");
+              }}
+              className="space-y-3"
+            >
               <input
                 type="password"
                 value={password}
@@ -92,10 +238,12 @@ export default function AdminPage() {
                 placeholder="Mot de passe admin"
                 className="w-full px-4 py-3 rounded-xl text-sm border outline-none transition-all"
                 style={{ background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--text)" }}
-                autoFocus
+                autoFocus={!supabaseConfigured}
               />
               {authError && <p className="text-sm" style={{ color: "#CE1126" }}>{authError}</p>}
-              <button type="submit" className="btn btn-primary w-full justify-center">Connexion</button>
+              <button type="submit" className="btn btn-primary w-full justify-center">
+                Connexion
+              </button>
             </form>
           ) : (
             <button
@@ -103,15 +251,17 @@ export default function AdminPage() {
               className="text-sm"
               style={{ color: "var(--text-muted)" }}
             >
-              Accès d'urgence par mot de passe
+              Accès d&apos;urgence par mot de passe
             </button>
           )}
 
           <div className="mt-6 pt-6 border-t space-y-3" style={{ borderColor: "var(--border)" }}>
             <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-              Vous êtes éditeur, ambassadeur ou partenaire ? Connectez-vous avec le compte Google enregistré.
+              Connectez-vous avec votre compte Google ou lien magique autorisé.
             </p>
-            <Link href="/" className="text-sm block" style={{ color: "var(--text-muted)" }}>← Retour au site</Link>
+            <Link href="/" className="text-sm block" style={{ color: "var(--text-muted)" }}>
+              ← Retour au site
+            </Link>
           </div>
         </div>
       </div>
