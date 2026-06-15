@@ -13,6 +13,8 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
+  // Nav links only used in the mobile menu — desktop navigation is handled
+  // by the TabApp sticky tab strip (avoids double menu on desktop).
   const NAV_LINKS = [
     { href: "/", label: t("home") },
     { href: "/?tab=alphabet", label: t("alphabet") },
@@ -21,6 +23,7 @@ export default function Navigation() {
     { href: "/?tab=culture", label: t("culture") },
     { href: "/?tab=dictionary", label: t("dictionary") },
     { href: "/?tab=keyboard", label: t("keyboard") },
+    { href: "/?tab=media", label: t("media") },
   ];
 
   useEffect(() => {
@@ -54,19 +57,6 @@ export default function Navigation() {
               <span className="ml-1.5 text-xs font-medium opacity-50" style={{ color: "var(--text)" }}>Kabu lëp Manjak</span>
             </div>
           </Link>
-
-          {/* Desktop nav links */}
-          <div className="hidden lg:flex items-center gap-0.5">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-3 py-1.5 rounded-md text-sm transition-colors nav-link"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
 
           {/* Right controls */}
           <div className="flex items-center gap-1.5">
