@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">
+  
+
   <g fill="none" stroke="currentColor" stroke-width="70" stroke-linecap="round" stroke-linejoin="round">
     <path d="M250 260 L780 260" />
     <path d="M250 380 L780 380" />
