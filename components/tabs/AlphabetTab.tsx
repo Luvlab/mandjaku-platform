@@ -238,7 +238,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
                     id={letter.id}
                     size={52}
                     variant={variant}
-                    color={isSelected ? "#009E49" : "#7a8a7e"}
+                    color="#009E49"
                   />
                 ) : (
                   <span className="text-2xl font-black text-gradient">
