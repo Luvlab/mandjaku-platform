@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-type Tab = "home" | "alphabet" | "learn" | "history" | "culture" | "dictionary" | "keyboard" | "media" | "market";
+type Tab = "home" | "alphabet" | "learn" | "history" | "culture" | "dictionary" | "keyboard" | "media" | "market" | "studio";
 
 interface Props {
   activeTab: Tab;
@@ -23,6 +23,7 @@ const MORE: { id: Tab; emoji: string; label: string }[] = [
   { id: "culture", emoji: "🎭", label: "Culture" },
   { id: "keyboard", emoji: "⌨️", label: "Clavier" },
   { id: "media", emoji: "🎬", label: "Médias" },
+  { id: "studio", emoji: "✏️", label: "Studio" },
 ];
 
 export default function MobileBottomNav({ activeTab, onSwitch }: Props) {

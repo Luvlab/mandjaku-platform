@@ -211,6 +211,35 @@ export const MANJAK_ALPHABET: Letter[] = [
   },
 ];
 
+// ── Digits ──────────────────────────────────────────────────────────────────
+// SVGs in /public/alphabet-svg/. Digit 2 has 3 iterative versions — set
+// `svg` to whichever looks best; the others are kept as `variants`.
+export interface Digit {
+  value: number;
+  label: string;    // French name
+  svg: string;      // canonical SVG filename
+  variants?: string[];  // alternate iterations (digit 2 only for now)
+}
+
+export const MANJAK_DIGITS: Digit[] = [
+  { value: 0, label: "zéro",  svg: "manjak_digit0_black_1000_ll.svg" },
+  { value: 1, label: "un",    svg: "manjak_digit1_black_1000_ll.svg" },
+  { value: 2, label: "deux",  svg: "manjak_digit2_align_test.svg",
+    variants: [
+      "manjak_digit2_thickness_match_shifted.svg",
+      "manjak_digit2_circle_touch_fix.svg",
+      "manjak_digit2_align_test.svg",
+    ],
+  },
+  { value: 3, label: "trois", svg: "digit_3.svg" },
+  { value: 4, label: "quatre",svg: "digit_4.svg" },
+  { value: 5, label: "cinq",  svg: "digit_5.svg" },
+  { value: 6, label: "six",   svg: "digit_6.svg" },
+  { value: 7, label: "sept",  svg: "digit_7.svg" },
+  { value: 8, label: "huit",  svg: "digit_8.svg" },
+  { value: 9, label: "neuf",  svg: "digit_9.svg" },
+];
+
 export const NOMINAL_CLASSES = [
   {
     number: 1, prefix: "a-, n-, na-",

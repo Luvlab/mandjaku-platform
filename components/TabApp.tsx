@@ -14,9 +14,10 @@ import DictionaryTab from "./tabs/DictionaryTab";
 import KeyboardTab from "./tabs/KeyboardTab";
 import MediaTab from "./tabs/MediaTab";
 import MarketplaceTab from "./tabs/MarketplaceTab";
+import FontStudio from "./studio/FontStudio";
 import MobileBottomNav from "./MobileBottomNav";
 
-type Tab = "home" | "alphabet" | "learn" | "history" | "culture" | "dictionary" | "keyboard" | "media" | "market";
+type Tab = "home" | "alphabet" | "learn" | "history" | "culture" | "dictionary" | "keyboard" | "media" | "market" | "studio";
 
 interface TabAppProps {
   initialTab: string;
@@ -136,6 +137,7 @@ export default function TabApp({ initialTab }: TabAppProps) {
     { id: "keyboard", label: t("keyboard"), emoji: "⌨️" },
     { id: "media", label: t("media"), emoji: "🎬" },
     { id: "market", label: "Boutique", emoji: "🛍️" },
+    { id: "studio", label: "Font Studio", emoji: "✏️" },
   ];
 
   const switchTab = useCallback(
@@ -195,6 +197,7 @@ export default function TabApp({ initialTab }: TabAppProps) {
         <div style={{ display: activeTab === "keyboard" ? "block" : "none" }}><KeyboardTab /></div>
         <div style={{ display: activeTab === "media" ? "block" : "none" }}><MediaTab /></div>
         <div style={{ display: activeTab === "market" ? "block" : "none" }}><MarketplaceTab /></div>
+        <div style={{ display: activeTab === "studio" ? "block" : "none" }}><FontStudio /></div>
       </div>
 
       <MobileBottomNav activeTab={activeTab} onSwitch={switchTab} />
