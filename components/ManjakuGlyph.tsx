@@ -6,72 +6,88 @@ import { MANJAKU_GLYPHS, LETTER_TO_GLYPH } from "@/data/manjaku-glyphs";
 export type GlyphVariant = "clean" | "sketch";
 
 interface ManjakuGlyphProps {
-  /** Letter ID from MANJAK_ALPHABET (e.g. "A", "CHE", "NGHE") OR a glyph key (e.g. "letter_A") */
+  /** Letter ID from MANJAK_ALPHABET (e.g. "A", "CHE") OR glyph key (e.g. "letter_A") */
   id: string;
-  /** Size in px (width = height). Default 64 */
+  /** Display size in px (square). Default 64 */
   size?: number;
-  /** Colour for stroke. Uses currentColor from container if omitted. */
+  /** Stroke/fill colour. Default: Manjak green #009E49 */
   color?: string;
-  /** "clean" = vectorised symbol; "sketch" = hand-drawn rough filter */
+  /** "clean" = vectorised; "sketch" = hand-drawn wobble filter */
   variant?: GlyphVariant;
   className?: string;
   style?: React.CSSProperties;
+  /** Accessible label. Defaults to "Symbole Manjaku — {id}" */
   title?: string;
 }
 
-const FILTER_ID = "mjk-sketch-filter";
-
-/** Shared SVG filter definitions — rendered once, reused everywhere */
+/**
+ * No-op kept for call-site API compatibility.
+ * The data-URI approach no longer needs shared SVG filter defs in the document.
+ */
 export function ManjakuGlyphDefs() {
-  return (
-    <svg width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }}>
-      <defs>
-        {/* Sketch / hand-drawn effect */}
-        <filter id={FILTER_ID} x="-5%" y="-5%" width="110%" height="110%">
-          {/* Slight displacement to mimic pen wobble */}
-          <feTurbulence
-            type="turbulence"
-            baseFrequency="0.04 0.04"
-            numOctaves="3"
-            seed="2"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-            result="displaced"
-          />
-          {/* Slight blur then sharpen to mimic ink diffusion */}
-          <feGaussianBlur in="displaced" stdDeviation="3" result="blurred" />
-          <feComposite in="displaced" in2="blurred" operator="over" />
-        </filter>
-      </defs>
-    </svg>
-  );
+  return null;
 }
 
+/**
+ * Renders a Manjaku script glyph as a plain <img> with a data:image/svg+xml
+ * source. This avoids every React/Next.js SSR dangerouslySetInnerHTML SVG
+ * quirk: no hydration mismatch, works in <img>, no CSS currentColor inheritance
+ * needed.
+ */
 export default function ManjakuGlyph({
   id,
   size = 64,
-  color,
+  color = "#009E49",
   variant = "clean",
   className = "",
   style = {},
   title,
 }: ManjakuGlyphProps) {
-  // Resolve glyph key: accept both "A" and "letter_A"
+  // Resolve glyph key — accept "A" → "letter_A" or pass-through "letter_A"
   const glyphKey = useMemo(() => {
     if (id.startsWith("letter_")) return id;
     return LETTER_TO_GLYPH[id] ?? null;
   }, [id]);
 
-  const innerSvg = glyphKey ? (MANJAKU_GLYPHS[glyphKey] ?? null) : null;
+  const rawSvgInner = glyphKey ? (MANJAKU_GLYPHS[glyphKey] ?? null) : null;
 
-  if (!innerSvg) {
-    // Fallback: unsupported glyph
+  // Build a self-contained SVG data URI. currentColor is replaced by the
+  // resolved colour so the image is independent of any CSS context.
+  const src = useMemo(() => {
+    if (!rawSvgInner) return null;
+
+    const strokeColor = color ?? "#009E49";
+    // Replace all occurrences of currentColor (attribute values only)
+    const paths = rawSvgInner.replace(/currentColor/g, strokeColor);
+
+    let svgBody: string;
+    if (variant === "sketch") {
+      // Embed the displacement filter directly inside the SVG so no external
+      // defs are needed.
+      svgBody = [
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">',
+        "<defs>",
+        '<filter id="sk" x="-5%" y="-5%" width="110%" height="110%">',
+        '<feTurbulence type="turbulence" baseFrequency="0.04 0.04"',
+        ' numOctaves="3" seed="2" result="noise"/>',
+        '<feDisplacementMap in="SourceGraphic" in2="noise"',
+        ' scale="18" xChannelSelector="R" yChannelSelector="G"/>',
+        "</filter>",
+        "</defs>",
+        '<g filter="url(#sk)">',
+        paths,
+        "</g>",
+        "</svg>",
+      ].join("");
+    } else {
+      svgBody = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">${paths}</svg>`;
+    }
+
+    return `data:image/svg+xml,${encodeURIComponent(svgBody)}`;
+  }, [rawSvgInner, color, variant]);
+
+  // Fallback: glyph not found → show the ID as text
+  if (!src) {
     return (
       <span
         className={className}
@@ -81,7 +97,7 @@ export default function ManjakuGlyph({
           justifyContent: "center",
           width: size,
           height: size,
-          fontSize: size * 0.4,
+          fontSize: size * 0.38,
           fontWeight: 900,
           color: color ?? "currentColor",
           ...style,
@@ -92,26 +108,15 @@ export default function ManjakuGlyph({
     );
   }
 
-  const filterProp =
-    variant === "sketch" ? `url(#${FILTER_ID})` : undefined;
-
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1000 1000"
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
       width={size}
       height={size}
+      alt={title ?? `Symbole Manjaku — ${id}`}
       className={className}
-      style={{
-        color: color ?? "currentColor",
-        display: "block",
-        flexShrink: 0,
-        filter: filterProp,
-        ...style,
-      }}
-      aria-label={title ?? `Symbole Manjaku — ${id}`}
-      role="img"
-      dangerouslySetInnerHTML={{ __html: innerSvg }}
+      style={{ display: "block", flexShrink: 0, ...style }}
     />
   );
 }

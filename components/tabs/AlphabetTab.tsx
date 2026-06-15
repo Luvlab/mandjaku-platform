@@ -232,15 +232,13 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
               }}
             >
               {/* Glyph */}
-              <div
-                className="w-14 h-14 flex items-center justify-center"
-                style={{ color: isSelected ? "#009E49" : "var(--text)" }}
-              >
+              <div className="w-14 h-14 flex items-center justify-center">
                 {hasGlyph ? (
                   <ManjakuGlyph
                     id={letter.id}
                     size={52}
                     variant={variant}
+                    color={isSelected ? "#009E49" : "#7a8a7e"}
                   />
                 ) : (
                   <span className="text-2xl font-black text-gradient">
