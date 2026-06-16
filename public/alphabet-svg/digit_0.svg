@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">
   <g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M 200,380 L 800,380"/>
-    <path d="M 200,520 L 800,520"/>
-    <path d="M 200,660 L 800,660"/>
+    <path d="M 180,200 L 820,200"/>
+    <path d="M 180,340 L 820,340"/>
+    <path d="M 220,340 L 375,720 L 500,480 L 625,720 L 780,340"/>
   </g>
 </svg>

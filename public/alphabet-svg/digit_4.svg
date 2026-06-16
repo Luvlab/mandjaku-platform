@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">
-  
   <g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M720 320 L360 680"/>
-    <path d="M360 680 L240 560"/>
-</g></svg>
+    <path d="M 740,280 L 340,680"/>
+    <path d="M 340,680 L 220,560"/>
+  </g>
+</svg>

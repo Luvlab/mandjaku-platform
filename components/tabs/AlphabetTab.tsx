@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { MANJAK_ALPHABET, NOMINAL_CLASSES, TONES, PROVERBS } from "@/data/alphabet";
+import { MANJAK_ALPHABET, MANJAK_DIGITS, NOMINAL_CLASSES, TONES, PROVERBS } from "@/data/alphabet";
 import type { Letter } from "@/data/alphabet";
 import { ELDER_SKETCHES } from "@/data/manjaku-glyphs";
 import ManjakuGlyph, { ManjakuGlyphDefs } from "@/components/ManjakuGlyph";
@@ -259,6 +259,42 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
             </button>
           );
         })}
+      </div>
+
+      {/* ── Numbers / Chiffres ───────────────────────────────────────────────── */}
+      <div className="mb-12">
+        <div className="badge badge-green mb-3">Chiffres Manjak</div>
+        <p className="body-sm mb-5">
+          Le système de numération Manjaku possède des symboles graphiques uniques pour les chiffres 0 à 9,
+          développés par les anciens avec la même logique géométrique que l&apos;alphabet.
+        </p>
+        <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+          {MANJAK_DIGITS.map((digit) => (
+            <div
+              key={digit.value}
+              className="card rounded-xl p-2 text-center flex flex-col items-center"
+              style={{ gap: "6px", border: "1px solid var(--border)", background: "var(--surface)" }}
+            >
+              <div className="w-14 h-14 flex items-center justify-center">
+                <ManjakuGlyph
+                  id={`digit_${digit.value}`}
+                  size={52}
+                  color="#009E49"
+                  variant={variant}
+                />
+              </div>
+              <div
+                className="text-lg font-black"
+                style={{ color: "#009E49", lineHeight: 1 }}
+              >
+                {digit.value}
+              </div>
+              <div className="text-xs" style={{ color: "var(--text-muted)" }}>
+                {digit.label}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ── Selected letter detail ────────────────────────────────────────────── */}

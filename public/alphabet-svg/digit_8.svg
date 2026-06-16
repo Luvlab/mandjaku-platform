@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">
   <g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M500 120 L180 820 L820 820 Z"/>
-</g></svg>
+    <path d="M 500,140 L 200,800 L 800,800 Z"/>
+    <path d="M 350,420 L 650,420"/>
+  </g>
+</svg>

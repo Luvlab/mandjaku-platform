@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { MANJAKU_GLYPHS, LETTER_TO_GLYPH } from "@/data/manjaku-glyphs";
+import { MANJAKU_GLYPHS, MANJAKU_DIGIT_GLYPHS, LETTER_TO_GLYPH } from "@/data/manjaku-glyphs";
 
 export type GlyphVariant = "clean" | "sketch";
 
@@ -43,13 +43,16 @@ export default function ManjakuGlyph({
   style = {},
   title,
 }: ManjakuGlyphProps) {
-  // Resolve glyph key — accept "A" → "letter_A" or pass-through "letter_A"
+  // Resolve glyph key — accept "A" → "letter_A", pass-through "letter_A",
+  // or look up digit glyphs directly via "digit_0" … "digit_9"
   const glyphKey = useMemo(() => {
-    if (id.startsWith("letter_")) return id;
+    if (id.startsWith("letter_") || id.startsWith("digit_")) return id;
     return LETTER_TO_GLYPH[id] ?? null;
   }, [id]);
 
-  const rawSvgInner = glyphKey ? (MANJAKU_GLYPHS[glyphKey] ?? null) : null;
+  const rawSvgInner = glyphKey
+    ? (MANJAKU_GLYPHS[glyphKey] ?? MANJAKU_DIGIT_GLYPHS[glyphKey] ?? null)
+    : null;
 
   // Build a self-contained SVG data URI. currentColor is replaced by the
   // resolved colour so the image is independent of any CSS context.

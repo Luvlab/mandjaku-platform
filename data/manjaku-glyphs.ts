@@ -65,10 +65,25 @@ export const LETTER_TO_GLYPH: Record<string, string> = {
   THE: "letter_THE",
 };
 
+// ── Digit glyphs (0–9) ──────────────────────────────────────────────────────
+// Inner SVG content; rendered via ManjakuGlyph the same way as letters.
+export const MANJAKU_DIGIT_GLYPHS: Record<string, string> = {
+  digit_0: `<g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"><path d="M 180,200 L 820,200"/><path d="M 180,340 L 820,340"/><path d="M 220,340 L 375,720 L 500,480 L 625,720 L 780,340"/></g>`,
+  digit_1: `<g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"><circle cx="480" cy="560" r="255"/><path d="M 280,760 L 680,360"/></g><circle cx="800" cy="260" r="65" fill="none" stroke="currentColor" stroke-width="50"/>`,
+  digit_2: `<g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"><path d="M 220,220 L 220,680"/><path d="M 220,220 L 760,220"/><path d="M 220,400 L 760,400"/><circle cx="760" cy="540" r="130"/></g>`,
+  digit_3: `<g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"><path d="M 220,340 L 780,340"/><path d="M 220,540 L 780,540"/><path d="M 780,340 L 780,220"/><path d="M 220,340 L 220,540"/></g>`,
+  digit_4: `<g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"><path d="M 740,280 L 340,680"/><path d="M 340,680 L 220,560"/></g>`,
+  digit_5: `<g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"><path d="M 500,160 L 200,760 L 800,760 Z"/><path d="M 340,860 L 660,860"/><path d="M 300,940 L 700,940"/></g>`,
+  digit_6: `<g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"><path d="M 280,460 L 760,460"/><path d="M 560,460 L 560,760"/><circle cx="640" cy="320" r="60" fill="none"/></g>`,
+  digit_7: `<g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"><path d="M 200,380 L 800,380"/><path d="M 200,520 L 800,520"/><path d="M 200,660 L 800,660"/></g>`,
+  digit_8: `<g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"><path d="M 500,140 L 200,800 L 800,800 Z"/><path d="M 350,420 L 650,420"/></g>`,
+  digit_9: `<g fill="none" stroke="currentColor" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"><path d="M 500,220 L 200,820 L 800,820 Z"/><circle cx="500" cy="130" r="65" fill="none"/></g>`,
+};
+
 /** Elder sketch photos — original hand-drawn alphabet references, Aug 2024 */
+// Pages 1 & 3 were identical; pages 2 & 4 were identical. Kept one of each.
+// Page 2 has been rotated 90° CCW to display correctly.
 export const ELDER_SKETCHES = [
   { src: "/alphabet-svg/sketch_alphabet_1.jpg", label: "Croquis • Page 1" },
   { src: "/alphabet-svg/sketch_alphabet_2.jpg", label: "Croquis • Page 2" },
-  { src: "/alphabet-svg/sketch_alphabet_3.png", label: "Croquis • Page 3" },
-  { src: "/alphabet-svg/sketch_alphabet_4.jpeg", label: "Croquis • Page 4" },
 ];
