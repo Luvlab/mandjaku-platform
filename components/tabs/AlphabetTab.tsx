@@ -424,15 +424,40 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
         <div className="space-y-4 mt-5">
           {PROVERBS.map((proverb, i) => (
             <div key={i} className="card p-5">
-              <div className="text-lg font-bold italic mb-2" style={{ color: "#009E49" }}>
-                &ldquo;{proverb.manjak}&rdquo;
-              </div>
-              <div className="text-sm mb-1" style={{ color: "var(--text)" }}>
-                🇫🇷 {proverb.french}
-              </div>
+              {/* Manjak text — shown only when verified original text exists */}
+              {proverb.manjak ? (
+                <div className="text-lg font-bold italic mb-2" style={{ color: "#009E49" }}>
+                  &ldquo;{proverb.manjak}&rdquo;
+                </div>
+              ) : (
+                <div className="text-lg font-bold italic mb-2" style={{ color: "var(--text)" }}>
+                  &ldquo;{proverb.french}&rdquo;
+                </div>
+              )}
+              {/* Translations */}
+              {proverb.manjak && (
+                <div className="text-sm mb-1" style={{ color: "var(--text)" }}>
+                  🇫🇷 {proverb.french}
+                </div>
+              )}
               <div className="text-sm" style={{ color: "var(--text-muted)" }}>
                 🇬🇧 {proverb.english}
               </div>
+              {/* Source badge */}
+              {proverb.source && (
+                <div className="mt-2">
+                  <span
+                    className="text-xs px-2 py-0.5 rounded-full"
+                    style={{
+                      background: "var(--surface2)",
+                      color: "var(--text-muted)",
+                      border: "1px solid var(--border)",
+                    }}
+                  >
+                    {proverb.source}
+                  </span>
+                </div>
+              )}
             </div>
           ))}
         </div>

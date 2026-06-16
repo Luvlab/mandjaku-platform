@@ -273,7 +273,17 @@ export const TONES = [
   { name: "Ton bas", mark: "`", description: "Descendant, comme l'accent grave: à, è, ù" },
 ];
 
-export const PROVERBS = [
+export interface Proverb {
+  /** Original Manjak text. Optional — many proverbs circulate only orally. */
+  manjak?: string;
+  french: string;
+  english: string;
+  /** Provenance note shown in the UI when manjak text is absent */
+  source?: string;
+}
+
+export const PROVERBS: Proverb[] = [
+  // ── Verified Manjak-language proverbs ──────────────────────────────────────
   {
     manjak: "Napats na war ku di asin.",
     french: "Un bon enfant honore son père.",
@@ -288,5 +298,72 @@ export const PROVERBS = [
     manjak: "Bapats ba gue di asin.",
     french: "Les enfants marchent avec leurs pères.",
     english: "Children walk with their fathers.",
+  },
+  {
+    // Source: Jill Karlik, "Orality meets literacy in Manjaku of Guinea-Bissau",
+    // BALID Practitioner Research Day, University of Leeds, April 2018, p. 6.
+    manjak: "Wund aci baloole.",
+    french: "Nous sommes pluriels et un.",
+    english: "We are plural-one.",
+    source: "Tradition orale Manjaku",
+  },
+
+  // ── Tradition orale de Guinée-Bissau ─────────────────────────────────────
+  // The following proverbs circulate in the oral traditions of Guinea-Bissau
+  // (multi-ethnic; Manjak text to be verified by community speakers).
+  {
+    french: "Le cœur amer se ronge lui-même.",
+    english: "The bitter heart eats its owner.",
+    source: "Tradition orale de Guinée-Bissau",
+  },
+  {
+    french: "La richesse de l'avare finit toujours par revenir à la communauté.",
+    english: "The wealth of the greedy ultimately goes to the community.",
+    source: "Tradition orale de Guinée-Bissau",
+  },
+  {
+    french: "Autour d'un arbre en fleurs, les insectes sont nombreux.",
+    english: "Around a flowering tree, one finds many insects.",
+    source: "Tradition orale de Guinée-Bissau",
+  },
+  {
+    french: "Le ventre ne connaît pas de repos.",
+    english: "The stomach has no holiday.",
+    source: "Tradition orale de Guinée-Bissau",
+  },
+  {
+    french: "Personne ne sonde la profondeur d'un fleuve des deux pieds à la fois s'il n'est pas prêt à nager.",
+    english: "No one tests the depth of a river with both feet unless prepared to swim.",
+    source: "Tradition orale de Guinée-Bissau",
+  },
+  {
+    french: "L'homme debout emporte la part de l'homme assis.",
+    english: "The man on his feet carries off the share of the man sitting down.",
+    source: "Tradition orale de Guinée-Bissau",
+  },
+  {
+    french: "Quand le fol a appris le jeu, les joueurs se sont déjà dispersés.",
+    english: "By the time the fool has learned the game, the players have dispersed.",
+    source: "Tradition orale de Guinée-Bissau",
+  },
+  {
+    french: "Un homme trop ambitieux ne dort pas en paix.",
+    english: "A man with too much ambition cannot sleep in peace.",
+    source: "Tradition orale de Guinée-Bissau",
+  },
+  {
+    french: "Si toutes les graines qui tombent poussaient, nul ne pourrait marcher sous les arbres.",
+    english: "If all seeds that fall were to grow, no one could follow the path under the trees.",
+    source: "Tradition orale de Guinée-Bissau",
+  },
+  {
+    french: "La discussion trop longue engendre la querelle.",
+    english: "Too much discussion leads to quarrel.",
+    source: "Tradition orale de Guinée-Bissau",
+  },
+  {
+    french: "Lorsqu'un arbre mort tombe, il entraîne un arbre vivant avec lui.",
+    english: "When a dead tree falls, it carries a living one with it.",
+    source: "Tradition orale de Guinée-Bissau",
   },
 ];
