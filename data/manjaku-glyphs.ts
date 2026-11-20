@@ -1,3 +1,4 @@
+import { withBase } from "@/lib/base-path";
 /**
  * Manjaku script glyphs — inner SVG path data extracted from authoritative
  * Notion source files. viewBox is always "0 0 1000 1000".
@@ -84,6 +85,6 @@ export const MANJAKU_DIGIT_GLYPHS: Record<string, string> = {
 // Pages 1 & 3 were identical; pages 2 & 4 were identical. Kept one of each.
 // Page 2 has been rotated 90° CCW to display correctly.
 export const ELDER_SKETCHES = [
-  { src: "/alphabet-svg/sketch_alphabet_1.jpg", label: "Croquis • Page 1" },
-  { src: "/alphabet-svg/sketch_alphabet_2.jpg", label: "Croquis • Page 2" },
+  { src: withBase("/alphabet-svg/sketch_alphabet_1.jpg"), label: "Croquis • Page 1" },
+  { src: withBase("/alphabet-svg/sketch_alphabet_2.jpg"), label: "Croquis • Page 2" },
 ];

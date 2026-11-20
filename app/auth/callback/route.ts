@@ -1,3 +1,4 @@
+import { withBase } from "@/lib/base-path";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -50,13 +51,13 @@ export async function GET(request: NextRequest) {
         await supabase.auth.signOut();
         const errorMsg = encodeURIComponent(countryError);
         return NextResponse.redirect(
-          `${origin}/fr/admin?error=geo_blocked&msg=${errorMsg}`,
+          `${origin}${withBase("/fr/admin")}?error=geo_blocked&msg=${errorMsg}`,
         );
       }
 
-      return NextResponse.redirect(`${origin}${next}`);
+      return NextResponse.redirect(`${origin}${withBase(next)}`);
     }
   }
 
-  return NextResponse.redirect(`${origin}/fr?error=auth`);
+  return NextResponse.redirect(`${origin}${withBase("/fr")}?error=auth`);
 }

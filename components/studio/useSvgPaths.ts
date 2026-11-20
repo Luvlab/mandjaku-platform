@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { withBase } from "@/lib/base-path";
 
 export interface SvgPathData {
   paths: string[];            // 'd' attributes of every <path>
@@ -19,7 +20,7 @@ function fetchSvg(file: string) {
   if (CACHE[file] !== undefined) return;
   CACHE[file] = "loading";
 
-  fetch(`/alphabet-svg/${file}`)
+  fetch(withBase(`/alphabet-svg/${file}`))
     .then((r) => r.text())
     .then((text) => {
       const parser = new DOMParser();

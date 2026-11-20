@@ -4,8 +4,12 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
+  // Mounted at luvlab.io/manjak — keep in sync with lib/base-path.ts
+  basePath: "/manjak",
   async redirects() {
     return [
+      // The bare deployment root has nothing: send it to the app
+      { source: "/", destination: "/manjak", basePath: false, permanent: false },
       // /admin → /fr/admin (default locale)
       { source: "/admin", destination: "/fr/admin", permanent: false },
       // bare tab routes → SPA with locale

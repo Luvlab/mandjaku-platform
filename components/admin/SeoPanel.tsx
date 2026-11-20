@@ -1,5 +1,6 @@
 "use client";
 
+import { withBase } from "@/lib/base-path";
 import { useState, useEffect, useCallback } from "react";
 
 type SeoRow = {
@@ -37,7 +38,7 @@ export default function SeoPanel({ password }: { password: string }) {
   const fetchRows = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/seo");
+      const res = await fetch(withBase("/api/admin/seo"));
       const json = await res.json();
       setRows(json.rows ?? []);
     } finally {
@@ -59,7 +60,7 @@ export default function SeoPanel({ password }: { password: string }) {
     setSaving(true);
     setSaveMsg("");
     try {
-      const res = await fetch("/api/admin/seo", {
+      const res = await fetch(withBase("/api/admin/seo"), {
         method: "PUT",
         headers: { "Content-Type": "application/json", "x-admin-password": password },
         body: JSON.stringify({

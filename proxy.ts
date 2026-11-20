@@ -78,5 +78,6 @@ export default function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)" ],
+  // "/" is listed on its own: with a basePath the pattern below does not match the root
+  matcher: ["/", "/((?!api|_next|_vercel|.*\\..*).*)" ],
 };

@@ -1,3 +1,4 @@
+import { withBase } from "@/lib/base-path";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getAdminEntry, checkCountryAccess } from "@/lib/admin-config";
@@ -59,7 +60,7 @@ export async function POST(req: NextRequest) {
     process.env.NEXT_PUBLIC_SITE_URL ??
     (req.headers.get("origin") || "https://manjak-app.vercel.app");
 
-  const callbackUrl = `${siteUrl}/auth/callback?next=${encodeURIComponent(
+  const callbackUrl = `${siteUrl}${withBase("/auth/callback")}?next=${encodeURIComponent(
     redirectTo ?? "/fr/admin",
   )}`;
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { withBase } from "@/lib/base-path";
 import { useState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { useAuth, isAdminRole, canPostContent } from "@/components/AuthProvider";
@@ -23,7 +24,7 @@ function MagicLinkForm() {
     setErrorMsg("");
 
     try {
-      const res = await fetch("/api/admin/magic-link", {
+      const res = await fetch(withBase("/api/admin/magic-link"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim().toLowerCase() }),
@@ -226,7 +227,7 @@ export default function AdminPage() {
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
-                const res = await fetch("/api/admin/seo", {
+                const res = await fetch(withBase("/api/admin/seo"), {
                   headers: { "x-admin-password": password },
                 });
                 if (res.ok) { setLegacyAuthed(true); setAuthError(""); }

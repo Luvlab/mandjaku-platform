@@ -1,5 +1,6 @@
 "use client";
 
+import { withBase } from "@/lib/base-path";
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import type { UserRole } from "@/components/AuthProvider";
@@ -211,11 +212,11 @@ export default function UsersPanel() {
           <input
             aria-label="Lien d'invitation"
             readOnly
-            value={typeof window !== "undefined" ? `${window.location.origin}/fr?invite=manjak2026` : ""}
+            value={typeof window !== "undefined" ? `${window.location.origin}${withBase("/fr")}?invite=manjak2026` : ""}
             className="cms-input flex-1 text-sm font-mono"
           />
           <button
-            onClick={() => navigator.clipboard?.writeText(`${window.location.origin}/fr?invite=manjak2026`)}
+            onClick={() => navigator.clipboard?.writeText(`${window.location.origin}${withBase("/fr")}?invite=manjak2026`)}
             className="btn btn-primary text-sm px-4"
           >
             Copier
