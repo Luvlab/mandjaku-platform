@@ -49,15 +49,14 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-14">
 
           {/* Logo */}
-          <Link href="/" aria-label={`Mandjaku, ${t("home")}`} className="flex items-center gap-2.5 group flex-shrink-0">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-white text-sm"
-              style={{ background: "linear-gradient(135deg, #009E49, #007A38)" }}>
-              M
-            </div>
-            <div className="hidden sm:block">
-              <span className="font-bold text-base" style={{ color: "var(--text)" }}>Mandjaku</span>
-              <span className="ml-1.5 text-xs font-medium opacity-50" style={{ color: "var(--text)" }}>Kabu lëp Manjak</span>
-            </div>
+          <Link href="/" aria-label={`Manjak, ${t("home")}`} className="flex items-center gap-2.5 group flex-shrink-0">
+            <span
+              className="h-8 px-3 rounded-lg flex items-center justify-center font-black text-white text-base tracking-tight"
+              style={{ background: "linear-gradient(135deg, #009E49, #007A38)" }}
+            >
+              Manjak
+            </span>
+            <span className="hidden sm:block text-xs font-medium opacity-50" style={{ color: "var(--text)" }}>Kabu lëp Manjak</span>
           </Link>
 
           {/* Right controls */}
