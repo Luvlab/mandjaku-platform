@@ -1,4 +1,4 @@
--- Applied to the live LUVLAB project on 2026-11-20.
+-- NOT YET APPLIED to the live LUVLAB project (as of 2026-11-20). Run this in the Supabase SQL editor.
 -- manjak_seo_config had a policy "anon_write" (FOR ALL, USING true) that let any
 -- visitor change or delete the search engine texts with the public key.
 -- Reading stays public. Writing now goes through /api/admin/seo with the
