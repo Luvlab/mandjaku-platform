@@ -17,7 +17,8 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
   const MANJAK_DIGITS = useLocalized(DIGITS_FR);
   const NOMINAL_CLASSES = useLocalized(CLASSES_FR);
   const TONES = useLocalized(TONES_FR);
-  const PROVERBS = useLocalized(PROVERBS_FR);
+  // A proverb is only shown once it has its Manjak text: people come here to learn it in Manjak.
+  const PROVERBS = useLocalized(PROVERBS_FR).filter((p) => p.manjak);
   const t = useTranslations("alphabet");
   const a = useTranslations("a11y");
   const [filter, setFilter] = useState<Filter>("all");

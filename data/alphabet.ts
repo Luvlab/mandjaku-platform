@@ -283,7 +283,10 @@ export interface Proverb {
 }
 
 export const PROVERBS: Proverb[] = [
-  // ── Verified Manjak-language proverbs ──────────────────────────────────────
+  // ── Proverbs with Manjak text ───────────────────────────────────────────────
+  // Only proverbs with a `manjak` text are shown on the site.
+  // NOT YET CONFIRMED BY A SPEAKER: the first three use only words from the
+  // example list above and have no source. The fourth has a cited source.
   {
     manjak: "Napats na war ku di asin.",
     french: "Un bon enfant honore son père.",

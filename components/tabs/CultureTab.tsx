@@ -30,7 +30,8 @@ const TEXTILES_FR = [
 export default function CultureTab() {
   const c = useC();
   const CULTURAL_FACTS = useLocalized(FACTS_FR);
-  const PROVERBS = useLocalized(PROVERBS_FR);
+  // A proverb is only shown once it has its Manjak text: people come here to learn it in Manjak.
+  const PROVERBS = useLocalized(PROVERBS_FR).filter((p) => p.manjak);
   const MUSIC_INSTRUMENTS = useLocalized(MUSIC_INSTRUMENTS_FR);
   const RITES = useLocalized(RITES_FR);
   const TEXTILES = useLocalized(TEXTILES_FR);
