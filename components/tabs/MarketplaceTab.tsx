@@ -38,12 +38,15 @@ export default function MarketplaceTab() {
   const filtered = filter === "Tout" ? MERCH : MERCH.filter((m) => m.category === filter);
 
   return (
-    <div>
+    <div lang="fr">
       {/* Header */}
       <div className="text-center mb-8">
-        <div className="badge badge-green mb-3 mx-auto">🛍️ Marketplace Manjak</div>
+        <div className="badge badge-green mb-3 mx-auto"><span aria-hidden="true">🛍️</span> Marketplace Manjak</div>
         <h2 className="heading-lg" style={{ color:"var(--text)" }}>Boutique & Communauté</h2>
         <p className="body-lg max-w-xl mx-auto mt-2">Merch officiel, artisanat et annonces de la communauté Mandjaku mondiale</p>
+        <p role="note" className="text-sm font-semibold max-w-xl mx-auto mt-4 rounded-xl px-4 py-3" style={{ background: "rgba(252,209,22,0.12)", border: "1px solid rgba(252,209,22,0.4)", color: "var(--text)" }}>
+          Aperçu : la boutique et les annonces ne sont pas encore ouvertes. Les articles, les prix et les annonces ci-dessous sont des exemples. Rien ne peut être acheté ni publié pour le moment.
+        </p>
       </div>
 
       {/* Section tabs */}
@@ -53,7 +56,7 @@ export default function MarketplaceTab() {
           { id:"ads" as const, label:"📌 Annonces" },
           { id:"post" as const, label:"✏️ Poster une annonce" },
         ].map((s) => (
-          <button key={s.id} onClick={() => setSection(s.id)}
+          <button key={s.id} onClick={() => setSection(s.id)} aria-pressed={section === s.id}
             className="btn"
             style={{ background: section===s.id ? "#009E49" : "var(--surface2)", color: section===s.id ? "#fff" : "var(--text-muted)", border: section===s.id ? "none" : "1px solid var(--border)" }}>
             {s.label}
@@ -67,7 +70,7 @@ export default function MarketplaceTab() {
           {/* Category filters */}
           <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
             {merchCats.map((c) => (
-              <button key={c} onClick={() => setFilter(c)}
+              <button key={c} onClick={() => setFilter(c)} aria-pressed={filter === c}
                 className="btn flex-shrink-0 text-sm py-2 px-4"
                 style={{ background: filter===c ? "#009E49" : "var(--surface2)", color: filter===c ? "#fff" : "var(--text-muted)", border: filter===c ? "none" : "1px solid var(--border)" }}>
                 {c}
@@ -79,7 +82,7 @@ export default function MarketplaceTab() {
             {filtered.map((item) => (
               <div key={item.id} className="card card-hover overflow-hidden flex flex-col">
                 {/* Image placeholder */}
-                <div className="aspect-square flex items-center justify-center text-5xl relative"
+                <div aria-hidden="true" className="aspect-square flex items-center justify-center text-5xl relative"
                   style={{ background: `linear-gradient(135deg, ${CAT_COLORS[item.category] ?? "#009E49"}15, ${CAT_COLORS[item.category] ?? "#009E49"}05)` }}>
                   {item.emoji}
                   {item.tag && (
@@ -93,7 +96,7 @@ export default function MarketplaceTab() {
                   <p className="text-xs leading-relaxed flex-1" style={{ color:"var(--text-muted)" }}>{item.desc}</p>
                   <div className="flex items-center justify-between mt-3">
                     <span className="font-black text-base" style={{ color:"#009E49" }}>{item.price}</span>
-                    <button className="btn btn-primary text-xs py-1.5 px-3">Acheter</button>
+                    <button disabled aria-label={`Acheter ${item.title} : bientôt disponible`} className="btn btn-primary text-xs py-1.5 px-3" style={{ opacity: 0.5 }}>Bientôt</button>
                   </div>
                 </div>
               </div>
@@ -138,7 +141,7 @@ export default function MarketplaceTab() {
                     <span className="font-black text-sm" style={{ color:"#009E49" }}>{ad.price}</span>
                   )}
                 </div>
-                <button className="btn btn-outline text-sm w-full justify-center py-2">Contacter</button>
+                <button disabled className="btn btn-outline text-sm w-full justify-center py-2" style={{ opacity: 0.5 }}>Contact bientôt disponible</button>
               </div>
             ))}
           </div>
@@ -153,10 +156,10 @@ export default function MarketplaceTab() {
       {section === "post" && (
         <div className="max-w-lg mx-auto">
           {posted ? (
-            <div className="card p-10 text-center animate-fade-up">
-              <div className="text-6xl mb-4">🎉</div>
-              <h3 className="heading-md mb-3" style={{ color:"#009E49" }}>Annonce soumise !</h3>
-              <p className="body-sm mb-6">Votre annonce sera validée et publiée sous 24h. Merci de contribuer à la communauté Mandjaku !</p>
+            <div className="card p-10 text-center animate-fade-up" role="status">
+              <div className="text-6xl mb-4" aria-hidden="true">📝</div>
+              <h3 className="heading-md mb-3" style={{ color:"#009E49" }}>Annonce non envoyée</h3>
+              <p className="body-sm mb-6">La publication d&apos;annonces n&apos;est pas encore ouverte. Votre annonce n&apos;a été ni envoyée ni enregistrée. Pour la proposer dès maintenant, écrivez à info@luvlab.io.</p>
               <div className="flex gap-3 justify-center">
                 <button onClick={() => { setPosted(false); setForm({ title:"",desc:"",category:"Cours",price:"",location:"",email:"" }); }} className="btn btn-outline">Nouvelle annonce</button>
                 <button onClick={() => setSection("ads")} className="btn btn-primary">Voir les annonces</button>
@@ -168,35 +171,35 @@ export default function MarketplaceTab() {
               <h3 className="heading-md mb-6" style={{ color:"var(--text)" }}>Publier dans la communauté</h3>
               <form onSubmit={(e) => { e.preventDefault(); setPosted(true); }} className="space-y-4">
                 <div>
-                  <label className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Catégorie</label>
-                  <select value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))} className="cms-input">
+                  <label htmlFor="ad-f1" className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Catégorie</label>
+                  <select id="ad-f1" value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))} className="cms-input">
                     {["Cours","Artisanat","Services","Communauté","Événement","Emploi","Autre"].map((c) => <option key={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Titre</label>
-                  <input required value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} className="cms-input" placeholder="Ex: Cours de Mandjaku débutants" />
+                  <label htmlFor="ad-f2" className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Titre</label>
+                  <input id="ad-f2" required value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} className="cms-input" placeholder="Ex: Cours de Mandjaku débutants" />
                 </div>
                 <div>
-                  <label className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Description</label>
-                  <textarea required value={form.desc} onChange={(e) => setForm((f) => ({ ...f, desc: e.target.value }))} className="cms-input" rows={4} placeholder="Décrivez votre offre ou service…" />
+                  <label htmlFor="ad-f3" className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Description</label>
+                  <textarea id="ad-f3" required value={form.desc} onChange={(e) => setForm((f) => ({ ...f, desc: e.target.value }))} className="cms-input" rows={4} placeholder="Décrivez votre offre ou service…" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Prix (optionnel)</label>
-                    <input value={form.price} onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))} className="cms-input" placeholder="Ex: 30€/h" />
+                    <label htmlFor="ad-f4" className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Prix (optionnel)</label>
+                    <input id="ad-f4" value={form.price} onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))} className="cms-input" placeholder="Ex: 30€/h" />
                   </div>
                   <div>
-                    <label className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Ville / Pays</label>
-                    <input required value={form.location} onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))} className="cms-input" placeholder="Paris, France" />
+                    <label htmlFor="ad-f5" className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Ville / Pays</label>
+                    <input id="ad-f5" required value={form.location} onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))} className="cms-input" placeholder="Paris, France" />
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Email de contact</label>
-                  <input required type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className="cms-input" placeholder="votre@email.com" />
+                  <label htmlFor="ad-f6" className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>Email de contact</label>
+                  <input id="ad-f6" required type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className="cms-input" placeholder="votre@email.com" />
                 </div>
                 <button type="submit" className="btn btn-primary w-full justify-center py-3">Soumettre l'annonce</button>
-                <p className="text-xs text-center" style={{ color:"var(--text-muted)" }}>Validation sous 24h · Gratuit pour la communauté Mandjaku</p>
+                <p className="text-xs text-center" style={{ color:"var(--text-muted)" }}>Aperçu : le formulaire n&apos;envoie rien pour le moment.</p>
               </form>
             </div>
           )}

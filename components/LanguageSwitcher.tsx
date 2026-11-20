@@ -32,8 +32,15 @@ export default function LanguageSwitcher() {
         setOpen(false);
       }
     }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
   }, []);
 
   function switchLocale(next: string) {
@@ -48,11 +55,13 @@ export default function LanguageSwitcher() {
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#F5EDD3]/70 hover:text-[#F5EDD3] hover:bg-white/5 border border-transparent hover:border-[#C8882A]/20 transition-all"
-        aria-label={t("language_switcher")}
+        aria-label={`${t("language_switcher")}: ${current?.label ?? locale}`}
+        aria-expanded={open}
+        aria-haspopup="true"
       >
-        <span>{current?.flag}</span>
+        <span aria-hidden="true">{current?.flag}</span>
         <span className="hidden sm:block">{current?.label}</span>
-        <span className="text-[10px] opacity-60">▾</span>
+        <span aria-hidden="true" className="text-[10px] opacity-60">▾</span>
       </button>
 
       {open && (
@@ -64,15 +73,17 @@ export default function LanguageSwitcher() {
                 <button
                   key={loc}
                   onClick={() => switchLocale(loc)}
+                  lang={loc}
+                  aria-current={loc === locale ? "true" : undefined}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs transition-colors ${
                     loc === locale
                       ? "text-[#E8A94A] bg-[#C8882A]/15"
                       : "text-[#F5EDD3]/60 hover:text-[#F5EDD3] hover:bg-white/5"
                   }`}
                 >
-                  <span>{info?.flag}</span>
+                  <span aria-hidden="true">{info?.flag}</span>
                   <span>{info?.label}</span>
-                  {loc === locale && <span className="ml-auto text-[#C8882A]">✓</span>}
+                  {loc === locale && <span aria-hidden="true" className="ml-auto text-[#C8882A]">✓</span>}
                 </button>
               );
             })}

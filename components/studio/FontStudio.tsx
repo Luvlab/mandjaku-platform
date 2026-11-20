@@ -69,6 +69,7 @@ function Cap({ value, onChange }: { value: string; onChange: (v: "round" | "squa
         <button
           key={o.v}
           onClick={() => onChange(o.v)}
+          aria-pressed={value === o.v}
           className="text-xs px-2 py-1 rounded transition-all"
           style={{
             background: value === o.v ? "#009E49" : "var(--surface2)",
@@ -95,6 +96,7 @@ function Join({ value, onChange }: { value: string; onChange: (v: "round" | "mit
         <button
           key={o.v}
           onClick={() => onChange(o.v)}
+          aria-pressed={value === o.v}
           className="text-xs px-2 py-1 rounded transition-all"
           style={{
             background: value === o.v ? "#009E49" : "var(--surface2)",
@@ -174,6 +176,8 @@ function SelectedPanel({
             <button
               key={s}
               onClick={() => setPreviewSize(s)}
+              aria-pressed={previewSize === s}
+              aria-label={`Taille d'aperçu ${s} pixels`}
               className="text-xs px-2 py-1 rounded"
               style={{
                 background: previewSize === s ? "rgba(0,158,73,0.15)" : "var(--surface2)",
@@ -216,6 +220,7 @@ function SelectedPanel({
               Épaisseur: <span className="font-mono font-bold" style={{ color: "#009E49" }}>{resolved.strokeWidth}</span>
             </div>
             <input
+              aria-label="Épaisseur du trait pour ce symbole"
               type="range" min={5} max={180} step={1}
               value={resolved.strokeWidth}
               onChange={(e) => onUpdateOverride(symbol.id, { strokeWidth: Number(e.target.value) })}
@@ -233,7 +238,7 @@ function SelectedPanel({
           className="flex-1 text-xs py-2 rounded-lg font-semibold transition-all disabled:opacity-40"
           style={{ background: "#009E49", color: "#fff" }}
         >
-          ↓ Export SVG
+          <span aria-hidden="true">↓ </span>Export SVG
         </button>
         <button
           onClick={copySvg}
@@ -241,7 +246,7 @@ function SelectedPanel({
           className="flex-1 text-xs py-2 rounded-lg font-semibold transition-all disabled:opacity-40"
           style={{ background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)" }}
         >
-          {copied ? "✓ Copié !" : "<> Copier SVG"}
+          <span role="status">{copied ? "Copié !" : "Copier SVG"}</span>
         </button>
       </div>
     </div>
@@ -383,6 +388,7 @@ export default function FontStudio() {
               <div key={f.id} className="flex items-center gap-1">
                 <button
                   onClick={() => setActiveFamilyId(f.id)}
+                  aria-pressed={activeFamilyId === f.id}
                   className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all"
                   style={{
                     background: active ? GREEN : "var(--surface2)",
@@ -407,10 +413,10 @@ export default function FontStudio() {
                   <button
                     onClick={() => deleteFamily(f.id)}
                     className="text-xs px-1.5 py-1 rounded"
-                    title="Supprimer cette famille"
+                    aria-label={`Supprimer la famille ${f.name}`}
                     style={{ color: "#CE1126", background: "rgba(206,17,38,0.08)", border: "1px solid rgba(206,17,38,0.2)" }}
                   >
-                    ✕
+                    <span aria-hidden="true">✕</span>
                   </button>
                 )}
               </div>
@@ -422,6 +428,7 @@ export default function FontStudio() {
             <div className="flex items-center gap-1">
               <input
                 autoFocus
+                aria-label="Nom de la nouvelle famille"
                 value={newFamilyName}
                 onChange={(e) => setNewFamilyName(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") createFamily(); if (e.key === "Escape") setAddingFamily(false); }}
@@ -430,7 +437,7 @@ export default function FontStudio() {
                 style={{ border: "1px solid #009E49", background: "var(--surface2)", color: "var(--text)", width: 180 }}
               />
               <button onClick={createFamily} className="text-xs px-2 py-1.5 rounded-lg font-semibold" style={{ background: GREEN, color: "#fff" }}>OK</button>
-              <button onClick={() => setAddingFamily(false)} className="text-xs px-2 py-1.5 rounded-lg" style={{ background: "var(--surface2)", color: "var(--text-muted)", border: "1px solid var(--border)" }}>✕</button>
+              <button onClick={() => setAddingFamily(false)} className="text-xs px-2 py-1.5 rounded-lg" style={{ background: "var(--surface2)", color: "var(--text-muted)", border: "1px solid var(--border)" }} aria-label="Annuler"><span aria-hidden="true">✕</span></button>
             </div>
           ) : (
             <button
@@ -471,6 +478,7 @@ export default function FontStudio() {
                 <span className="font-mono text-sm font-bold" style={{ color: GREEN }}>{activeFamily?.strokeWidth}</span>
               </div>
               <input
+                aria-label="Épaisseur du trait de la famille"
                 type="range" min={5} max={180} step={1}
                 value={activeFamily?.strokeWidth ?? 60}
                 onChange={(e) => updateFamily({ strokeWidth: Number(e.target.value) })}
@@ -501,6 +509,7 @@ export default function FontStudio() {
                 <div className="flex flex-col items-center gap-1">
                   <span className="text-[9px]" style={{ color: "var(--text-muted)" }}>Fond</span>
                   <input
+                    aria-label="Couleur du fond"
                     type="color"
                     value={activeFamily?.bgColor ?? "#000000"}
                     onChange={(e) => updateFamily({ bgColor: e.target.value })}
@@ -511,6 +520,7 @@ export default function FontStudio() {
                 <div className="flex flex-col items-center gap-1">
                   <span className="text-[9px]" style={{ color: "var(--text-muted)" }}>Trait</span>
                   <input
+                    aria-label="Couleur du trait"
                     type="color"
                     value={activeFamily?.fgColor ?? "#ffffff"}
                     onChange={(e) => updateFamily({ fgColor: e.target.value })}
@@ -521,10 +531,10 @@ export default function FontStudio() {
                 <button
                   onClick={() => updateFamily({ bgColor: activeFamily.fgColor, fgColor: activeFamily.bgColor })}
                   className="text-xs px-2 py-1 rounded ml-1 transition-all"
-                  title="Inverser les couleurs"
+                  aria-label="Inverser les couleurs"
                   style={{ background: "var(--surface2)", color: "var(--text-muted)", border: "1px solid var(--border)" }}
                 >
-                  ⇄
+                  <span aria-hidden="true">⇄</span>
                 </button>
               </div>
             </div>
@@ -563,6 +573,7 @@ export default function FontStudio() {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
+                aria-pressed={filter === f}
                 className="text-xs px-3 py-1.5 rounded-lg font-semibold transition-all"
                 style={{
                   background: filter === f ? GREEN : "var(--surface2)",
@@ -584,6 +595,8 @@ export default function FontStudio() {
                 <button
                   key={sym.id}
                   onClick={() => setSelectedId(isSelected ? null : sym.id)}
+                  aria-pressed={isSelected}
+                  aria-label={`${sym.label} ${sym.sub ?? ""}${hasOverride ? ", réglage propre actif" : ""}`}
                   className="flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all"
                   style={{
                     border: isSelected ? `2px solid ${GREEN}` : "1px solid var(--border)",

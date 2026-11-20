@@ -119,6 +119,7 @@ export default function UsersPanel() {
           ))}
         </div>
         <input
+          aria-label="Rechercher par nom ou email"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Rechercher par nom ou email…"
@@ -176,6 +177,7 @@ export default function UsersPanel() {
 
                 {/* Role changer */}
                 <select
+                  aria-label={`Rôle de ${user.full_name ?? user.email ?? "ce compte"}`}
                   value={user.role}
                   onChange={(e) => updateRole(user.id, e.target.value as UserRole)}
                   disabled={updatingId === user.id}
@@ -207,6 +209,7 @@ export default function UsersPanel() {
         </p>
         <div className="flex gap-2">
           <input
+            aria-label="Lien d'invitation"
             readOnly
             value={typeof window !== "undefined" ? `${window.location.origin}/fr?invite=manjak2026` : ""}
             className="cms-input flex-1 text-sm font-mono"

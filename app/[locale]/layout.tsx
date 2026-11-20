@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
 import { AuthProvider } from "@/components/AuthProvider";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 
@@ -46,6 +46,7 @@ export default async function LocaleLayout({
   }
 
   const messages = await getMessages();
+  const a = await getTranslations({ locale, namespace: "a11y" });
 
   return (
     <html lang={locale} className={inter.variable} suppressHydrationWarning>
@@ -53,8 +54,9 @@ export default async function LocaleLayout({
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <AuthProvider>
+              <a href="#main" className="skip-link">{a("skip_to_content")}</a>
               <Navigation />
-              <main className="flex-1">{children}</main>
+              <main id="main" tabIndex={-1} className="flex-1 outline-none">{children}</main>
               <Footer />
             </AuthProvider>
           </NextIntlClientProvider>

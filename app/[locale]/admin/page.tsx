@@ -74,6 +74,8 @@ function MagicLinkForm() {
       </p>
       <input
         type="email"
+        aria-label="Adresse email pour le lien magique"
+        autoComplete="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="votre@email.com"
@@ -170,6 +172,7 @@ export default function AdminPage() {
           {/* Geo-block error banner */}
           {geoError && (
             <div
+              role="alert"
               className="rounded-xl px-4 py-3 text-sm mb-5 text-left"
               style={{ background: "rgba(206,17,38,0.08)", border: "1px solid rgba(206,17,38,0.25)", color: "#CE1126" }}
             >
@@ -233,6 +236,8 @@ export default function AdminPage() {
             >
               <input
                 type="password"
+                aria-label="Mot de passe admin"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Mot de passe admin"
@@ -240,7 +245,7 @@ export default function AdminPage() {
                 style={{ background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--text)" }}
                 autoFocus={!supabaseConfigured}
               />
-              {authError && <p className="text-sm" style={{ color: "#CE1126" }}>{authError}</p>}
+              <p role="alert" className="text-sm" style={{ color: "#CE1126" }}>{authError}</p>
               <button type="submit" className="btn btn-primary w-full justify-center">
                 Connexion
               </button>

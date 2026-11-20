@@ -6,6 +6,7 @@ import { KEYBOARD_DOWNLOADS, QMK_VIA_INFO, VIRTUAL_KEYBOARD_LAYOUT } from "@/dat
 
 export default function KeyboardTab() {
   const t = useTranslations("keyboard");
+  const a = useTranslations("a11y");
   const [pressedKey, setPressedKey] = useState<string | null>(null);
   const [output, setOutput] = useState("");
 
@@ -27,9 +28,13 @@ export default function KeyboardTab() {
       {/* Virtual keyboard */}
       <div className="card p-6 mb-12">
         <h3 className="font-bold text-base mb-4" style={{ color: "var(--text)" }}>
-          🖥️ {t("virtual_title")}
+          <span aria-hidden="true">🖥️</span> {t("virtual_title")}
         </h3>
         <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          aria-label={a("typed_text")}
           className="rounded-xl px-4 py-3 mb-4 min-h-16 flex items-center"
           style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}
         >
@@ -38,7 +43,7 @@ export default function KeyboardTab() {
           </span>
         </div>
 
-        <div className="space-y-2 mb-4">
+        <div className="space-y-2 mb-4" role="group" aria-label={t("virtual_title")}>
           {VIRTUAL_KEYBOARD_LAYOUT.rows.map((row, i) => (
             <div key={i} className="flex flex-wrap gap-1.5 justify-center">
               {row.map((key) => (
@@ -82,10 +87,11 @@ export default function KeyboardTab() {
             </button>
             <button
               onClick={() => setOutput((p) => p.slice(0, -1))}
+              aria-label={a("backspace")}
               className="px-4 h-10 rounded-lg text-sm font-bold transition-all"
               style={{ background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)" }}
             >
-              ⌫
+              <span aria-hidden="true">⌫</span>
             </button>
             <button
               onClick={() => setOutput("")}
@@ -110,9 +116,9 @@ export default function KeyboardTab() {
               style={{ borderColor: kb.available ? "rgba(0,158,73,0.30)" : "var(--border)" }}
             >
               <div className="flex items-start gap-3 mb-3">
-                <div className="text-2xl flex-shrink-0">{kb.osIcon}</div>
+                <div className="text-2xl flex-shrink-0" aria-hidden="true">{kb.osIcon}</div>
                 <div>
-                  <div className="font-bold text-sm" style={{ color: "var(--text)" }}>{kb.os}</div>
+                  <h3 className="font-bold text-sm" style={{ color: "var(--text)" }}>{kb.os}</h3>
                   <div className="text-xs" style={{ color: "var(--text-muted)" }}>{kb.version}</div>
                 </div>
               </div>
@@ -126,14 +132,14 @@ export default function KeyboardTab() {
                   href={kb.downloadFile}
                   className="btn btn-primary w-full justify-center text-sm"
                 >
-                  ⬇ {t("use_now")}
+                  <span aria-hidden="true">⬇</span> {t("use_now")}<span className="sr-only">: {kb.os}</span>
                 </a>
               ) : (
                 <div
                   className="text-xs text-center py-2.5 rounded-xl"
                   style={{ background: "rgba(0,158,73,0.08)", color: "#009E49", border: "1px solid rgba(0,158,73,0.20)" }}
                 >
-                  🔜 {t("coming_soon")}
+                  <span aria-hidden="true">🔜</span> {t("coming_soon")}
                 </div>
               )}
             </div>
@@ -148,16 +154,19 @@ export default function KeyboardTab() {
           {KEYBOARD_DOWNLOADS.map((kb) => (
             <details key={kb.os} className="card group" style={{ padding: 0 }}>
               <summary className="px-6 py-4 flex items-center gap-3 cursor-pointer list-none">
-                <span className="text-lg">{kb.osIcon}</span>
+                <span className="text-lg" aria-hidden="true">{kb.osIcon}</span>
                 <span className="font-bold flex-1 text-sm" style={{ color: "var(--text)" }}>{kb.os}</span>
+                {!kb.available && <span className="badge text-xs" style={{ background: "rgba(0,158,73,0.08)", color: "#009E49" }}>{t("coming_soon")}</span>}
                 <span className="text-xs" style={{ color: "var(--text-muted)" }}>{kb.version}</span>
-                <span className="text-sm" style={{ color: "#009E49" }}>▼</span>
+                <span className="text-sm" aria-hidden="true" style={{ color: "#009E49" }}>▼</span>
               </summary>
               <div className="px-6 pb-5">
+                {!kb.available && <p className="text-sm mb-3 font-semibold" style={{ color: "var(--text)" }}>{t("not_yet")}</p>}
                 <ol className="space-y-2">
                   {kb.instructions.map((step, i) => (
                     <li key={i} className="flex gap-3 text-sm" style={{ color: "var(--text-muted)" }}>
                       <span
+                        aria-hidden="true"
                         className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5"
                         style={{ background: "rgba(0,158,73,0.15)", color: "#009E49" }}
                       >
@@ -176,7 +185,7 @@ export default function KeyboardTab() {
       {/* QMK */}
       <div className="card p-7 mb-8">
         <div className="flex items-start gap-5 mb-5">
-          <div className="text-3xl">⌨️</div>
+          <div className="text-3xl" aria-hidden="true">⌨️</div>
           <div>
             <h3 className="heading-md mb-2" style={{ color: "var(--text)" }}>{t("qmk_title")}</h3>
             <p className="body-lg">{QMK_VIA_INFO.description}</p>
@@ -197,23 +206,21 @@ export default function KeyboardTab() {
         <ol className="space-y-2 mb-5">
           {QMK_VIA_INFO.instructions.map((step, i) => (
             <li key={i} className="flex gap-3 text-sm" style={{ color: "var(--text-muted)" }}>
-              <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style={{ background: "rgba(0,158,73,0.15)", color: "#009E49" }}>
+              <span aria-hidden="true" className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style={{ background: "rgba(0,158,73,0.15)", color: "#009E49" }}>
                 {i + 1}
               </span>
               {step}
             </li>
           ))}
         </ol>
-        <a href={QMK_VIA_INFO.downloadFile} className="btn btn-outline">
-          ⬇ Télécharger config QMK
-        </a>
+        <p className="text-sm font-semibold" style={{ color: "#009E49" }}>{t("coming_soon")}. {t("not_yet")}</p>
       </div>
 
       {/* 3D keycaps */}
       <div className="card p-8 text-center">
-        <div className="text-4xl mb-4">🖨️</div>
+        <div className="text-4xl mb-4" aria-hidden="true">🖨️</div>
         <h3 className="heading-md mb-3" style={{ color: "var(--text)" }}>{t("keycaps_title")}</h3>
-        <p className="body-lg max-w-2xl mx-auto mb-5">
+        <p className="body-lg max-w-2xl mx-auto mb-5" lang="fr">
           Des fichiers 3D pour imprimer vos propres keycaps Mandjaku.
           Compatible avec les claviers Keychron (K2, K3, K6, K8) et le GK61.
         </p>
@@ -225,7 +232,7 @@ export default function KeyboardTab() {
           ))}
         </div>
         <a href="mailto:info@luvlab.io" className="btn btn-outline">
-          📧 {t("request_files")}
+          <span aria-hidden="true">📧</span> {t("request_files")}
         </a>
       </div>
     </div>

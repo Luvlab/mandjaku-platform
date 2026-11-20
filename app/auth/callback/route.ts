@@ -6,7 +6,9 @@ import { checkCountryAccess } from "@/lib/admin-config";
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/fr/admin";
+  // Only allow a path on this site, never another host ("//evil" or "@evil").
+  const nextParam = searchParams.get("next") ?? "";
+  const next = /^\/(?![\/\\])/.test(nextParam) ? nextParam : "/fr/admin";
 
   if (code) {
     const cookieStore = await cookies();

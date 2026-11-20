@@ -9,6 +9,7 @@ import UserMenu from "./UserMenu";
 
 export default function Navigation() {
   const t = useTranslations("nav");
+  const a = useTranslations("a11y");
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -36,6 +37,7 @@ export default function Navigation() {
 
   return (
     <nav
+      aria-label={a("main_nav")}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-200"
       style={{
         background: scrolled ? "var(--surface)" : "transparent",
@@ -47,7 +49,7 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-14">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
+          <Link href="/" aria-label={`Mandjaku, ${t("home")}`} className="flex items-center gap-2.5 group flex-shrink-0">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-white text-sm"
               style={{ background: "linear-gradient(135deg, #009E49, #007A38)" }}>
               M
@@ -68,14 +70,15 @@ export default function Navigation() {
               className="lg:hidden ml-1 w-8 h-8 flex items-center justify-center rounded-md transition-colors"
               style={{ color: "var(--text-muted)" }}
               onClick={() => setOpen(!open)}
-              aria-label="Toggle menu"
+              aria-label={a(open ? "menu_close" : "menu_open")}
+              aria-expanded={open}
             >
               {open ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                 </svg>
               ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
                 </svg>
               )}

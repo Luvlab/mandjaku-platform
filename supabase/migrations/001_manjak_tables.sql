@@ -10,13 +10,11 @@ CREATE TABLE IF NOT EXISTS public.manjak_admins (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 ALTER TABLE public.manjak_admins ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "public_read_admins" ON public.manjak_admins FOR SELECT USING (true);
-CREATE POLICY "anon_write_admins" ON public.manjak_admins FOR ALL USING (true) WITH CHECK (true);
-
-INSERT INTO public.manjak_admins (email, name, role) VALUES
-  ('gordoncyrus@gmail.com', 'Gordon Cyrus', 'superadmin'),
-  ('eurelie.gomis@gmail.com', 'Eurelie Gomis', 'editor')
-ON CONFLICT (email) DO NOTHING;
+-- No policies on purpose: with row level security on and no policy, the public
+-- and signed-in keys can neither read nor write this table. It holds mail
+-- addresses, so it is only reachable with the service role key or from the
+-- SQL editor. Add administrators by hand in the SQL editor, never in this file:
+--   INSERT INTO public.manjak_admins (email, name, role) VALUES ('...', '...', 'superadmin');
 
 -- ── User progress ─────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.manjak_user_progress (
@@ -33,7 +31,9 @@ CREATE TABLE IF NOT EXISTS public.manjak_user_progress (
   UNIQUE(session_id, lesson_id)
 );
 ALTER TABLE public.manjak_user_progress ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "open_progress" ON public.manjak_user_progress FOR ALL USING (true) WITH CHECK (true);
+-- Visitors may save and read progress. Nobody may change or delete rows with the public key.
+CREATE POLICY "public_read_progress" ON public.manjak_user_progress FOR SELECT USING (true);
+CREATE POLICY "public_insert_progress" ON public.manjak_user_progress FOR INSERT WITH CHECK (true);
 
 -- ── Marketplace merch ─────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.manjak_merch (
@@ -51,7 +51,8 @@ CREATE TABLE IF NOT EXISTS public.manjak_merch (
 );
 ALTER TABLE public.manjak_merch ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "public_read_merch" ON public.manjak_merch FOR SELECT USING (active = true);
-CREATE POLICY "anon_write_merch" ON public.manjak_merch FOR ALL USING (true) WITH CHECK (true);
+-- Writing is for administrators only. The policy is added in 002_auth_roles.sql,
+-- once the role check exists. Until then only the service role key can write.
 
 INSERT INTO public.manjak_merch (title, description, price_eur, category, tags) VALUES
   ('T-shirt Mandjaku', 'T-shirt imprimé avec l''alphabet Manjak — 100% coton bio', 29.90, 'clothing', ARRAY['t-shirt','alphabet','guinée-bissau']),
@@ -87,7 +88,8 @@ CREATE TABLE IF NOT EXISTS public.manjak_classifieds (
 );
 ALTER TABLE public.manjak_classifieds ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "public_read_classifieds" ON public.manjak_classifieds FOR SELECT USING (active = true);
-CREATE POLICY "anon_write_classifieds" ON public.manjak_classifieds FOR ALL USING (true) WITH CHECK (true);
+-- Writing is for administrators only. The policy is added in 002_auth_roles.sql,
+-- once the role check exists. Until then only the service role key can write.
 
 INSERT INTO public.manjak_classifieds (title, description, category, price, location, country, contact_email, featured) VALUES
   ('Cours de Mandjaku en ligne', 'Cours de langue Mandjaku via Zoom, tous niveaux. Méthode communicative avec exercices et quiz.', 'cours', 30.00, 'Paris', 'FR', 'info@luvlab.io', true),
@@ -109,4 +111,5 @@ CREATE TABLE IF NOT EXISTS public.manjak_symbols (
 );
 ALTER TABLE public.manjak_symbols ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "public_read_symbols" ON public.manjak_symbols FOR SELECT USING (true);
-CREATE POLICY "anon_write_symbols" ON public.manjak_symbols FOR ALL USING (true) WITH CHECK (true);
+-- Writing is for administrators only. The policy is added in 002_auth_roles.sql,
+-- once the role check exists. Until then only the service role key can write.

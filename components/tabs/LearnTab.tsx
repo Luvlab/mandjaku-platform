@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { COURSES, type Unit, type Lesson, type Exercise } from "@/data/courses";
 
 function getProgress(): Record<string, { stars: number; xp: number }> {
@@ -45,6 +45,15 @@ export default function LearnTab() {
   const [resultStars, setResultStars] = useState(0);
   const [resultXP, setResultXP] = useState(0);
 
+  // Screen readers: move focus to the heading of each new exercise and of the
+  // result screen, so the new question is read without hunting for it.
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) { firstRender.current = false; return; }
+    headingRef.current?.focus();
+  }, [view, exerciseIdx]);
+
   useEffect(() => { setProgress(getProgress()); setTotalXP(getTotalXP()); setStreak(getStreak()); }, []);
 
   const startLesson = useCallback((unit: Unit, lesson: Lesson) => {
@@ -82,26 +91,28 @@ export default function LearnTab() {
     const level = Math.floor(totalXP / 100) + 1;
     const levelXP = totalXP % 100;
     return (
-      <div className="max-w-2xl mx-auto pb-24">
+      <div className="max-w-2xl mx-auto pb-24" lang="fr">
+        <h2 ref={headingRef} tabIndex={-1} className="sr-only">Carte des leçons</h2>
         {/* XP bar */}
         <div className="card p-4 mb-6 sticky top-[104px] z-30">
           <div className="flex items-center gap-4">
             <div className="w-11 h-11 rounded-full flex items-center justify-center font-black text-white"
               style={{ background: "linear-gradient(135deg,#009E49,#007A38)", flexShrink: 0 }}>
-              {level}
+              <span className="sr-only">Niveau </span>{level}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex justify-between text-xs mb-1" style={{ color: "var(--text-muted)" }}>
                 <span>{totalXP} XP</span><span>Niv. {level + 1} dans {100 - levelXP} XP</span>
               </div>
-              <div className="h-2.5 rounded-full overflow-hidden" style={{ background: "var(--surface2)" }}>
+              <div className="h-2.5 rounded-full overflow-hidden" style={{ background: "var(--surface2)" }}
+                role="progressbar" aria-label="Progression vers le niveau suivant" aria-valuemin={0} aria-valuemax={100} aria-valuenow={levelXP}>
                 <div className="h-full rounded-full transition-all duration-500"
                   style={{ width: `${levelXP}%`, background: "linear-gradient(90deg,#009E49,#00C45A)" }} />
               </div>
             </div>
             <div className="text-center flex-shrink-0">
-              <div className="text-xl">🔥</div>
-              <div className="text-xs font-bold" style={{ color: "#FCD116" }}>{streak} j</div>
+              <div className="text-xl" aria-hidden="true">🔥</div>
+              <div className="text-xs font-bold" style={{ color: "#FCD116" }}><span className="sr-only">Série : </span>{streak} j<span className="sr-only">ours</span></div>
             </div>
           </div>
         </div>
@@ -116,12 +127,12 @@ export default function LearnTab() {
                 opacity: !prevDone ? 0.45 : 1,
               }}>
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl">{unit.icon}</span>
+                  <span className="text-3xl" aria-hidden="true">{unit.icon}</span>
                   <div className="flex-1">
                     <div className="text-xs font-bold uppercase tracking-wider" style={{ color: prevDone ? unit.color : "var(--text-muted)" }}>Unité {ui + 1}</div>
-                    <div className="font-bold" style={{ color: "var(--text)" }}>{unit.titleFr}</div>
+                    <h3 className="font-bold" style={{ color: "var(--text)" }}>{unit.titleFr}</h3>
                   </div>
-                  {unitDone ? <span className="text-xl">🏆</span> : !prevDone ? <span className="text-xl">🔒</span> : null}
+                  {unitDone ? <span className="text-xl" role="img" aria-label="Unité terminée">🏆</span> : !prevDone ? <span className="text-xl" role="img" aria-label="Unité verrouillée">🔒</span> : null}
                 </div>
               </div>
 
@@ -133,6 +144,7 @@ export default function LearnTab() {
                   return (
                     <div key={lesson.id} className={`w-full max-w-xs ${li % 2 === 1 ? "ml-10 sm:ml-16" : ""}`}>
                       <button disabled={!unlocked} onClick={() => unlocked && startLesson(unit, lesson)}
+                        aria-label={`${lesson.titleFr}. ${lesson.exercises.length} exercices, ${lesson.xp} XP. ${!unlocked ? "Verrouillée" : done ? `Terminée, ${p?.stars ?? 0} étoiles sur 3` : "Pas encore faite"}`}
                         className="w-full rounded-2xl p-4 flex items-center gap-3 transition-all"
                         style={{
                           background: done ? `${unit.color}15` : unlocked ? "var(--surface)" : "var(--surface2)",
@@ -147,7 +159,7 @@ export default function LearnTab() {
                         <div className="flex-1 text-left min-w-0">
                           <div className="font-semibold text-sm truncate" style={{ color: "var(--text)" }}>{lesson.titleFr}</div>
                           <div className="text-xs" style={{ color: "var(--text-muted)" }}>{lesson.exercises.length} exos · {lesson.xp} XP</div>
-                          <div className="flex gap-0.5 mt-1">{[1,2,3].map((s) => <span key={s} style={{ opacity: (p?.stars ?? 0) >= s ? 1 : 0.2 }}>⭐</span>)}</div>
+                          <div className="flex gap-0.5 mt-1" aria-hidden="true">{[1,2,3].map((s) => <span key={s} style={{ opacity: (p?.stars ?? 0) >= s ? 1 : 0.2 }}>⭐</span>)}</div>
                         </div>
                         {done && <span className="text-xs font-bold px-2 py-1 rounded-full flex-shrink-0" style={{ background: `${unit.color}25`, color: unit.color }}>+{p.xp}XP</span>}
                       </button>
@@ -160,7 +172,7 @@ export default function LearnTab() {
         })}
 
         <div className="card p-5 text-center mt-2" style={{ opacity: 0.55 }}>
-          <div className="text-3xl mb-2">🚧</div>
+          <div className="text-3xl mb-2" aria-hidden="true">🚧</div>
           <p className="text-sm font-semibold" style={{ color: "var(--text)" }}>Plus de leçons à venir</p>
           <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>Corps humain · Nature · Traditions · Grammaire…</p>
         </div>
@@ -176,28 +188,31 @@ export default function LearnTab() {
     const canCheck = ex.type === "type_answer" ? typed.trim().length > 0 : selected !== null;
 
     return (
-      <div className="max-w-xl mx-auto pb-32">
+      <div className="max-w-xl mx-auto pb-32" lang="fr">
         <div className="flex items-center gap-3 mb-8 sticky top-[104px] z-30 py-3" style={{ background: "var(--bg)" }}>
-          <button onClick={() => setView("map")} className="text-xl leading-none" style={{ color: "var(--text-muted)" }}>✕</button>
-          <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: "var(--surface2)" }}>
+          <button onClick={() => setView("map")} aria-label="Quitter la leçon" className="text-xl leading-none" style={{ color: "var(--text-muted)" }}><span aria-hidden="true">✕</span></button>
+          <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: "var(--surface2)" }}
+            role="progressbar" aria-label={`Exercice ${exerciseIdx + 1} sur ${exs.length}`} aria-valuemin={0} aria-valuemax={exs.length} aria-valuenow={exerciseIdx}>
             <div className="h-full rounded-full transition-all duration-300"
               style={{ width: `${pct}%`, background: `linear-gradient(90deg,${activeLesson.unit.color},#00C45A)` }} />
           </div>
-          <div className="flex gap-0.5 flex-shrink-0">
-            {[...Array(5)].map((_, i) => <span key={i} style={{ opacity: i < hearts ? 1 : 0.2, fontSize: "14px" }}>❤️</span>)}
+          <div className="flex gap-0.5 flex-shrink-0" role="img" aria-label={`${hearts} vies sur 5`}>
+            {[...Array(5)].map((_, i) => <span key={i} aria-hidden="true" style={{ opacity: i < hearts ? 1 : 0.2, fontSize: "14px" }}>❤️</span>)}
           </div>
         </div>
 
         <div className="text-center mb-8">
-          {ex.emoji && <div className="text-6xl mb-4 animate-fade-up">{ex.emoji}</div>}
+          {ex.emoji && <div className="text-6xl mb-4 animate-fade-up" aria-hidden="true">{ex.emoji}</div>}
           <div className="badge badge-green mb-3 mx-auto">
             {ex.type === "translate" ? "Traduction" : ex.type === "type_answer" ? "Complétez" : "Choisissez la bonne réponse"}
           </div>
-          <h2 className="heading-md px-4" style={{ color: "var(--text)" }}>{ex.prompt}</h2>
+          <h2 ref={headingRef} tabIndex={-1} id="learn-prompt" className="heading-md px-4 outline-none" style={{ color: "var(--text)" }}>
+            <span className="sr-only">Exercice {exerciseIdx + 1} sur {exs.length}. </span>{ex.prompt}
+          </h2>
         </div>
 
         {(ex.type === "multiple_choice" || ex.type === "translate") && ex.options && (
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 gap-3" role="group" aria-labelledby="learn-prompt">
             {ex.options.map((opt) => {
               let bg = "var(--surface)", border = "1px solid var(--border)", color = "var(--text)";
               if (confirmed) {
@@ -205,12 +220,12 @@ export default function LearnTab() {
                 else if (opt === selected) { bg = "rgba(206,17,38,0.12)"; border = "2px solid #CE1126"; color = "#CE1126"; }
               } else if (selected === opt) { bg = "rgba(0,158,73,0.10)"; border = "2px solid #009E49"; color = "#009E49"; }
               return (
-                <button key={opt} disabled={confirmed} onClick={() => setSelected(opt)}
+                <button key={opt} disabled={confirmed} onClick={() => setSelected(opt)} aria-pressed={selected === opt}
                   className="w-full p-4 rounded-2xl text-left font-semibold transition-all flex items-center justify-between"
                   style={{ background: bg, border, color }}>
                   <span>{opt}</span>
-                  {confirmed && opt === ex.answer && <span>✓</span>}
-                  {confirmed && opt === selected && opt !== ex.answer && <span>✗</span>}
+                  {confirmed && opt === ex.answer && <span role="img" aria-label="bonne réponse">✓</span>}
+                  {confirmed && opt === selected && opt !== ex.answer && <span role="img" aria-label="votre réponse, incorrecte">✗</span>}
                 </button>
               );
             })}
@@ -219,7 +234,7 @@ export default function LearnTab() {
 
         {ex.type === "type_answer" && (
           <div>
-            <input value={typed} onChange={(e) => setTyped(e.target.value)} disabled={confirmed}
+            <input aria-labelledby="learn-prompt" autoComplete="off" autoCapitalize="off" spellCheck={false} value={typed} onChange={(e) => setTyped(e.target.value)} disabled={confirmed}
               className="w-full p-4 rounded-2xl text-lg font-semibold text-center border-2 outline-none transition-all"
               style={{
                 background: confirmed ? (correct ? "rgba(0,158,73,0.12)" : "rgba(206,17,38,0.10)") : "var(--surface2)",
@@ -230,16 +245,19 @@ export default function LearnTab() {
           </div>
         )}
 
+        {/* Always in the page so screen readers announce the result when it appears */}
+        <div role="status" aria-live="polite" aria-atomic="true">
         {confirmed && (
           <div className="rounded-2xl p-4 mt-5 flex items-center gap-3 animate-fade-up"
             style={{ background: correct ? "rgba(0,158,73,0.12)" : "rgba(206,17,38,0.10)", border: `1.5px solid ${correct ? "#009E49" : "#CE1126"}` }}>
-            <span className="text-2xl">{correct ? "🎉" : "💡"}</span>
+            <span className="text-2xl" aria-hidden="true">{correct ? "🎉" : "💡"}</span>
             <div>
               <div className="font-bold text-sm" style={{ color: correct ? "#009E49" : "#CE1126" }}>{correct ? "Excellent !" : "Pas tout à fait…"}</div>
               {!correct && <div className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>Réponse : <strong>{ex.answer}</strong></div>}
             </div>
           </div>
         )}
+        </div>
 
         <div className="fixed bottom-20 left-0 right-0 px-4 z-40 lg:relative lg:bottom-auto lg:px-0 lg:mt-8">
           {!confirmed
@@ -258,17 +276,17 @@ export default function LearnTab() {
     const nextLessonIdx = activeLesson.unit.lessons.indexOf(activeLesson.lesson) + 1;
     const nextLesson = activeLesson.unit.lessons[nextLessonIdx];
     return (
-      <div className="max-w-xl mx-auto text-center pt-8 pb-24 animate-fade-up">
-        <div className="text-7xl mb-6">{resultStars === 3 ? "🏆" : resultStars === 2 ? "⭐" : "👍"}</div>
-        <div className="heading-lg mb-2" style={{ color: "#009E49" }}>{resultStars === 3 ? "Parfait !" : resultStars === 2 ? "Bien joué !" : "Continue !"}</div>
+      <div className="max-w-xl mx-auto text-center pt-8 pb-24 animate-fade-up" lang="fr">
+        <div className="text-7xl mb-6" aria-hidden="true">{resultStars === 3 ? "🏆" : resultStars === 2 ? "⭐" : "👍"}</div>
+        <h2 ref={headingRef} tabIndex={-1} className="heading-lg mb-2 outline-none" style={{ color: "#009E49" }}>{resultStars === 3 ? "Parfait !" : resultStars === 2 ? "Bien joué !" : "Continue !"}</h2>
         <div className="body-lg mb-8">{activeLesson.lesson.titleFr}</div>
-        <div className="flex justify-center gap-3 mb-8">
-          {[1,2,3].map((s) => <span key={s} className="text-5xl" style={{ opacity: resultStars >= s ? 1 : 0.2 }}>⭐</span>)}
+        <div className="flex justify-center gap-3 mb-8" role="img" aria-label={`${resultStars} étoiles sur 3`}>
+          {[1,2,3].map((s) => <span key={s} aria-hidden="true" className="text-5xl" style={{ opacity: resultStars >= s ? 1 : 0.2 }}>⭐</span>)}
         </div>
         <div className="grid grid-cols-3 gap-3 mb-8">
           {[{ label: "XP gagnés", value: `+${resultXP}`, e: "⚡" }, { label: "Total XP", value: totalXP, e: "🎯" }, { label: "Série", value: `${streak}🔥`, e: "🔥" }].map((s) => (
             <div key={s.label} className="card p-4">
-              <div className="text-2xl mb-1">{s.e}</div>
+              <div className="text-2xl mb-1" aria-hidden="true">{s.e}</div>
               <div className="text-xl font-black" style={{ color: "#009E49" }}>{s.value}</div>
               <div className="text-xs" style={{ color: "var(--text-muted)" }}>{s.label}</div>
             </div>

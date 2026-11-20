@@ -17,8 +17,58 @@ CREATE TABLE IF NOT EXISTS public.manjak_profiles (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 ALTER TABLE public.manjak_profiles ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "public_read_profiles" ON public.manjak_profiles FOR SELECT USING (true);
-CREATE POLICY "self_write_profile" ON public.manjak_profiles FOR ALL USING (auth.uid() = id) WITH CHECK (auth.uid() = id);
+-- A profile holds a mail address, so it is not public: a user reads their own
+-- row and administrators read all rows.
+CREATE POLICY "self_read_profile" ON public.manjak_profiles FOR SELECT USING (auth.uid() = id);
+
+-- Is the caller a superadmin or editor? SECURITY DEFINER so the check itself
+-- is not blocked by row level security.
+CREATE OR REPLACE FUNCTION public.manjak_is_admin()
+RETURNS BOOLEAN
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.manjak_profiles
+    WHERE id = auth.uid() AND role IN ('superadmin', 'editor')
+  );
+$$;
+
+-- A user may edit their own profile. Administrators may edit any profile.
+-- Nobody inserts or deletes profiles with the public key: the signup trigger
+-- below creates the row, and deleting the auth user removes it.
+CREATE POLICY "self_update_profile" ON public.manjak_profiles FOR UPDATE
+  USING (auth.uid() = id) WITH CHECK (auth.uid() = id);
+CREATE POLICY "admin_read_profiles" ON public.manjak_profiles FOR SELECT USING (public.manjak_is_admin());
+CREATE POLICY "admin_update_profiles" ON public.manjak_profiles FOR UPDATE
+  USING (public.manjak_is_admin()) WITH CHECK (public.manjak_is_admin());
+
+-- The role lives in the same row as the profile, so guard it separately:
+-- only an administrator (or the service role / SQL editor) may change a role.
+-- Without this a user could set their own role to superadmin.
+CREATE OR REPLACE FUNCTION public.manjak_protect_role()
+RETURNS TRIGGER
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  IF NEW.role IS DISTINCT FROM OLD.role
+     AND auth.uid() IS NOT NULL
+     AND NOT public.manjak_is_admin() THEN
+    RAISE EXCEPTION 'Only an administrator can change a role';
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS manjak_protect_role ON public.manjak_profiles;
+CREATE TRIGGER manjak_protect_role
+  BEFORE UPDATE ON public.manjak_profiles
+  FOR EACH ROW EXECUTE FUNCTION public.manjak_protect_role();
+
+-- Admin-managed tables from 001: writing for administrators only.
+CREATE POLICY "admin_write_merch" ON public.manjak_merch FOR ALL
+  USING (public.manjak_is_admin()) WITH CHECK (public.manjak_is_admin());
+CREATE POLICY "admin_write_classifieds" ON public.manjak_classifieds FOR ALL
+  USING (public.manjak_is_admin()) WITH CHECK (public.manjak_is_admin());
+CREATE POLICY "admin_write_symbols" ON public.manjak_symbols FOR ALL
+  USING (public.manjak_is_admin()) WITH CHECK (public.manjak_is_admin());
 
 -- Trigger: auto-create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
@@ -41,7 +91,7 @@ BEGIN
   ON CONFLICT (id) DO NOTHING;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
@@ -62,7 +112,7 @@ CREATE TABLE IF NOT EXISTS public.manjak_ambassadors (
 );
 ALTER TABLE public.manjak_ambassadors ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "public_read_ambassadors" ON public.manjak_ambassadors FOR SELECT USING (approved = true);
-CREATE POLICY "admin_all_ambassadors" ON public.manjak_ambassadors FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "admin_all_ambassadors" ON public.manjak_ambassadors FOR ALL USING (public.manjak_is_admin()) WITH CHECK (public.manjak_is_admin());
 
 -- ── Partner profiles ──────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.manjak_partners (
@@ -78,7 +128,7 @@ CREATE TABLE IF NOT EXISTS public.manjak_partners (
 );
 ALTER TABLE public.manjak_partners ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "public_read_partners" ON public.manjak_partners FOR SELECT USING (approved = true);
-CREATE POLICY "admin_all_partners" ON public.manjak_partners FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "admin_all_partners" ON public.manjak_partners FOR ALL USING (public.manjak_is_admin()) WITH CHECK (public.manjak_is_admin());
 
 -- ── Social media posts ────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.manjak_social_posts (
@@ -96,8 +146,17 @@ CREATE TABLE IF NOT EXISTS public.manjak_social_posts (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 ALTER TABLE public.manjak_social_posts ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "authed_read_posts" ON public.manjak_social_posts FOR SELECT USING (auth.uid() IS NOT NULL);
-CREATE POLICY "authed_write_posts" ON public.manjak_social_posts FOR ALL USING (auth.uid() IS NOT NULL) WITH CHECK (auth.uid() IS NOT NULL);
+-- Only roles that may post content (administrators, ambassadors, partners).
+CREATE OR REPLACE FUNCTION public.manjak_can_post()
+RETURNS BOOLEAN
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.manjak_profiles
+    WHERE id = auth.uid() AND role IN ('superadmin', 'editor', 'ambassador', 'partner')
+  );
+$$;
+CREATE POLICY "poster_read_posts" ON public.manjak_social_posts FOR SELECT USING (public.manjak_can_post());
+CREATE POLICY "poster_write_posts" ON public.manjak_social_posts FOR ALL USING (public.manjak_can_post()) WITH CHECK (public.manjak_can_post());
 
 -- ── Content templates ─────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.manjak_post_templates (
@@ -112,7 +171,7 @@ CREATE TABLE IF NOT EXISTS public.manjak_post_templates (
 );
 ALTER TABLE public.manjak_post_templates ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "public_read_templates" ON public.manjak_post_templates FOR SELECT USING (true);
-CREATE POLICY "authed_write_templates" ON public.manjak_post_templates FOR ALL USING (auth.uid() IS NOT NULL) WITH CHECK (auth.uid() IS NOT NULL);
+CREATE POLICY "admin_write_templates" ON public.manjak_post_templates FOR ALL USING (public.manjak_is_admin()) WITH CHECK (public.manjak_is_admin());
 
 -- Seed templates
 INSERT INTO public.manjak_post_templates (name, post_type, content, hashtags, platforms) VALUES

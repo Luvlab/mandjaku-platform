@@ -7,7 +7,9 @@
     "culture": "Culture",
     "dictionary": "Dictionnaire",
     "keyboard": "Clavier",
-    "media": "Médias"
+    "media": "Médias",
+    "market": "Boutique",
+    "studio": "Studio de police"
   },
   "home": {
     "tag": "Langue atlantique d'Afrique de l'Ouest",
@@ -109,20 +111,21 @@
   "keyboard": {
     "tag": "Clavier Mandjaku",
     "title": "Télécharger le Clavier",
-    "subtitle": "Le clavier Mandjaku est disponible pour toutes les plateformes — Windows, macOS, Linux, Android, iOS, HarmonyOS et web.",
+    "subtitle": "Essayez le clavier virtuel Mandjaku sur cette page. Les claviers à installer pour Windows, macOS, Linux, Android et iOS sont en préparation.",
     "virtual_title": "Clavier Virtuel Mandjaku — Essai en ligne",
     "virtual_placeholder": "Cliquez sur les touches pour écrire en Mandjaku...",
     "space": "Espace",
     "clear": "Effacer",
     "downloads_title": "Téléchargements par Plateforme",
-    "downloads_sub": "Compatible avec toutes les plateformes majeures, incluant HarmonyOS",
+    "downloads_sub": "Seul le clavier web est disponible aujourd'hui. Les autres sont en préparation.",
     "coming_soon": "Bientôt disponible",
     "use_now": "Utiliser maintenant",
     "install_title": "Guides d'Installation",
     "qmk_title": "Claviers Mécaniques (QMK/VIA)",
     "supported_boards": "Claviers supportés",
     "keycaps_title": "Keycaps 3D — Impression à domicile",
-    "request_files": "Demander les fichiers 3D"
+    "request_files": "Demander les fichiers 3D",
+    "not_yet": "Ce fichier n'est pas encore publié. Les étapes ci-dessous s'appliqueront quand il le sera."
   },
   "footer": {
     "description": "Plateforme dédiée à la préservation et à la promotion de la langue et culture du peuple Manjak.",
@@ -138,5 +141,28 @@
     "back": "Retour",
     "loading": "Chargement...",
     "language_switcher": "Langue"
+  },
+  "a11y": {
+    "skip_to_content": "Aller au contenu",
+    "main_nav": "Navigation principale",
+    "sections": "Rubriques",
+    "more": "Plus",
+    "more_sections": "Autres rubriques",
+    "menu_open": "Ouvrir le menu",
+    "menu_close": "Fermer le menu",
+    "close": "Fermer",
+    "clear_search": "Effacer la recherche",
+    "translation_language": "Langue de traduction",
+    "categories": "Catégories",
+    "no_results": "Aucun résultat pour",
+    "typed_text": "Texte saisi",
+    "backspace": "Effacer le dernier caractère",
+    "enlarge": "Agrandir",
+    "no_glyph": "Pas encore de symbole dessiné",
+    "symbol_for": "Symbole manjak pour",
+    "letter_details": "Détails de la lettre",
+    "theme_light": "Thème clair. Changer de thème",
+    "theme_dark": "Thème sombre. Changer de thème",
+    "theme_system": "Thème du système. Changer de thème"
   }
 }

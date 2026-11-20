@@ -7,7 +7,9 @@
     "culture": "Culture",
     "dictionary": "Dictionary",
     "keyboard": "Keyboard",
-    "media": "Media"
+    "media": "Media",
+    "market": "Shop",
+    "studio": "Font Studio"
   },
   "home": {
     "tag": "Atlantic Language of West Africa",
@@ -109,20 +111,21 @@
   "keyboard": {
     "tag": "Mandjaku Keyboard",
     "title": "Download the Keyboard",
-    "subtitle": "The Mandjaku keyboard is available for all platforms — Windows, macOS, Linux, Android, iOS, HarmonyOS and web.",
+    "subtitle": "Try the Mandjaku virtual keyboard on this page. Installable keyboards for Windows, macOS, Linux, Android and iOS are in preparation.",
     "virtual_title": "Mandjaku Virtual Keyboard — Try Online",
     "virtual_placeholder": "Click the keys to type in Mandjaku...",
     "space": "Space",
     "clear": "Clear",
     "downloads_title": "Downloads by Platform",
-    "downloads_sub": "Compatible with all major platforms, including HarmonyOS",
+    "downloads_sub": "Only the web keyboard is available today. The others are in preparation.",
     "coming_soon": "Coming soon",
     "use_now": "Use now",
     "install_title": "Installation Guides",
     "qmk_title": "Mechanical Keyboards (QMK/VIA)",
     "supported_boards": "Supported keyboards",
     "keycaps_title": "3D Keycaps — Print at home",
-    "request_files": "Request 3D files"
+    "request_files": "Request 3D files",
+    "not_yet": "This file is not published yet. The steps below will apply once it is."
   },
   "footer": {
     "description": "Platform dedicated to preserving and promoting the language and culture of the Manjak people.",
@@ -138,5 +141,28 @@
     "back": "Back",
     "loading": "Loading...",
     "language_switcher": "Language"
+  },
+  "a11y": {
+    "skip_to_content": "Skip to content",
+    "main_nav": "Main navigation",
+    "sections": "Sections",
+    "more": "More",
+    "more_sections": "More sections",
+    "menu_open": "Open menu",
+    "menu_close": "Close menu",
+    "close": "Close",
+    "clear_search": "Clear search",
+    "translation_language": "Translation language",
+    "categories": "Categories",
+    "no_results": "No results for",
+    "typed_text": "Typed text",
+    "backspace": "Delete last character",
+    "enlarge": "Enlarge",
+    "no_glyph": "No drawn symbol yet",
+    "symbol_for": "Manjak symbol for",
+    "letter_details": "Letter details",
+    "theme_light": "Light theme. Change theme",
+    "theme_dark": "Dark theme. Change theme",
+    "theme_system": "System theme. Change theme"
   }
 }

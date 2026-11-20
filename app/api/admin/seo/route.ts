@@ -1,16 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { SEO_DEFAULTS } from "@/data/seo";
+import { getAdminClient } from "@/lib/supabase-admin";
+import { timingSafeEqual } from "node:crypto";
+
+/** Constant-time comparison. An unset ADMIN_PASSWORD never matches. */
+function passwordMatches(given: string | null) {
+  const expected = process.env.ADMIN_PASSWORD;
+  if (!expected || given === null) return false;
+  const a = Buffer.from(given);
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
 
 function checkAuth(req: NextRequest) {
-  const auth = req.headers.get("x-admin-password");
-  return auth === process.env.ADMIN_PASSWORD;
+  return passwordMatches(req.headers.get("x-admin-password"));
 }
 
 export async function GET(req: NextRequest) {
   // When called with auth header (login check), validate the password
   const auth = req.headers.get("x-admin-password");
-  if (auth !== null && auth !== process.env.ADMIN_PASSWORD) {
+  if (auth !== null && !passwordMatches(auth)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -43,7 +53,16 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  const { data, error } = await supabase
+  // The public key can only read this table. Writing needs the service role key.
+  const admin = getAdminClient();
+  if (!admin) {
+    return NextResponse.json(
+      { error: "SUPABASE_SERVICE_ROLE_KEY manquante sur le serveur. Les textes SEO ne peuvent pas être enregistrés." },
+      { status: 503 },
+    );
+  }
+
+  const { data, error } = await admin
     .from("manjak_seo_config")
     .upsert({
       id,

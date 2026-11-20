@@ -302,3 +302,35 @@ body {
   transition: background 0.15s ease;
 }
 .alpha-chip:hover { background: rgba(0,158,73,0.18); }
+
+/* ── Accessibility ─────────────────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -100px;
+  z-index: 1000;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #009E49;
+  color: #fff;
+  font-weight: 700;
+}
+.skip-link:focus {
+  top: 8px;
+}
+/* A clear focus ring for keyboard users on every control */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid #FCD116;
+  outline-offset: 2px;
+}
+[id^="panel-"]:focus-visible, #main:focus-visible, h2[tabindex="-1"]:focus-visible {
+  outline: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

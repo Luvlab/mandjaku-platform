@@ -254,6 +254,7 @@ export default function MarketingPanel({ role }: { role: UserRole }) {
               {/* Textarea */}
               <div className="relative">
                 <textarea
+                  aria-label="Texte de la publication"
                   value={currentContent}
                   onChange={(e) => setContent(e.target.value)}
                   className="cms-input w-full"
@@ -311,6 +312,7 @@ export default function MarketingPanel({ role }: { role: UserRole }) {
               </div>
               <div className="flex gap-2">
                 <input
+                  aria-label="Ajouter un hashtag"
                   value={customHashtag}
                   onChange={(e) => setCustomHashtag(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addHashtag())}

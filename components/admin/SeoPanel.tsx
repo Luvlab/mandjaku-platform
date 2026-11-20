@@ -219,9 +219,9 @@ export default function SeoPanel({ password }: { password: string }) {
 
 function Field({ label, hint, count, children }: { label: string; hint?: string; count?: number; children: React.ReactNode }) {
   return (
-    <div>
+    <label className="block">
       <div className="flex items-center justify-between mb-1.5">
-        <label className="text-sm font-semibold" style={{ color: "var(--text)" }}>{label}</label>
+        <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>{label}</span>
         <div className="flex items-center gap-3">
           {count !== undefined && (
             <span className="text-xs tabular-nums" style={{ color: count > 100 ? "#CE1126" : "var(--text-muted)" }}>{count} car.</span>
@@ -230,7 +230,7 @@ function Field({ label, hint, count, children }: { label: string; hint?: string;
         </div>
       </div>
       {children}
-    </div>
+    </label>
   );
 }
 

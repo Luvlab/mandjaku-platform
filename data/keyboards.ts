@@ -70,7 +70,7 @@ export const KEYBOARD_DOWNLOADS: KeyboardDownload[] = [
     os: "Android",
     osIcon: "🤖",
     version: "Android 8.0+",
-    description: "Clavier Mandjaku pour Android. Application IME (Input Method Editor) complète avec saisie prédictive.",
+    description: "Clavier Mandjaku pour Android. Application de clavier (IME) prévue. Elle n'existe pas encore.",
     instructions: [
       "Téléchargez le fichier APK",
       "Activez 'Sources inconnues' dans les paramètres",
@@ -106,7 +106,7 @@ export const KEYBOARD_DOWNLOADS: KeyboardDownload[] = [
     os: "HarmonyOS",
     osIcon: "🌸",
     version: "HarmonyOS 3.0+ (Huawei)",
-    description: "Clavier Mandjaku pour appareils Huawei sous HarmonyOS. Disponible via AppGallery.",
+    description: "Clavier Mandjaku pour appareils Huawei sous HarmonyOS. Prévu pour AppGallery.",
     instructions: [
       "Ouvrez AppGallery sur votre appareil Huawei",
       "Recherchez 'Clavier Mandjaku'",
@@ -121,18 +121,17 @@ export const KEYBOARD_DOWNLOADS: KeyboardDownload[] = [
     comingSoon: true,
   },
   {
-    os: "Web (PWA)",
+    os: "Web",
     osIcon: "🌐",
     version: "Tous navigateurs modernes",
-    description: "Utilisez le clavier Mandjaku directement dans votre navigateur. Fonctionne hors-ligne après installation.",
+    description: "Utilisez le clavier virtuel Mandjaku directement dans votre navigateur, sur la page Clavier. Il écrit les lettres latines du Mandjaku.",
     instructions: [
-      "Utilisez le clavier virtuel sur cette page",
-      "Sur mobile, appuyez sur 'Ajouter à l'écran d'accueil'",
-      "Sur desktop, cliquez sur l'icône d'installation dans la barre d'adresse",
-      "L'app fonctionne hors-ligne après la première visite",
+      "Utilisez le clavier virtuel en haut de cette page",
+      "Appuyez sur les touches pour écrire, puis copiez le texte",
+      "Une connexion internet est nécessaire",
     ],
-    downloadFile: "/learn",
-    format: "PWA",
+    downloadFile: "?tab=keyboard",
+    format: "Page web",
     size: "Inclus dans l'app",
     available: true,
   },
@@ -157,7 +156,7 @@ export const KEYBOARD_DOWNLOADS: KeyboardDownload[] = [
 
 export const QMK_VIA_INFO = {
   title: "Claviers Mécaniques (QMK/VIA)",
-  description: "Pour les amateurs de claviers mécaniques, des fichiers de configuration QMK/VIA sont disponibles pour personnaliser votre clavier Keychron ou tout autre clavier compatible.",
+  description: "Pour les amateurs de claviers mécaniques, des fichiers de configuration QMK/VIA sont prévus pour personnaliser votre clavier Keychron ou tout autre clavier compatible.",
   supportedBoards: ["Keychron K2", "Keychron K3", "Keychron K6", "Keychron K8", "GK61", "GK64", "GMMK Pro"],
   downloadFile: "/downloads/manjak-qmk-config.zip",
   instructions: [

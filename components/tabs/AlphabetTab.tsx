@@ -12,6 +12,7 @@ type Filter = "all" | "vowel" | "consonant" | "digraph";
 
 export default function AlphabetTab({ isActive = true }: { isActive?: boolean }) {
   const t = useTranslations("alphabet");
+  const a = useTranslations("a11y");
   const [filter, setFilter] = useState<Filter>("all");
   const [selected, setSelected] = useState<Letter | null>(null);
   const [variant, setVariant] = useState<GlyphVariant>("clean");
@@ -101,6 +102,8 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
               <button
                 key={n}
                 onClick={() => setSketchPhoto(sketchPhoto === n ? null : n)}
+                aria-expanded={sketchPhoto === n}
+                aria-label={`${a("enlarge")}: ${sketch.label}`}
                 className="relative group overflow-hidden"
                 style={{
                   borderRight: n < 3 ? "1px solid var(--border)" : "none",
@@ -112,7 +115,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
               >
                 <img
                   src={sketch.src}
-                  alt={sketch.label}
+                  alt=""
                   style={{
                     width: "100%",
                     height: "100%",
@@ -137,7 +140,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
 
           {/* Lightbox */}
           {sketchPhoto !== null && (
-            <div style={{ background: "#0a0a0a", padding: "16px" }}>
+            <div style={{ background: "#0a0a0a", padding: "16px" }} role="status" aria-live="polite" lang="fr">
               <img
                 src={ELDER_SKETCHES[sketchPhoto].src}
                 alt={ELDER_SKETCHES[sketchPhoto].label}
@@ -158,14 +161,15 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
       </div>
 
       {/* ── Style Toggle: Clean ↔ Sketch ─────────────────────────────────────── */}
-      <div className="flex items-center justify-center gap-2 mb-6">
-        <span className="text-xs font-semibold" style={{ color: "var(--text-muted)" }}>
+      <div className="flex items-center justify-center gap-2 mb-6" role="group" aria-labelledby="alpha-style-label" lang="fr">
+        <span id="alpha-style-label" className="text-xs font-semibold" style={{ color: "var(--text-muted)" }}>
           Style d&apos;affichage :
         </span>
         {(["clean", "sketch"] as GlyphVariant[]).map((v) => (
           <button
             key={v}
             onClick={() => setVariant(v)}
+            aria-pressed={variant === v}
             className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all"
             style={{
               background: variant === v ? "#009E49" : "var(--surface2)",
@@ -173,7 +177,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
               border: variant === v ? "none" : "1px solid var(--border)",
             }}
           >
-            {v === "clean" ? "✦ Vectorisé" : "✍ Croquis"}
+            <span aria-hidden="true">{v === "clean" ? "✦ " : "✍ "}</span>{v === "clean" ? "Vectorisé" : "Croquis"}
           </button>
         ))}
       </div>
@@ -190,6 +194,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
             <button
               key={btn.key}
               onClick={() => setFilter(btn.key)}
+              aria-pressed={active}
               className="btn"
               style={{
                 background: active ? "#009E49" : "var(--surface2)",
@@ -224,6 +229,8 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
             <button
               key={letter.id}
               onClick={() => setSelected(isSelected ? null : letter)}
+              aria-pressed={isSelected}
+              aria-label={`${letter.latin}, ${catLabel(letter.category)}, ${letter.pronunciation}${hasGlyph ? "" : `. ${a("no_glyph")}`}`}
               className="card letter-glow rounded-xl p-2 text-center transition-all hover:scale-105 flex flex-col items-center"
               style={{
                 border: isSelected ? "2px solid #009E49" : "1px solid var(--border)",
@@ -236,6 +243,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
                 {hasGlyph ? (
                   <ManjakuGlyph
                     id={letter.id}
+                    title=""
                     size={52}
                     variant={variant}
                     color="#009E49"
@@ -278,6 +286,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
               <div className="w-14 h-14 flex items-center justify-center">
                 <ManjakuGlyph
                   id={`digit_${digit.value}`}
+                  title={`${a("symbol_for")} ${digit.value}`}
                   size={52}
                   color="#009E49"
                   variant={variant}
@@ -298,6 +307,8 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
       </div>
 
       {/* ── Selected letter detail ────────────────────────────────────────────── */}
+      {/* Always in the page so screen readers announce the letter when it is chosen */}
+      <div role="region" aria-live="polite" aria-label={a("letter_details")}>
       {selected && (
         <div className="card p-5 mb-12" style={{ border: "2px solid rgba(0,158,73,0.30)" }}>
           <div className="flex items-start gap-5">
@@ -313,7 +324,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
               }}
             >
               {selected.svg ? (
-                <ManjakuGlyph id={selected.id} size={88} color="#009E49" variant={variant} />
+                <ManjakuGlyph id={selected.id} title={`${a("symbol_for")} ${selected.latin}`} size={88} color="#009E49" variant={variant} />
               ) : (
                 <span className="text-5xl font-black text-gradient">
                   {selected.symbol.split("/")[0].trim()}
@@ -359,14 +370,16 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
 
             <button
               onClick={() => setSelected(null)}
+              aria-label={a("close")}
               className="text-2xl leading-none flex-shrink-0"
               style={{ color: "var(--text-muted)" }}
             >
-              ×
+              <span aria-hidden="true">×</span>
             </button>
           </div>
         </div>
       )}
+      </div>
 
       {/* ── Tones ────────────────────────────────────────────────────────────── */}
       <div className="mb-12">

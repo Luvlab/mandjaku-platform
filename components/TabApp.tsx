@@ -36,7 +36,7 @@ function HomeTab() {
       >
         <div className="absolute top-0 left-0 right-0 h-1 kente-stripe" />
         <div className="badge badge-green mb-5 mx-auto">
-          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#009E49" }} />
+          <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#009E49" }} />
           {t("tag")}
         </div>
         <h1 className="heading-xl mb-3">
@@ -44,6 +44,7 @@ function HomeTab() {
         </h1>
         <p className="text-lg font-medium mb-3" style={{ color: "var(--text)" }}>{t("subtitle")}</p>
         <blockquote
+          lang="en"
           className="text-sm italic mb-5 max-w-md mx-auto text-left"
           style={{ color: "var(--text-muted)", borderLeft: "3px solid #009E49", paddingLeft: "1rem" }}
         >
@@ -55,7 +56,7 @@ function HomeTab() {
           {t("countries")}
         </p>
         {/* Floating letters */}
-        <div className="flex justify-center gap-2 flex-wrap">
+        <div className="flex justify-center gap-2 flex-wrap" aria-hidden="true">
           {featuredLetters.map((letter, i) => (
             <div
               key={letter.id}
@@ -94,7 +95,7 @@ function HomeTab() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {CULTURAL_FACTS.slice(0, 4).map((fact) => (
             <div key={fact.title} className="card card-hover p-4">
-              <div className="text-2xl mb-2">{fact.icon}</div>
+              <div className="text-2xl mb-2" aria-hidden="true">{fact.icon}</div>
               <div className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: "#009E49" }}>{fact.category}</div>
               <div className="font-semibold text-sm mb-1" style={{ color: "var(--text)" }}>{fact.title}</div>
               <p className="text-xs leading-relaxed line-clamp-2" style={{ color: "var(--text-muted)" }}>{fact.description}</p>
@@ -107,7 +108,7 @@ function HomeTab() {
       <div className="card p-8 text-center" style={{ border: "1px solid rgba(0,158,73,0.25)", background: "rgba(0,158,73,0.04)" }}>
         <div className="badge badge-green mb-3 mx-auto">{t("section_alphabet")}</div>
         <h2 className="heading-md mb-3" style={{ color: "var(--text)" }}>{t("section_alphabet_sub")}</h2>
-        <div className="flex flex-wrap justify-center gap-2 my-5">
+        <div className="flex flex-wrap justify-center gap-2 my-5" aria-hidden="true">
           {MANJAK_ALPHABET.slice(0, 12).map((letter) => (
             <div key={letter.id} className="alpha-chip w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">
               {letter.symbol.split("/")[0].trim()}
@@ -124,6 +125,7 @@ function HomeTab() {
 
 export default function TabApp({ initialTab }: TabAppProps) {
   const t = useTranslations("nav");
+  const a = useTranslations("a11y");
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<Tab>((initialTab as Tab) || "home");
 
@@ -136,14 +138,16 @@ export default function TabApp({ initialTab }: TabAppProps) {
     { id: "dictionary", label: t("dictionary"), emoji: "📖" },
     { id: "keyboard", label: t("keyboard"), emoji: "⌨️" },
     { id: "media", label: t("media"), emoji: "🎬" },
-    { id: "market", label: "Boutique", emoji: "🛍️" },
-    { id: "studio", label: "Font Studio", emoji: "✏️" },
+    { id: "market", label: t("market"), emoji: "🛍️" },
+    { id: "studio", label: t("studio"), emoji: "✏️" },
   ];
 
   const switchTab = useCallback(
     (tab: Tab) => {
       setActiveTab(tab);
       router.replace(tab === "home" ? "." : `?tab=${tab}`, { scroll: false });
+      // Screen readers and keyboards: land in the section that was just opened.
+      requestAnimationFrame(() => document.getElementById(`panel-${tab}`)?.focus());
     },
     [router]
   );
@@ -151,7 +155,8 @@ export default function TabApp({ initialTab }: TabAppProps) {
   return (
     <div className="min-h-screen pt-16 pb-20 lg:pb-0">
       {/* Sticky tab bar */}
-      <div
+      <nav
+        aria-label={a("sections")}
         className="sticky top-14 z-40 border-b"
         style={{
           background: "var(--surface)",
@@ -167,6 +172,8 @@ export default function TabApp({ initialTab }: TabAppProps) {
                 <button
                   key={tab.id}
                   onClick={() => switchTab(tab.id)}
+                  aria-label={tab.label}
+                  aria-current={active ? "page" : undefined}
                   className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
                   style={{
                     background: active ? "rgba(0,158,73,0.12)" : "transparent",
@@ -176,7 +183,7 @@ export default function TabApp({ initialTab }: TabAppProps) {
                     borderRadius: "8px 8px 0 0",
                   }}
                 >
-                  <span className="text-base">{tab.emoji}</span>
+                  <span className="text-base" aria-hidden="true">{tab.emoji}</span>
                   <span className="hidden sm:inline">{tab.label}</span>
                 </button>
               );
@@ -184,20 +191,20 @@ export default function TabApp({ initialTab }: TabAppProps) {
           </div>
         </div>
         <div className="h-0.5 kente-stripe opacity-40" />
-      </div>
+      </nav>
 
       {/* All tabs pre-mounted — CSS display toggle for instant switching */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div style={{ display: activeTab === "home" ? "block" : "none" }}><HomeTab /></div>
-        <div style={{ display: activeTab === "alphabet" ? "block" : "none" }}><AlphabetTab isActive={activeTab === "alphabet"} /></div>
-        <div style={{ display: activeTab === "learn" ? "block" : "none" }}><LearnTab /></div>
-        <div style={{ display: activeTab === "history" ? "block" : "none" }}><HistoryTab /></div>
-        <div style={{ display: activeTab === "culture" ? "block" : "none" }}><CultureTab /></div>
-        <div style={{ display: activeTab === "dictionary" ? "block" : "none" }}><DictionaryTab /></div>
-        <div style={{ display: activeTab === "keyboard" ? "block" : "none" }}><KeyboardTab /></div>
-        <div style={{ display: activeTab === "media" ? "block" : "none" }}><MediaTab /></div>
-        <div style={{ display: activeTab === "market" ? "block" : "none" }}><MarketplaceTab /></div>
-        <div style={{ display: activeTab === "studio" ? "block" : "none" }}><FontStudio /></div>
+        <div id="panel-home" tabIndex={-1} className="outline-none" style={{ display: activeTab === "home" ? "block" : "none" }}><HomeTab /></div>
+        <div id="panel-alphabet" tabIndex={-1} className="outline-none" style={{ display: activeTab === "alphabet" ? "block" : "none" }}><AlphabetTab isActive={activeTab === "alphabet"} /></div>
+        <div id="panel-learn" tabIndex={-1} className="outline-none" style={{ display: activeTab === "learn" ? "block" : "none" }}><LearnTab /></div>
+        <div id="panel-history" tabIndex={-1} className="outline-none" style={{ display: activeTab === "history" ? "block" : "none" }}><HistoryTab /></div>
+        <div id="panel-culture" tabIndex={-1} className="outline-none" style={{ display: activeTab === "culture" ? "block" : "none" }}><CultureTab /></div>
+        <div id="panel-dictionary" tabIndex={-1} className="outline-none" style={{ display: activeTab === "dictionary" ? "block" : "none" }}><DictionaryTab /></div>
+        <div id="panel-keyboard" tabIndex={-1} className="outline-none" style={{ display: activeTab === "keyboard" ? "block" : "none" }}><KeyboardTab /></div>
+        <div id="panel-media" tabIndex={-1} className="outline-none" style={{ display: activeTab === "media" ? "block" : "none" }}><MediaTab /></div>
+        <div id="panel-market" tabIndex={-1} className="outline-none" style={{ display: activeTab === "market" ? "block" : "none" }}><MarketplaceTab /></div>
+        <div id="panel-studio" tabIndex={-1} className="outline-none" style={{ display: activeTab === "studio" ? "block" : "none" }}><FontStudio /></div>
       </div>
 
       <MobileBottomNav activeTab={activeTab} onSwitch={switchTab} />

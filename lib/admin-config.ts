@@ -1,8 +1,8 @@
 /**
  * Admin access configuration.
  *
- * ADMIN_EMAILS env var overrides the default list (comma-separated).
- * ADMIN_FRANCE_ONLY_EMAILS env var overrides the France-restricted list.
+ * ADMIN_EMAILS env var holds the list (comma-separated).
+ * ADMIN_FRANCE_ONLY_EMAILS env var holds the France-restricted list.
  *
  * countryRestriction: ISO-3166-1 alpha-2 code, or null for no restriction.
  */
@@ -15,18 +15,11 @@ export interface AdminEmailEntry {
   displayName?: string;
 }
 
-/** Default whitelist — override with env vars in production. */
-const DEFAULT_ENTRIES: AdminEmailEntry[] = [
-  {
-    email: "gordoncyrus@gmail.com",
-    countryRestriction: null,
-  },
-  {
-    email: process.env.ADMIN_EURELIE_EMAIL ?? "eurely-@hotmail.fr",
-    countryRestriction: "FR",
-    displayName: "Eurelie Gomis",
-  },
-];
+/**
+ * No addresses live in the code. The whitelist comes only from the server
+ * environment: ADMIN_EMAILS (comma-separated, no country limit) and
+ * ADMIN_FRANCE_ONLY_EMAILS (comma-separated, France only).
+ */
 
 function parseOverride(
   envVar: string | undefined,
@@ -42,30 +35,15 @@ function parseOverride(
 
 /** Resolved whitelist (env overrides applied). */
 export function getAdminWhitelist(): AdminEmailEntry[] {
-  const envAll = process.env.ADMIN_EMAILS;
-  if (envAll) {
-    // Full override: use ADMIN_EMAILS + ADMIN_FRANCE_ONLY_EMAILS
-    const unrestricted = parseOverride(envAll, null) ?? [];
-    const franceOnly =
-      parseOverride(process.env.ADMIN_FRANCE_ONLY_EMAILS, "FR") ?? [];
-    // France-only overrides unrestricted for matching emails
-    const franceEmails = new Set(franceOnly.map((e) => e.email));
-    const merged = unrestricted.map((entry) =>
-      franceEmails.has(entry.email)
-        ? { ...entry, countryRestriction: "FR" }
-        : entry,
-    );
-    // Add any france-only emails not in unrestricted list
-    const mergedEmails = new Set(merged.map((e) => e.email));
-    for (const fo of franceOnly) {
-      if (!mergedEmails.has(fo.email)) merged.push(fo);
-    }
-    return merged;
-  }
-  return DEFAULT_ENTRIES.map((e) => ({
-    ...e,
-    email: e.email.toLowerCase(),
-  }));
+  const unrestricted = parseOverride(process.env.ADMIN_EMAILS, null) ?? [];
+  const franceOnly =
+    parseOverride(process.env.ADMIN_FRANCE_ONLY_EMAILS, "FR") ?? [];
+  // A France-only entry wins over an unrestricted one for the same address.
+  const franceEmails = new Set(franceOnly.map((e) => e.email));
+  return [
+    ...unrestricted.filter((e) => !franceEmails.has(e.email)),
+    ...franceOnly,
+  ];
 }
 
 /** Lookup a single entry by email (case-insensitive). */

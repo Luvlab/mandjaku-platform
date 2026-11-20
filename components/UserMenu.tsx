@@ -33,6 +33,8 @@ export default function UserMenu() {
     return (
       <button
         onClick={() => signInWithGoogle()}
+        aria-label="Connexion"
+        lang="fr"
         className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg transition-all"
         style={{ background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
       >
@@ -51,15 +53,17 @@ export default function UserMenu() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-haspopup="true"
+        aria-label={`Compte : ${profile?.full_name ?? user.email ?? ""}`}
         className="w-8 h-8 rounded-full overflow-hidden font-bold text-white text-sm flex items-center justify-center transition-all ring-2 ring-offset-1"
         style={{
           background: profile?.avatar_url ? undefined : `linear-gradient(135deg,${roleInfo.color},${roleInfo.color}99)`,
           outline: open ? `2px solid ${roleInfo.color}` : "none",
         }}
-        title={profile?.full_name ?? user.email ?? ""}
       >
         {profile?.avatar_url
-          ? <img src={profile.avatar_url} alt={initials} className="w-full h-full object-cover" />
+          ? <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
           : initials}
       </button>
 
@@ -101,7 +105,7 @@ export default function UserMenu() {
               className="flex items-center gap-2.5 px-4 py-2 text-sm w-full text-left transition-colors"
               style={{ color: "#CE1126" }}
             >
-              <span>↩</span> Déconnexion
+              <span aria-hidden="true">↩</span> Déconnexion
             </button>
           </div>
         </div>
