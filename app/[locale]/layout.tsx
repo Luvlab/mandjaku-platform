@@ -19,13 +19,13 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Mandjaku — Langue & Culture Manjak",
-    template: "%s · Mandjaku",
+    default: "Manjaku — Langue & Culture Manjak",
+    template: "%s · Manjaku",
   },
   description:
     "Plateforme éducative pour la langue et la culture Manjak — alphabet, histoire, clavier, apprentissage. Kabu lëp Manjak.",
   keywords: [
-    "Manjak", "Mandjaku", "langue atlantique", "Guinée-Bissau",
+    "Manjak", "Manjaku", "langue atlantique", "Guinée-Bissau",
     "alphabet africain", "culture Manjak", "Cacheu",
   ],
   authors: [{ name: "LUVlab.io" }],

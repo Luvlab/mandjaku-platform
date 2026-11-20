@@ -46,7 +46,7 @@ export default async function Footer() {
                 M
               </div>
               <div>
-                <div className="font-bold text-base" style={{ color: "var(--text)" }}>Mandjaku</div>
+                <div className="font-bold text-base" style={{ color: "var(--text)" }}>Manjaku</div>
                 <div className="text-xs italic" style={{ color: "var(--text-muted)" }}>Kabu lëp Manjak</div>
               </div>
             </div>

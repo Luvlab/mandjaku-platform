@@ -225,7 +225,7 @@ export default function KeyboardTab() {
         <div className="text-4xl mb-4" aria-hidden="true">🖨️</div>
         <h3 className="heading-md mb-3" style={{ color: "var(--text)" }}>{t("keycaps_title")}</h3>
         <p className="body-lg max-w-2xl mx-auto mb-5">
-          {c("Des fichiers 3D pour imprimer vos propres keycaps Mandjaku. Compatible avec les claviers Keychron (K2, K3, K6, K8) et le GK61.")}
+          {c("Des fichiers 3D pour imprimer vos propres keycaps Manjaku. Compatible avec les claviers Keychron (K2, K3, K6, K8) et le GK61.")}
         </p>
         <div className="grid grid-cols-3 gap-3 max-w-xs mx-auto mb-5">
           {[".STL", ".BLEND", ".STP"].map((fmt) => (

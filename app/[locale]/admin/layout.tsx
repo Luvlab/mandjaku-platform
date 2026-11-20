@@ -1,4 +1,4 @@
-export const metadata = { title: "Admin — Mandjaku CMS" };
+export const metadata = { title: "Admin — Manjaku CMS" };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (

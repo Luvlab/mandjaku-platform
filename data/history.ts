@@ -19,9 +19,9 @@ export const HISTORY_ERAS: HistoryEra[] = [
     period: "Origines anciennes",
     title: "Les Manjak — Peuple de la Sénégambie",
     content: [
-      "Les Manjak (ou Mandjaku, Manjaco) sont un peuple d'Afrique de l'Ouest appartenant au groupe linguistique atlantique occidental. Leurs origines remontent aux peuples de la Sénégambie, une région côtière entre les fleuves Sénégal et Gambie.",
+      "Les Manjak (ou Manjaku, Manjaco) sont un peuple d'Afrique de l'Ouest appartenant au groupe linguistique atlantique occidental. Leurs origines remontent aux peuples de la Sénégambie, une région côtière entre les fleuves Sénégal et Gambie.",
       "Peuple autochtone de la côte ouest-africaine, les Manjak ont habité les terres fertiles de la Guinée-Bissau actuelle, du Sénégal et de la Gambie depuis des millénaires. Ils sont profondément liés à la terre, à la mer et aux forêts de mangroves.",
-      "Leur nom 'Manjak' viendrait du terme 'Mandjaku', signifiant littéralement 'le peuple des eaux' — une référence à leur proximité historique avec les zones côtières, les estuaires et les rizières inondées.",
+      "Leur nom 'Manjak' viendrait du terme 'Manjaku', signifiant littéralement 'le peuple des eaux' — une référence à leur proximité historique avec les zones côtières, les estuaires et les rizières inondées.",
     ],
   },
   {
@@ -41,7 +41,7 @@ export const HISTORY_ERAS: HistoryEra[] = [
     content: [
       "Les premiers contacts avec les Européens ont lieu au XVe siècle lorsque les explorateurs portugais atteignent la côte de Guinée. Les Portugais établissent des comptoirs commerciaux à Cacheu et Bissau, au cœur du territoire Manjak.",
       "Les Manjak figurent parmi les peuples d'Afrique de l'Ouest victimes de la traite négrière transatlantique. Des milliers de Manjak furent arrachés à leurs terres et déportés vers les Amériques, notamment au Brésil et aux Antilles.",
-      "Malgré la violence de la colonisation, les Manjak ont maintenu leur identité culturelle. Certains chefs Manjak négocièrent avec les Portugais pour limiter les razzias, d'autres organisèrent une résistance armée. La langue Mandjaku survécut intacte.",
+      "Malgré la violence de la colonisation, les Manjak ont maintenu leur identité culturelle. Certains chefs Manjak négocièrent avec les Portugais pour limiter les razzias, d'autres organisèrent une résistance armée. La langue Manjaku survécut intacte.",
     ],
   },
   {
@@ -60,7 +60,7 @@ export const HISTORY_ERAS: HistoryEra[] = [
     title: "Indépendance et renaissance culturelle",
     content: [
       "La Guinée-Bissau obtient son indépendance du Portugal le 24 septembre 1974, après une guerre de libération de onze ans. Les Manjak, présents sur tout le territoire, participèrent à cette lutte pour la dignité et l'autodétermination.",
-      "Depuis l'indépendance, les communautés Manjak ont travaillé à la revitalisation de leur langue et culture. Des linguistes, en collaboration avec les anciens, ont commencé à normaliser l'alphabet Mandjaku — travail qui continue aujourd'hui.",
+      "Depuis l'indépendance, les communautés Manjak ont travaillé à la revitalisation de leur langue et culture. Des linguistes, en collaboration avec les anciens, ont commencé à normaliser l'alphabet Manjaku — travail qui continue aujourd'hui.",
       "La diaspora Manjak en Europe (Portugal, France, Suède, Espagne) joue un rôle crucial dans cette renaissance : organisation de festivals culturels, transmission de la langue aux enfants nés à l'étranger, et financement de projets éducatifs en Guinée-Bissau et au Sénégal.",
       "Aujourd'hui, les anciens Manjak développent un alphabet propre à leur langue — symboles uniques qui capturent les sons et l'âme d'une langue atlantique vieille de millénaires. Ce projet est le prolongement digital de ce travail essentiel.",
     ],

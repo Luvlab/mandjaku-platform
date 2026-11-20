@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { SEO_DEFAULTS } from "@/data/seo";
 
 export const runtime = "edge";
-export const alt = "Mandjaku";
+export const alt = "Manjaku";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -29,7 +29,7 @@ export default async function OgImage({
 }) {
   const tab = searchParams?.tab ?? "home";
   const seo = await getSeo(tab);
-  const headline = seo.og_image_headline ?? "Mandjaku";
+  const headline = seo.og_image_headline ?? "Manjaku";
   const sub = seo.og_image_sub ?? "Kabu lëp Manjak";
 
   return new ImageResponse(
@@ -113,7 +113,7 @@ export default async function OgImage({
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <span style={{ color: "#F1F5F9", fontWeight: "700", fontSize: "22px" }}>
-                Mandjaku
+                Manjaku
               </span>
               <span style={{ color: "#94A3B8", fontSize: "13px" }}>
                 Kabu lëp Manjak

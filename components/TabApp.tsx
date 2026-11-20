@@ -43,7 +43,7 @@ function HomeTab() {
           {t("tag")}
         </div>
         <h1 className="heading-xl mb-3">
-          <span className="text-gradient">{c("Mandjaku")}</span>
+          <span className="text-gradient">{c("Manjaku")}</span>
         </h1>
         <p className="text-lg font-medium mb-3" style={{ color: "var(--text)" }}>{t("subtitle")}</p>
         <blockquote

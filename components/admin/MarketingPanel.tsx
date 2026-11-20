@@ -71,25 +71,25 @@ const TEMPLATES = [
     name: "Mot de la semaine",
     type: "word_of_week",
     content: {
-      fr: "📖 Mot de la semaine en Mandjaku !\n\n« {mot} » signifie « {traduction} »\n\nPrononciation : {prononciation}\n\nApprenez le Mandjaku gratuitement sur mandjaku.com 🌍",
-      en: "📖 Mandjaku word of the week!\n\n« {word} » means « {translation} »\n\nPronunciation: {pronunciation}\n\nLearn Mandjaku for free at mandjaku.com 🌍",
-      pt: "📖 Palavra Mandjaku da semana!\n\n« {palavra} » significa « {tradução} »\n\nPronúncia: {pronúncia}\n\nAprenda Mandjaku gratuitamente em mandjaku.com 🌍",
+      fr: "📖 Mot de la semaine en Manjaku !\n\n« {mot} » signifie « {traduction} »\n\nPrononciation : {prononciation}\n\nApprenez le Manjaku gratuitement sur mandjaku.com 🌍",
+      en: "📖 Manjaku word of the week!\n\n« {word} » means « {translation} »\n\nPronunciation: {pronunciation}\n\nLearn Manjaku for free at mandjaku.com 🌍",
+      pt: "📖 Palavra Manjaku da semana!\n\n« {palavra} » significa « {tradução} »\n\nPronúncia: {pronúncia}\n\nAprenda Manjaku gratuitamente em mandjaku.com 🌍",
     },
   },
   {
     name: "Fait culturel",
     type: "cultural_fact",
     content: {
-      fr: "🌍 Le saviez-vous ?\n\n{fait_culturel}\n\nLa civilisation Mandjaku est riche et millénaire.\nDécouvrez-en plus sur mandjaku.com 🏺",
-      en: "🌍 Did you know?\n\n{cultural_fact}\n\nMandjaku civilization is ancient and rich.\nDiscover more at mandjaku.com 🏺",
+      fr: "🌍 Le saviez-vous ?\n\n{fait_culturel}\n\nLa civilisation Manjaku est riche et millénaire.\nDécouvrez-en plus sur mandjaku.com 🏺",
+      en: "🌍 Did you know?\n\n{cultural_fact}\n\nManjaku civilization is ancient and rich.\nDiscover more at mandjaku.com 🏺",
     },
   },
   {
     name: "Nouvelle leçon",
     type: "lesson_promo",
     content: {
-      fr: "📚 Nouvelle leçon disponible !\n\n{titre_leçon}\n\nQuiz, vocabulaire, alphabet Mandjaku — tout gratuit.\n➡️ mandjaku.com",
-      en: "📚 New lesson available!\n\n{lesson_title}\n\nQuizzes, vocabulary, Mandjaku alphabet — all free.\n➡️ mandjaku.com",
+      fr: "📚 Nouvelle leçon disponible !\n\n{titre_leçon}\n\nQuiz, vocabulaire, alphabet Manjaku — tout gratuit.\n➡️ mandjaku.com",
+      en: "📚 New lesson available!\n\n{lesson_title}\n\nQuizzes, vocabulary, Manjaku alphabet — all free.\n➡️ mandjaku.com",
     },
   },
 ];

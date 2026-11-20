@@ -178,7 +178,7 @@ export default function AdminPage() {
             style={{ background: "linear-gradient(135deg,#009E49,#007A38)" }}
           >M</div>
           <div className="badge badge-green mb-4 mx-auto">Admin CMS</div>
-          <h1 className="heading-md mb-2" style={{ color: "var(--text)" }}>Mandjaku Admin</h1>
+          <h1 className="heading-md mb-2" style={{ color: "var(--text)" }}>Manjaku Admin</h1>
           <p className="body-sm mb-6">Pour les éditeurs, ambassadeurs et partenaires</p>
 
           {/* Geo-block error banner */}
@@ -322,7 +322,7 @@ export default function AdminPage() {
         <div className="flex items-center gap-3">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center font-black text-white text-xs"
             style={{ background: "linear-gradient(135deg,#009E49,#007A38)" }}>M</div>
-          <span className="font-bold text-sm" style={{ color: "var(--text)" }}>Mandjaku CMS</span>
+          <span className="font-bold text-sm" style={{ color: "var(--text)" }}>Manjaku CMS</span>
 
           {/* Section tabs */}
           <div className="flex items-center gap-1 ml-2">

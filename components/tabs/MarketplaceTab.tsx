@@ -7,21 +7,21 @@ type MerchItem = { id: string; title: string; price: string; category: string; e
 type Ad = { id: string; title: string; desc: string; category: string; price: string | null; location: string; flag: string; featured?: boolean };
 
 const MERCH: MerchItem[] = [
-  { id:"1", title:"T-shirt Mandjaku", price:"29.90€", category:"Vêtements", emoji:"👕", desc:"Imprimé avec l'alphabet Manjak — 100% coton bio", tag:"Bestseller" },
+  { id:"1", title:"T-shirt Manjaku", price:"29.90€", category:"Vêtements", emoji:"👕", desc:"Imprimé avec l'alphabet Manjak — 100% coton bio", tag:"Bestseller" },
   { id:"2", title:"Hoodie Kabu lëp Manjak", price:"54.90€", category:"Vêtements", emoji:"🧥", desc:"Sweat brodé avec le proverbe Manjak" },
   { id:"3", title:"Tote Bag Kente", price:"19.90€", category:"Accessoires", emoji:"👜", desc:"Couleurs du kente — vert, jaune, rouge", tag:"Eco" },
   { id:"4", title:"Poster Alphabet A2", price:"24.90€", category:"Art", emoji:"🖼️", desc:"Les 24 lettres avec prononciations — livré roulé" },
-  { id:"5", title:"Mug Mandjaku", price:"14.90€", category:"Accessoires", emoji:"☕", desc:"24 lettres et prononciation sur céramique" },
-  { id:"6", title:"Casquette Manjak", price:"34.90€", category:"Vêtements", emoji:"🧢", desc:"Broderie logo Mandjaku — 6 coloris" },
+  { id:"5", title:"Mug Manjaku", price:"14.90€", category:"Accessoires", emoji:"☕", desc:"24 lettres et prononciation sur céramique" },
+  { id:"6", title:"Casquette Manjak", price:"34.90€", category:"Vêtements", emoji:"🧢", desc:"Broderie logo Manjaku — 6 coloris" },
   { id:"7", title:"Bracelet Kente", price:"12.90€", category:"Accessoires", emoji:"📿", desc:"Artisanal — couleurs Guinée-Bissau", tag:"Artisanat" },
   { id:"8", title:"Carnet Alphabet", price:"9.90€", category:"Papeterie", emoji:"📓", desc:"A5 avec alphabet illustré — idéal pour apprendre" },
 ];
 
 const ADS: Ad[] = [
-  { id:"1", title:"Cours de Mandjaku en ligne", desc:"Cours via Zoom, tous niveaux. Méthode communicative avec exercices et quiz inclus.", category:"Cours", price:"30€/h", location:"Paris", flag:"🇫🇷", featured:true },
+  { id:"1", title:"Cours de Manjaku en ligne", desc:"Cours via Zoom, tous niveaux. Méthode communicative avec exercices et quiz inclus.", category:"Cours", price:"30€/h", location:"Paris", flag:"🇫🇷", featured:true },
   { id:"2", title:"Tissus traditionnels Manjak", desc:"Tissus authentiques importés de Guinée-Bissau. Plusieurs motifs disponibles à Lisbonne.", category:"Artisanat", price:"45€/m", location:"Lisbonne", flag:"🇵🇹", featured:true },
   { id:"3", title:"Musicien Manjak — événements", desc:"Percussions traditionnelles pour mariages, expositions, événements culturels.", category:"Services", price:"Sur devis", location:"Paris", flag:"🇫🇷" },
-  { id:"4", title:"Association Mandjaku Lisbonne", desc:"Rejoignez notre association — réunions mensuelles, événements culturels au Portugal.", category:"Communauté", price:null, location:"Lisbonne", flag:"🇵🇹", featured:true },
+  { id:"4", title:"Association Manjaku Lisbonne", desc:"Rejoignez notre association — réunions mensuelles, événements culturels au Portugal.", category:"Communauté", price:null, location:"Lisbonne", flag:"🇵🇹", featured:true },
 ];
 
 const CAT_COLORS: Record<string, string> = {
@@ -45,7 +45,7 @@ export default function MarketplaceTab() {
       <div className="text-center mb-8">
         <div className="badge badge-green mb-3 mx-auto"><span aria-hidden="true">🛍️</span> {c("Marketplace Manjak")}</div>
         <h2 className="heading-lg" style={{ color:"var(--text)" }}>{c("Boutique & Communauté")}</h2>
-        <p className="body-lg max-w-xl mx-auto mt-2">{c("Merch officiel, artisanat et annonces de la communauté Mandjaku mondiale")}</p>
+        <p className="body-lg max-w-xl mx-auto mt-2">{c("Merch officiel, artisanat et annonces de la communauté Manjaku mondiale")}</p>
         <p role="note" className="text-sm font-semibold max-w-xl mx-auto mt-4 rounded-xl px-4 py-3" style={{ background: "rgba(252,209,22,0.12)", border: "1px solid rgba(252,209,22,0.4)", color: "var(--text)" }}>
           {c("Aperçu : la boutique et les annonces ne sont pas encore ouvertes. Les articles, les prix et les annonces ci-dessous sont des exemples. Rien ne peut être acheté ni publié pour le moment.")}
         </p>
@@ -180,7 +180,7 @@ export default function MarketplaceTab() {
                 </div>
                 <div>
                   <label htmlFor="ad-f2" className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>{c("Titre")}</label>
-                  <input id="ad-f2" required value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} className="cms-input" placeholder={c("Ex: Cours de Mandjaku débutants")} />
+                  <input id="ad-f2" required value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} className="cms-input" placeholder={c("Ex: Cours de Manjaku débutants")} />
                 </div>
                 <div>
                   <label htmlFor="ad-f3" className="text-sm font-semibold block mb-1.5" style={{ color:"var(--text)" }}>{c("Description")}</label>

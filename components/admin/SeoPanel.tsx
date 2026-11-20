@@ -185,7 +185,7 @@ export default function SeoPanel({ password }: { password: string }) {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Field label="Titre principal">
-                  <input value={form.og_image_headline ?? ""} onChange={(e) => update("og_image_headline", e.target.value)} className="cms-input" placeholder="Mandjaku" />
+                  <input value={form.og_image_headline ?? ""} onChange={(e) => update("og_image_headline", e.target.value)} className="cms-input" placeholder="Manjaku" />
                 </Field>
                 <Field label="Sous-titre image">
                   <input value={form.og_image_sub ?? ""} onChange={(e) => update("og_image_sub", e.target.value)} className="cms-input" placeholder="Kabu lëp Manjak" />
@@ -193,7 +193,7 @@ export default function SeoPanel({ password }: { password: string }) {
               </div>
               {preview && (
                 <OGPreview
-                  headline={form.og_image_headline ?? "Mandjaku"}
+                  headline={form.og_image_headline ?? "Manjaku"}
                   sub={form.og_image_sub ?? ""}
                   description={form.og_description ?? form.description}
                 />
@@ -242,13 +242,13 @@ function OGPreview({ headline, sub, description }: { headline: string; sub: stri
       <div className="flex items-center gap-2">
         <div className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-white text-sm" style={{ background: "linear-gradient(135deg,#009E49,#007A38)", flexShrink: 0 }}>M</div>
         <div>
-          <div className="text-xs font-bold" style={{ color: "#F1F5F9" }}>Mandjaku</div>
+          <div className="text-xs font-bold" style={{ color: "#F1F5F9" }}>Manjaku</div>
           <div className="text-xs" style={{ color: "#94A3B8" }}>Kabu lëp Manjak</div>
         </div>
         <div className="ml-auto px-2 py-0.5 rounded-full text-xs" style={{ background: "rgba(0,158,73,0.15)", border: "1px solid rgba(0,158,73,0.3)", color: "#00C45A" }}>mandjaku.com</div>
       </div>
       <div>
-        <div className="font-black text-gradient leading-none" style={{ fontSize: "clamp(24px,6vw,56px)", letterSpacing: "-2px" }}>{headline || "Mandjaku"}</div>
+        <div className="font-black text-gradient leading-none" style={{ fontSize: "clamp(24px,6vw,56px)", letterSpacing: "-2px" }}>{headline || "Manjaku"}</div>
         <div className="font-semibold mt-1" style={{ fontSize: "clamp(14px,3vw,24px)", color: "#F1F5F9" }}>{sub}</div>
         <div className="mt-2 leading-relaxed" style={{ fontSize: "clamp(10px,1.5vw,15px)", color: "#94A3B8", maxWidth: "75%" }}>{description}</div>
       </div>

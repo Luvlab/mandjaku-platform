@@ -102,7 +102,7 @@ export default function HistoryTab() {
             {c("Malgré des siècles de pressions extérieures — traite négrière, colonisation portugaise — le peuple Manjak a préservé sa culture, sa langue et son identité.")}
           </p>
           <p className="body-lg">
-            {c("Aujourd'hui, cette résilience se manifeste dans le projet d'un alphabet propre au Mandjaku — un acte de souveraineté culturelle porté par les anciens.")}
+            {c("Aujourd'hui, cette résilience se manifeste dans le projet d'un alphabet propre au Manjaku — un acte de souveraineté culturelle porté par les anciens.")}
           </p>
         </div>
         <div className="grid grid-cols-3 gap-3">

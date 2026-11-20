@@ -33,12 +33,12 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-14">
 
           {/* Logo */}
-          <Link href="/" aria-label={`Manjak, ${t("home")}`} className="flex items-center gap-2.5 group flex-shrink-0">
+          <Link href="/" aria-label={`Manjaku, ${t("home")}`} className="flex items-center gap-2.5 group flex-shrink-0">
             <span
               className="h-8 px-3 rounded-lg flex items-center justify-center font-black text-white text-base tracking-tight"
               style={{ background: "linear-gradient(135deg, #009E49, #007A38)" }}
             >
-              Manjak
+              Manjaku
             </span>
             <span className="hidden sm:block text-xs font-medium opacity-50" style={{ color: "var(--text)" }}>Kabu lëp Manjak</span>
           </Link>
