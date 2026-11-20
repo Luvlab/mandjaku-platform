@@ -45,7 +45,10 @@ export default function middleware(req: NextRequest) {
   const hasLocaleCookie = req.cookies.has("NEXT_LOCALE");
 
   if (pathname === "/" && !hasLocaleCookie) {
+    // x-client-country is set by luvlab.io, which proxies /manjak here and
+    // knows the visitor's own country.
     const country =
+      (req.headers.get("x-client-country") || null) ??
       req.headers.get("x-vercel-ip-country") ??
       req.headers.get("cf-ipcountry") ??
       "";
