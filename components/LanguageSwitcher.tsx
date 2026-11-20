@@ -9,13 +9,6 @@ const LOCALE_LABELS: Record<string, { label: string; flag: string }> = {
   fr: { label: "Français", flag: "🇫🇷" },
   en: { label: "English", flag: "🇬🇧" },
   pt: { label: "Português", flag: "🇵🇹" },
-  de: { label: "Deutsch", flag: "🇩🇪" },
-  es: { label: "Español", flag: "🇪🇸" },
-  zh: { label: "中文", flag: "🇨🇳" },
-  ja: { label: "日本語", flag: "🇯🇵" },
-  sw: { label: "Kiswahili", flag: "🇰🇪" },
-  ff: { label: "Fulfulde", flag: "🌍" },
-  wo: { label: "Wolof", flag: "🌍" },
 };
 
 export default function LanguageSwitcher() {

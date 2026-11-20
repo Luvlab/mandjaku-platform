@@ -4,7 +4,7 @@ import { withBase } from "@/lib/base-path";
 import { useState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { useAuth, isAdminRole, canPostContent } from "@/components/AuthProvider";
-import { supabaseConfigured } from "@/lib/supabase-browser";
+import { supabaseConfigured, createClient } from "@/lib/supabase-browser";
 import SeoPanel from "@/components/admin/SeoPanel";
 import MarketingPanel from "@/components/admin/MarketingPanel";
 import UsersPanel from "@/components/admin/UsersPanel";
@@ -36,6 +36,17 @@ function MagicLinkForm() {
         setStatus("error");
         setErrorMsg(data.error);
       } else {
+        if (data.allowed) {
+          // The browser asks for the link itself, so that the sign-in code
+          // can be exchanged here when the link is opened.
+          await createClient().auth.signInWithOtp({
+            email: email.trim().toLowerCase(),
+            options: {
+              emailRedirectTo: `${window.location.origin}${withBase("/auth/callback")}?next=/fr/admin`,
+              shouldCreateUser: true,
+            },
+          });
+        }
         // Always show "sent" for other cases — avoids email enumeration
         setStatus("sent");
       }

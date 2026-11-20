@@ -27,21 +27,13 @@ const GEO_LOCALE: Record<string, string> = {
   GM: "en", GB: "en", US: "en", CA: "en", AU: "en", NZ: "en", IE: "en",
   NG: "en", GH: "en", SL: "en", LR: "en", ZA: "en", ZW: "en", ZM: "en",
   MW: "en", BW: "en", NA: "en",
-  // German
-  DE: "de", AT: "de",
-  // Spanish
-  ES: "es", MX: "es", AR: "es", CO: "es", CL: "es", PE: "es",
-  VE: "es", EC: "es", BO: "es", PY: "es", UY: "es",
-  CU: "es", DO: "es", GT: "es", HN: "es", SV: "es", NI: "es", CR: "es", PA: "es",
-  // Chinese
-  CN: "zh", TW: "zh", HK: "zh", MO: "zh", SG: "zh",
-  // Japanese
-  JP: "ja",
-  // Swahili — East Africa
-  KE: "sw", TZ: "sw", UG: "sw", RW: "sw", BI: "sw",
-  // Fula / Fulfulde — Guinea (Conakry)
-  GN: "ff",
-  // Wolof — Senegal is already "fr" above; wo locale available via switcher
+  // Countries whose own language is not offered yet get English,
+  // except Guinea (Conakry), which gets French.
+  DE: "en", AT: "en", ES: "en", MX: "en", AR: "en", CO: "en", CL: "en", PE: "en",
+  CN: "en", TW: "en", HK: "en", SG: "en", JP: "en",
+  KE: "en", TZ: "en", UG: "en", RW: "fr", BI: "fr",
+  SE: "en", NO: "en", DK: "en", FI: "en", NL: "en", IT: "en", CH: "fr",
+  GN: "fr", MR: "fr",
 };
 
 const intlMiddleware = createMiddleware(routing);

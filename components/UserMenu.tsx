@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useAuth, isAdminRole } from "./AuthProvider";
 import { Link } from "@/i18n/navigation";
+import { useC, useLocalized } from "@/lib/content";
 
 const ROLE_LABELS: Record<string, { label: string; color: string }> = {
   superadmin: { label: "Super Admin",  color: "#009E49" },
@@ -13,6 +14,7 @@ const ROLE_LABELS: Record<string, { label: string; color: string }> = {
 };
 
 export default function UserMenu() {
+  const c = useC();
   const { user, profile, loading, signInWithGoogle, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -33,13 +35,12 @@ export default function UserMenu() {
     return (
       <button
         onClick={() => signInWithGoogle()}
-        aria-label="Connexion"
-        lang="fr"
+        aria-label={c("Connexion")}
         className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg transition-all"
         style={{ background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
       >
         <GoogleIcon />
-        <span className="hidden sm:inline">Connexion</span>
+        <span className="hidden sm:inline">{c("Connexion")}</span>
       </button>
     );
   }
@@ -96,7 +97,7 @@ export default function UserMenu() {
                 onClick={() => setOpen(false)}
               >
                 {isAdminRole(roleKey) ? "⚙️" : roleKey === "ambassador" ? "🌍" : "🤝"}
-                {isAdminRole(roleKey) ? "Admin CMS" : roleKey === "ambassador" ? "Espace ambassadeur" : "Espace partenaire"}
+                {isAdminRole(roleKey) ? c("Admin CMS") : roleKey === "ambassador" ? c("Espace ambassadeur") : c("Espace partenaire")}
               </Link>
             )}
 
@@ -105,7 +106,7 @@ export default function UserMenu() {
               className="flex items-center gap-2.5 px-4 py-2 text-sm w-full text-left transition-colors"
               style={{ color: "#CE1126" }}
             >
-              <span aria-hidden="true">↩</span> Déconnexion
+              <span aria-hidden="true">↩</span> {c("Déconnexion")}
             </button>
           </div>
         </div>

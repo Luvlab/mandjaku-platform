@@ -1,17 +1,18 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { CULTURAL_FACTS } from "@/data/history";
-import { PROVERBS } from "@/data/alphabet";
+import { CULTURAL_FACTS as FACTS_FR } from "@/data/history";
+import { PROVERBS as PROVERBS_FR } from "@/data/alphabet";
+import { useC, useLocalized } from "@/lib/content";
 
-const MUSIC_INSTRUMENTS = [
+const MUSIC_INSTRUMENTS_FR = [
   { name: "Tambour", emoji: "🥁", desc: "Instrument central des cérémonies Manjak. Chaque rythme transmet un message codé. Les tambourinaires sont des griots respectés." },
   { name: "Balafon", emoji: "🎵", desc: "Xylophone à lames de bois avec calebasses résonantes. Son son cristallin accompagne les fêtes de récolte et les funérailles." },
   { name: "Kora", emoji: "🎸", desc: "Harpe-luth à 21 cordes partagée avec les peuples Mandé. Instrument de narration par excellence, elle chante l'histoire des clans." },
   { name: "Flûte", emoji: "🎶", desc: "Flûtes en bambou utilisées lors des rites de passage. Leurs mélodies accompagnent les initiés dans leur transition." },
 ];
 
-const RITES = [
+const RITES_FR = [
   { name: "Le Fanado", emoji: "🔥", description: "Rite d'initiation masculin. Les jeunes garçons sont instruits par les anciens sur les responsabilités de l'homme Manjak : courage, respect des ancêtres, connaissance des traditions." },
   { name: "Rites Féminins", emoji: "🌺", description: "Cérémonies célébrant la transition des jeunes filles. Enseignements sur la sagesse féminine et la transmission des savoirs artisanaux." },
   { name: "Funérailles", emoji: "🕊️", description: "Les funérailles Manjak peuvent durer plusieurs jours. Les ancêtres sont vénérés et leur esprit (bëpëk) est invoqué. La musique et la danse permettent à l'âme du défunt de rejoindre les ancêtres." },
@@ -20,13 +21,19 @@ const RITES = [
   { name: "Libation aux Ancêtres", emoji: "🌿", description: "Pratique de vénération — on verse de l'alcool de palme sur le sol pour appeler les esprits des ancêtres et leur demander protection et sagesse." },
 ];
 
-const TEXTILES = [
+const TEXTILES_FR = [
   { title: "Tissu Manjak", desc: "Tissus à bandes colorées aux motifs géométriques. Chaque motif a une signification : clan, statut social, occasion festive ou deuil." },
   { title: "Vannerie", desc: "Les paniers et nattes tressés par les femmes Manjak sont réputés pour leur finesse. Ils servent de récipients, de décorations et de cadeaux de prestige." },
   { title: "Poterie", desc: "Art ancestral transmis de mère en fille. Les poteries Manjak sont décorées de motifs incisés et polies à la main." },
 ];
 
 export default function CultureTab() {
+  const c = useC();
+  const CULTURAL_FACTS = useLocalized(FACTS_FR);
+  const PROVERBS = useLocalized(PROVERBS_FR);
+  const MUSIC_INSTRUMENTS = useLocalized(MUSIC_INSTRUMENTS_FR);
+  const RITES = useLocalized(RITES_FR);
+  const TEXTILES = useLocalized(TEXTILES_FR);
   const t = useTranslations("culture");
 
   return (
@@ -36,8 +43,7 @@ export default function CultureTab() {
         <div className="badge badge-green mb-3 mx-auto">{t("tag")}</div>
         <h2 className="heading-lg" style={{ color: "var(--text)" }}>{t("title")}</h2>
         <p className="body-lg max-w-2xl mx-auto mt-3">
-          La culture Manjak est un tissu vivant de musique, de rites sacrés, d&apos;artisanat et
-          de littérature orale. Transmise de génération en génération, elle défie le temps.
+          {c("La culture Manjak est un tissu vivant de musique, de rites sacrés, d'artisanat et de littérature orale. Transmise de génération en génération, elle défie le temps.")}
         </p>
       </div>
 
@@ -91,7 +97,7 @@ export default function CultureTab() {
               </div>
               <div>
                 <div className="text-sm font-medium" style={{ color: "var(--text)" }}>{video.title}</div>
-                <div className="text-xs" style={{ color: "var(--text-muted)" }}>YouTube →</div>
+                <div className="text-xs" style={{ color: "var(--text-muted)" }}>{c("YouTube →")}</div>
               </div>
             </a>
           ))}
@@ -140,19 +146,15 @@ export default function CultureTab() {
           {PROVERBS.map((p, i) => (
             <div key={i} className="card p-5">
               <div className="text-lg font-bold italic mb-3" style={{ color: "#009E49" }}>
-                &ldquo;{p.manjak}&rdquo;
+                &ldquo;{p.manjak ?? p.french}&rdquo;
               </div>
-              <div className="flex flex-wrap gap-4">
-                <span className="text-sm" style={{ color: "var(--text)" }}>🇫🇷 {p.french}</span>
-                <span className="text-sm" style={{ color: "var(--text-muted)" }}>🇬🇧 {p.english}</span>
-              </div>
+              {p.manjak && <div className="text-sm" style={{ color: "var(--text)" }}>{p.french}</div>}
             </div>
           ))}
         </div>
         <div className="card mt-4 p-5 text-center">
           <p className="body-sm">
-            La tradition orale Manjak est immense — contes, épopées familiales, chants rituels.
-            Ce projet vise à documenter et numériser ce patrimoine inestimable.
+            {c("La tradition orale Manjak est immense — contes, épopées familiales, chants rituels. Ce projet vise à documenter et numériser ce patrimoine inestimable.")}
           </p>
         </div>
       </div>

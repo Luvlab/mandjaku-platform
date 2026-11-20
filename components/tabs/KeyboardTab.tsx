@@ -2,9 +2,13 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { KEYBOARD_DOWNLOADS, QMK_VIA_INFO, VIRTUAL_KEYBOARD_LAYOUT } from "@/data/keyboards";
+import { KEYBOARD_DOWNLOADS as DOWNLOADS_FR, QMK_VIA_INFO as QMK_FR, VIRTUAL_KEYBOARD_LAYOUT } from "@/data/keyboards";
+import { useC, useLocalized, fill } from "@/lib/content";
 
 export default function KeyboardTab() {
+  const c = useC();
+  const KEYBOARD_DOWNLOADS = useLocalized(DOWNLOADS_FR);
+  const QMK_VIA_INFO = useLocalized(QMK_FR);
   const t = useTranslations("keyboard");
   const a = useTranslations("a11y");
   const [pressedKey, setPressedKey] = useState<string | null>(null);
@@ -26,7 +30,7 @@ export default function KeyboardTab() {
       </div>
 
       {/* Virtual keyboard */}
-      <div className="card p-6 mb-12">
+      <div className="card p-3 sm:p-6 mb-12">
         <h3 className="font-bold text-base mb-4" style={{ color: "var(--text)" }}>
           <span aria-hidden="true">🖥️</span> {t("virtual_title")}
         </h3>
@@ -38,19 +42,19 @@ export default function KeyboardTab() {
           className="rounded-xl px-4 py-3 mb-4 min-h-16 flex items-center"
           style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}
         >
-          <span className="text-xl font-bold break-all" style={{ color: output ? "#009E49" : "var(--text-muted)", fontWeight: output ? 700 : 400 }}>
+          <span className="text-xl font-bold break-words" style={{ color: output ? "#009E49" : "var(--text-muted)", fontWeight: output ? 700 : 400 }}>
             {output || t("virtual_placeholder")}
           </span>
         </div>
 
         <div className="space-y-2 mb-4" role="group" aria-label={t("virtual_title")}>
           {VIRTUAL_KEYBOARD_LAYOUT.rows.map((row, i) => (
-            <div key={i} className="flex flex-wrap gap-1.5 justify-center">
+            <div key={i} className="flex gap-1 sm:gap-1.5 justify-center">
               {row.map((key) => (
                 <button
                   key={key}
                   onClick={() => handleKeyPress(key)}
-                  className="min-w-10 h-10 px-3 rounded-lg text-sm font-bold transition-all"
+                  className="flex-1 min-w-0 max-w-12 h-11 rounded-lg text-sm font-bold transition-all"
                   style={{
                     background: pressedKey === key ? "#009E49" : "var(--surface2)",
                     color: pressedKey === key ? "#fff" : "var(--text)",
@@ -68,7 +72,7 @@ export default function KeyboardTab() {
               <button
                 key={key}
                 onClick={() => handleKeyPress(key)}
-                className="px-4 h-10 rounded-lg text-sm font-bold transition-all"
+                className="px-3 h-11 rounded-lg text-sm font-bold transition-all"
                 style={{
                   background: pressedKey === key ? "#CE1126" : "var(--surface2)",
                   color: pressedKey === key ? "#fff" : "#CE1126",
@@ -80,7 +84,7 @@ export default function KeyboardTab() {
             ))}
             <button
               onClick={() => handleKeyPress(" ")}
-              className="w-40 h-10 rounded-lg text-xs font-medium transition-all"
+              className="flex-1 min-w-24 h-11 rounded-lg text-xs font-medium transition-all"
               style={{ background: "var(--surface2)", color: "var(--text-muted)", border: "1px solid var(--border)" }}
             >
               {t("space")}
@@ -88,14 +92,14 @@ export default function KeyboardTab() {
             <button
               onClick={() => setOutput((p) => p.slice(0, -1))}
               aria-label={a("backspace")}
-              className="px-4 h-10 rounded-lg text-sm font-bold transition-all"
+              className="px-4 h-11 rounded-lg text-sm font-bold transition-all"
               style={{ background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)" }}
             >
               <span aria-hidden="true">⌫</span>
             </button>
             <button
               onClick={() => setOutput("")}
-              className="px-4 h-10 rounded-lg text-xs transition-all"
+              className="px-4 h-11 rounded-lg text-xs transition-all"
               style={{ background: "var(--surface2)", color: "var(--text-muted)", border: "1px solid var(--border)" }}
             >
               {t("clear")}
@@ -220,9 +224,8 @@ export default function KeyboardTab() {
       <div className="card p-8 text-center">
         <div className="text-4xl mb-4" aria-hidden="true">🖨️</div>
         <h3 className="heading-md mb-3" style={{ color: "var(--text)" }}>{t("keycaps_title")}</h3>
-        <p className="body-lg max-w-2xl mx-auto mb-5" lang="fr">
-          Des fichiers 3D pour imprimer vos propres keycaps Mandjaku.
-          Compatible avec les claviers Keychron (K2, K3, K6, K8) et le GK61.
+        <p className="body-lg max-w-2xl mx-auto mb-5">
+          {c("Des fichiers 3D pour imprimer vos propres keycaps Mandjaku. Compatible avec les claviers Keychron (K2, K3, K6, K8) et le GK61.")}
         </p>
         <div className="grid grid-cols-3 gap-3 max-w-xs mx-auto mb-5">
           {[".STL", ".BLEND", ".STP"].map((fmt) => (

@@ -2,15 +2,22 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { MANJAK_ALPHABET, MANJAK_DIGITS, NOMINAL_CLASSES, TONES, PROVERBS } from "@/data/alphabet";
+import { MANJAK_ALPHABET as ALPHABET_FR, MANJAK_DIGITS as DIGITS_FR, NOMINAL_CLASSES as CLASSES_FR, TONES as TONES_FR, PROVERBS as PROVERBS_FR } from "@/data/alphabet";
 import type { Letter } from "@/data/alphabet";
 import { ELDER_SKETCHES } from "@/data/manjaku-glyphs";
 import ManjakuGlyph, { ManjakuGlyphDefs } from "@/components/ManjakuGlyph";
 import type { GlyphVariant } from "@/components/ManjakuGlyph";
+import { useC, useLocalized } from "@/lib/content";
 
 type Filter = "all" | "vowel" | "consonant" | "digraph";
 
 export default function AlphabetTab({ isActive = true }: { isActive?: boolean }) {
+  const c = useC();
+  const MANJAK_ALPHABET = useLocalized(ALPHABET_FR);
+  const MANJAK_DIGITS = useLocalized(DIGITS_FR);
+  const NOMINAL_CLASSES = useLocalized(CLASSES_FR);
+  const TONES = useLocalized(TONES_FR);
+  const PROVERBS = useLocalized(PROVERBS_FR);
   const t = useTranslations("alphabet");
   const a = useTranslations("a11y");
   const [filter, setFilter] = useState<Filter>("all");
@@ -67,7 +74,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
         >
           {/* Header */}
           <div
-            className="flex items-center gap-3 px-5 py-4"
+            className="flex flex-wrap items-center gap-3 px-4 py-4"
             style={{ borderBottom: "1px solid var(--border)" }}
           >
             <div
@@ -76,23 +83,23 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
             >
               ✍
             </div>
-            <div>
+            <div className="flex-1 min-w-[12rem]">
               <div className="font-bold text-sm" style={{ color: "var(--text)" }}>
-                Croquis des anciens — Origine de l&apos;écriture Manjaku
+                {c("Croquis des anciens — Origine de l'écriture Manjaku")}
               </div>
               <div className="text-xs" style={{ color: "var(--text-muted)" }}>
-                Esquisses originales à la main, août 2024
+                {c("Esquisses originales à la main, août 2024")}
               </div>
             </div>
             <span
-              className="ml-auto text-xs px-2 py-0.5 rounded-full font-semibold flex-shrink-0"
+              className="text-xs px-2 py-0.5 rounded-full font-semibold flex-shrink-0"
               style={{
                 background: "rgba(252,209,22,0.12)",
                 color: "#B8960A",
                 border: "1px solid rgba(252,209,22,0.3)",
               }}
             >
-              Référence historique
+              {c("Référence historique")}
             </span>
           </div>
 
@@ -103,7 +110,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
                 key={n}
                 onClick={() => setSketchPhoto(sketchPhoto === n ? null : n)}
                 aria-expanded={sketchPhoto === n}
-                aria-label={`${a("enlarge")}: ${sketch.label}`}
+                aria-label={`${a("enlarge")}: ${c(sketch.label)}`}
                 className="relative group overflow-hidden"
                 style={{
                   borderRight: n < 3 ? "1px solid var(--border)" : "none",
@@ -132,7 +139,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
                     color: "#fff",
                   }}
                 >
-                  {sketch.label}
+                  {c(sketch.label)}
                 </div>
               </button>
             ))}
@@ -140,7 +147,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
 
           {/* Lightbox */}
           {sketchPhoto !== null && (
-            <div style={{ background: "#0a0a0a", padding: "16px" }} role="status" aria-live="polite" lang="fr">
+            <div style={{ background: "#0a0a0a", padding: "16px" }} role="status" aria-live="polite">
               <img
                 src={ELDER_SKETCHES[sketchPhoto].src}
                 alt={ELDER_SKETCHES[sketchPhoto].label}
@@ -152,8 +159,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
                 }}
               />
               <p className="text-xs mt-3 text-center" style={{ color: "#888" }}>
-                {ELDER_SKETCHES[sketchPhoto].label} — Croquis à la main des symboles Manjaku,
-                12 août 2024. Ces esquisses sont à l&apos;origine du système d&apos;écriture vectorisé.
+                {c(ELDER_SKETCHES[sketchPhoto].label)} {c("— Croquis à la main des symboles Manjaku, 12 août 2024. Ces esquisses sont à l'origine du système d'écriture vectorisé.")}
               </p>
             </div>
           )}
@@ -161,9 +167,9 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
       </div>
 
       {/* ── Style Toggle: Clean ↔ Sketch ─────────────────────────────────────── */}
-      <div className="flex items-center justify-center gap-2 mb-6" role="group" aria-labelledby="alpha-style-label" lang="fr">
+      <div className="flex items-center justify-center gap-2 mb-6" role="group" aria-labelledby="alpha-style-label">
         <span id="alpha-style-label" className="text-xs font-semibold" style={{ color: "var(--text-muted)" }}>
-          Style d&apos;affichage :
+          {c("Style d'affichage :")}
         </span>
         {(["clean", "sketch"] as GlyphVariant[]).map((v) => (
           <button
@@ -177,7 +183,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
               border: variant === v ? "none" : "1px solid var(--border)",
             }}
           >
-            <span aria-hidden="true">{v === "clean" ? "✦ " : "✍ "}</span>{v === "clean" ? "Vectorisé" : "Croquis"}
+            <span aria-hidden="true">{v === "clean" ? "✦ " : "✍ "}</span>{v === "clean" ? c("Vectorisé") : c("Croquis")}
           </button>
         ))}
       </div>
@@ -271,10 +277,9 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
 
       {/* ── Numbers / Chiffres ───────────────────────────────────────────────── */}
       <div className="mb-12">
-        <div className="badge badge-green mb-3">Chiffres Manjak</div>
+        <div className="badge badge-green mb-3">{c("Chiffres Manjak")}</div>
         <p className="body-sm mb-5">
-          Le système de numération Manjaku possède des symboles graphiques uniques pour les chiffres 0 à 9,
-          développés par les anciens avec la même logique géométrique que l&apos;alphabet.
+          {c("Le système de numération Manjaku possède des symboles graphiques uniques pour les chiffres 0 à 9, développés par les anciens avec la même logique géométrique que l'alphabet.")}
         </p>
         <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
           {MANJAK_DIGITS.map((digit) => (
@@ -352,7 +357,7 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
                       border: "1px solid rgba(0,158,73,0.3)",
                     }}
                   >
-                    Symbole Manjaku ✓
+                    {c("Symbole Manjaku ✓")}
                   </span>
                 )}
               </div>
@@ -447,15 +452,12 @@ export default function AlphabetTab({ isActive = true }: { isActive?: boolean })
                   &ldquo;{proverb.french}&rdquo;
                 </div>
               )}
-              {/* Translations */}
+              {/* Translation, in the visitor's language only */}
               {proverb.manjak && (
                 <div className="text-sm mb-1" style={{ color: "var(--text)" }}>
-                  🇫🇷 {proverb.french}
+                  {proverb.french}
                 </div>
               )}
-              <div className="text-sm" style={{ color: "var(--text-muted)" }}>
-                🇬🇧 {proverb.english}
-              </div>
               {/* Source badge */}
               {proverb.source && (
                 <div className="mt-2">

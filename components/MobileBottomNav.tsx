@@ -95,11 +95,11 @@ export default function MobileBottomNav({ activeTab, onSwitch }: Props) {
                 key={tab.id}
                 onClick={() => { onSwitch(tab.id); setShowMore(false); }}
                 aria-current={active ? "page" : undefined}
-                className="flex-1 flex flex-col items-center gap-0.5 py-2 transition-all"
+                className="flex-1 min-w-0 min-h-14 flex flex-col items-center justify-center gap-0.5 py-1.5 transition-all"
                 style={{ color: active ? "#009E49" : "var(--text-muted)" }}
               >
                 <span className="text-xl" aria-hidden="true">{tab.emoji}</span>
-                <span className="text-xs font-medium">{t(tab.id)}</span>
+                <span className="text-[11px] font-medium truncate max-w-full px-0.5">{t(tab.id)}</span>
                 {active && (
                   <span
                     aria-hidden="true"
@@ -116,7 +116,7 @@ export default function MobileBottomNav({ activeTab, onSwitch }: Props) {
             onClick={() => setShowMore((s) => !s)}
             aria-expanded={showMore}
             aria-controls="more-sections"
-            className="flex-1 flex flex-col items-center gap-0.5 py-2 transition-all"
+            className="flex-1 min-w-0 min-h-14 flex flex-col items-center justify-center gap-0.5 py-1.5 transition-all"
             style={{ color: inMore ? "#009E49" : "var(--text-muted)" }}
           >
             <span className="text-xl" aria-hidden="true">☰</span>

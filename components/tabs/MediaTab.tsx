@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { useC, useLocalized } from "@/lib/content";
 
 const YOUTUBE_VIDEOS = [
   { id: "6OqK15Pc19Y", title: "Manjáku - bëjuk 1", channel: "Langue MANDJAKOU à l'écrit par Per-Nasaaju PRËLBI" },
@@ -14,7 +15,7 @@ const YOUTUBE_VIDEOS = [
   { id: "ir9XDvuYpcY", title: "BECHII MANJAKU SPECIAL, GUINEA BISSAU, PT 1", channel: "John Savic Bass" },
 ];
 
-const EXTERNAL_LINKS = [
+const EXTERNAL_LINKS_FR = [
   {
     title: "Instagram — Les Manjaques",
     url: "https://www.instagram.com/les_manjaques",
@@ -35,7 +36,7 @@ const EXTERNAL_LINKS = [
   },
 ];
 
-const GALLERY_ITEMS = [
+const GALLERY_ITEMS_FR = [
   { icon: "🧵", label: "Textiles" },
   { icon: "🏺", label: "Poterie" },
   { icon: "🥁", label: "Tambours" },
@@ -47,24 +48,26 @@ const GALLERY_ITEMS = [
 ];
 
 export default function MediaTab() {
+  const c = useC();
+  const EXTERNAL_LINKS = useLocalized(EXTERNAL_LINKS_FR);
+  const GALLERY_ITEMS = useLocalized(GALLERY_ITEMS_FR);
   const t = useTranslations("nav");
 
   return (
     <div>
       {/* Header */}
       <div className="text-center mb-10">
-        <div className="badge badge-green mb-3 mx-auto">🎬 Médias & Ressources</div>
-        <h2 className="heading-lg" style={{ color: "var(--text)" }}>Médias Manjak</h2>
+        <div className="badge badge-green mb-3 mx-auto">{c("🎬 Médias & Ressources")}</div>
+        <h2 className="heading-lg" style={{ color: "var(--text)" }}>{c("Médias Manjak")}</h2>
         <p className="body-lg max-w-2xl mx-auto mt-3">
-          Documentaires, musique, danses traditionnelles et ressources pour explorer
-          la culture Manjak par l&apos;image et le son.
+          {c("Documentaires, musique, danses traditionnelles et ressources pour explorer la culture Manjak par l'image et le son.")}
         </p>
       </div>
 
       {/* Videos grid */}
       <div className="mb-12">
         <h3 className="heading-md mb-6" style={{ color: "var(--text)" }}>
-          <span className="text-gradient">Vidéos & Documentaires</span>
+          <span className="text-gradient">{c("Vidéos & Documentaires")}</span>
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {YOUTUBE_VIDEOS.map((v) => (
@@ -90,7 +93,7 @@ export default function MediaTab() {
               </div>
               <div className="p-4">
                 <div className="font-medium text-sm leading-snug mb-1" style={{ color: "var(--text)" }}>{v.title}</div>
-                <div className="text-xs" style={{ color: "#009E49" }}>YouTube →</div>
+                <div className="text-xs" style={{ color: "#009E49" }}>{c("YouTube →")}</div>
               </div>
             </a>
           ))}
@@ -100,7 +103,7 @@ export default function MediaTab() {
       {/* External links */}
       <div className="mb-12">
         <h3 className="heading-md mb-6" style={{ color: "var(--text)" }}>
-          <span className="text-gradient">Ressources Externes</span>
+          <span className="text-gradient">{c("Ressources Externes")}</span>
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {EXTERNAL_LINKS.map((link) => (
@@ -114,7 +117,7 @@ export default function MediaTab() {
               <div className="text-3xl mb-3">{link.icon}</div>
               <div className="font-bold mb-2" style={{ color: "var(--text)" }}>{link.title}</div>
               <p className="body-sm mb-3">{link.desc}</p>
-              <div className="text-sm font-medium" style={{ color: "#009E49" }}>Visiter →</div>
+              <div className="text-sm font-medium" style={{ color: "#009E49" }}>{c("Visiter →")}</div>
             </a>
           ))}
         </div>
@@ -123,9 +126,9 @@ export default function MediaTab() {
       {/* Gallery placeholder */}
       <div className="mb-12">
         <h3 className="heading-md mb-2" style={{ color: "var(--text)" }}>
-          <span className="text-gradient">Galerie Culturelle</span>
+          <span className="text-gradient">{c("Galerie Culturelle")}</span>
         </h3>
-        <p className="body-sm mb-6">Textiles, poterie, architecture et vie quotidienne du peuple Manjak</p>
+        <p className="body-sm mb-6">{c("Textiles, poterie, architecture et vie quotidienne du peuple Manjak")}</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
           {GALLERY_ITEMS.map((item) => (
             <div key={item.label} className="card aspect-square flex flex-col items-center justify-center gap-2 text-center p-3">
@@ -136,8 +139,8 @@ export default function MediaTab() {
         </div>
         <div className="card mt-4 p-4 text-center">
           <p className="body-sm">
-            📸 La galerie photo complète sera ajoutée avec des images de la communauté Manjak.{" "}
-            <a href="mailto:info@luvlab.io" style={{ color: "#009E49" }}>Partagez vos photos.</a>
+            {c("📸 La galerie photo complète sera ajoutée avec des images de la communauté Manjak.")}
+            <a href="mailto:info@luvlab.io" style={{ color: "#009E49" }}>{c("Partagez vos photos.")}</a>
           </p>
         </div>
       </div>
@@ -145,10 +148,9 @@ export default function MediaTab() {
       {/* Community */}
       <div className="card p-8 text-center" style={{ border: "1px solid rgba(0,158,73,0.25)", background: "rgba(0,158,73,0.04)" }}>
         <div className="text-4xl mb-4">🌍</div>
-        <h2 className="heading-md mb-4" style={{ color: "var(--text)" }}>Rejoindre la Communauté</h2>
+        <h2 className="heading-md mb-4" style={{ color: "var(--text)" }}>{c("Rejoindre la Communauté")}</h2>
         <p className="body-lg max-w-2xl mx-auto mb-6">
-          Que vous soyez Manjak de Guinée-Bissau, du Sénégal, de Gambie ou de la diaspora en Europe —
-          cette plateforme est la vôtre. Partagez, contribuez et aidez à préserver une culture millénaire.
+          {c("Que vous soyez Manjak de Guinée-Bissau, du Sénégal, de Gambie ou de la diaspora en Europe — cette plateforme est la vôtre. Partagez, contribuez et aidez à préserver une culture millénaire.")}
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <a
@@ -157,10 +159,10 @@ export default function MediaTab() {
             rel="noopener noreferrer"
             className="btn btn-outline"
           >
-            📸 Instagram
+            {c("📸 Instagram")}
           </a>
           <a href="mailto:info@luvlab.io" className="btn btn-primary">
-            📧 Nous écrire
+            {c("📧 Nous écrire")}
           </a>
           <Link href="/learn" className="btn" style={{ background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)" }}>
             📚 {t("learn")}

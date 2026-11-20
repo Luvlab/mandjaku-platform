@@ -48,12 +48,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const supabase = createClient();
 
   const fetchProfile = useCallback(async (userId: string) => {
-    const { data } = await supabase
-      .from("manjak_profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
-    if (data) setProfile(data as Profile);
+    const { data: userData } = await supabase.auth.getUser();
+    const u = userData.user;
+    if (!u || u.id !== userId) return;
+    // Role comes from the administrator list in the database (manjak_my_role).
+    const { data: role } = await supabase.rpc("manjak_my_role");
+    setProfile({
+      id: u.id,
+      email: u.email ?? null,
+      full_name: (u.user_metadata?.full_name ?? u.user_metadata?.name ?? null) as string | null,
+      avatar_url: (u.user_metadata?.avatar_url ?? null) as string | null,
+      role: (typeof role === "string" ? role : "user") as UserRole,
+      locale: "fr",
+      bio: null,
+      country: null,
+      city: null,
+    });
   }, [supabase]);
 
   const refreshProfile = useCallback(async () => {

@@ -1,7 +1,7 @@
 import { withBase } from "@/lib/base-path";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { getAdminEntry, checkCountryAccess } from "@/lib/admin-config";
+import { findAdmin, countryError } from "@/lib/admin-config";
 import { supabaseConfigured } from "@/lib/supabase-browser";
 
 export async function POST(req: NextRequest) {
@@ -13,12 +13,10 @@ export async function POST(req: NextRequest) {
   }
 
   let email: string;
-  let redirectTo: string | undefined;
 
   try {
     const body = await req.json();
     email = body.email ?? "";
-    redirectTo = body.redirectTo;
   } catch {
     return NextResponse.json({ error: "Corps de requête invalide." }, { status: 400 });
   }
@@ -28,14 +26,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Email requis." }, { status: 400 });
   }
 
-  // ── Whitelist check ────────────────────────────────────────────────────────
-  const entry = getAdminEntry(normalised);
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+
+  // ── Administrator list check ───────────────────────────────────────────────
+  const entry = await findAdmin(supabase, normalised);
   if (!entry) {
-    // Return a generic message to avoid leaking which emails are valid
-    return NextResponse.json(
-      { error: "Si cette adresse est autorisée, vous recevrez un email sous peu." },
-      { status: 200 }, // 200 to avoid enumeration attacks
-    );
+    // Same answer as for a listed address, so the list cannot be probed here
+    return NextResponse.json({ allowed: false });
   }
 
   // ── IP / country check ─────────────────────────────────────────────────────
@@ -45,38 +45,12 @@ export async function POST(req: NextRequest) {
     req.headers.get("cf-ipcountry") ??
     null;
 
-  const countryError = checkCountryAccess(normalised, ipCountry);
-  if (countryError) {
-    return NextResponse.json({ error: countryError }, { status: 403 });
+  const blocked = countryError(entry, ipCountry);
+  if (blocked) {
+    return NextResponse.json({ error: blocked }, { status: 403 });
   }
 
-  // ── Send OTP ───────────────────────────────────────────────────────────────
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
-
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (req.headers.get("origin") || "https://manjak-app.vercel.app");
-
-  const callbackUrl = `${siteUrl}${withBase("/auth/callback")}?next=${encodeURIComponent(
-    redirectTo ?? "/fr/admin",
-  )}`;
-
-  const { error } = await supabase.auth.signInWithOtp({
-    email: normalised,
-    options: {
-      emailRedirectTo: callbackUrl,
-      shouldCreateUser: false, // only works for existing accounts
-    },
-  });
-
-  if (error) {
-    console.error("[magic-link] Supabase OTP error:", error.message);
-    // Don't leak internal errors — return a generic success to prevent enumeration
-    return NextResponse.json({ success: true });
-  }
-
-  return NextResponse.json({ success: true });
+  // The link itself is requested by the browser (see MagicLinkForm): the
+  // sign-in code can only be exchanged by the browser that asked for it.
+  return NextResponse.json({ allowed: true });
 }

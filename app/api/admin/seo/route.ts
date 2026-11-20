@@ -3,6 +3,8 @@ import { supabase } from "@/lib/supabase";
 import { SEO_DEFAULTS } from "@/data/seo";
 import { getAdminClient } from "@/lib/supabase-admin";
 import { timingSafeEqual } from "node:crypto";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 /** Constant-time comparison. An unset ADMIN_PASSWORD never matches. */
 function passwordMatches(given: string | null) {
@@ -42,8 +44,30 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  if (!checkAuth(req)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Two ways in: the emergency password (writes with the service role key),
+  // or a signed-in administrator (writes with their own session; the database
+  // rule on manjak_seo_config lets only administrators through).
+  let db;
+  if (checkAuth(req)) {
+    db = getAdminClient();
+    if (!db) {
+      return NextResponse.json(
+        { error: "SUPABASE_SERVICE_ROLE_KEY manquante sur le serveur. Connectez-vous avec votre compte pour enregistrer." },
+        { status: 503 },
+      );
+    }
+  } else {
+    const cookieStore = await cookies();
+    const userClient = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } },
+    );
+    const { data: role } = await userClient.rpc("manjak_my_role");
+    if (role !== "superadmin" && role !== "editor") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    db = userClient;
   }
 
   const body = await req.json();
@@ -53,16 +77,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  // The public key can only read this table. Writing needs the service role key.
-  const admin = getAdminClient();
-  if (!admin) {
-    return NextResponse.json(
-      { error: "SUPABASE_SERVICE_ROLE_KEY manquante sur le serveur. Les textes SEO ne peuvent pas être enregistrés." },
-      { status: 503 },
-    );
-  }
-
-  const { data, error } = await admin
+  const { data, error } = await db
     .from("manjak_seo_config")
     .upsert({
       id,

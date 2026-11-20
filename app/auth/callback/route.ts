@@ -2,7 +2,7 @@ import { withBase } from "@/lib/base-path";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { checkCountryAccess } from "@/lib/admin-config";
+import { findAdmin, countryError } from "@/lib/admin-config";
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -44,12 +44,13 @@ export async function GET(request: NextRequest) {
         null;
 
       const email = data.user.email ?? "";
-      const countryError = checkCountryAccess(email, ipCountry);
+      const entry = await findAdmin(supabase, email);
+      const blocked = entry ? countryError(entry, ipCountry) : "Adresse email non autorisée.";
 
-      if (countryError) {
+      if (blocked) {
         // Sign the user back out and redirect to an error page
         await supabase.auth.signOut();
-        const errorMsg = encodeURIComponent(countryError);
+        const errorMsg = encodeURIComponent(blocked);
         return NextResponse.redirect(
           `${origin}${withBase("/fr/admin")}?error=geo_blocked&msg=${errorMsg}`,
         );

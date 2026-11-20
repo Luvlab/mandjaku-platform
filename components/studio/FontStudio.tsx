@@ -9,6 +9,7 @@ import {
 } from "@/data/fonts";
 import { SymbolPreview, buildSvgString, downloadSvg } from "./SymbolPreview";
 import { useSvgPaths, prefetchSvgs } from "./useSvgPaths";
+import { useC, useLocalized, fill } from "@/lib/content";
 
 // ── Studio symbol index ──────────────────────────────────────────────────────
 interface StudioSymbol {
@@ -123,6 +124,7 @@ function SelectedPanel({
   onUpdateOverride: (id: string, patch: Partial<FontFamily>) => void;
   onClearOverride: (id: string) => void;
 }) {
+  const c = useC();
   const data = useSvgPaths(symbol.svg);
   const override = family.overrides[symbol.id] ?? {};
   const hasOverride = Object.keys(override).length > 0;
@@ -177,7 +179,7 @@ function SelectedPanel({
               key={s}
               onClick={() => setPreviewSize(s)}
               aria-pressed={previewSize === s}
-              aria-label={`Taille d'aperçu ${s} pixels`}
+              aria-label={fill(c("Taille d'aperçu {n} pixels"), { n: s })}
               className="text-xs px-2 py-1 rounded"
               style={{
                 background: previewSize === s ? "rgba(0,158,73,0.15)" : "var(--surface2)",
@@ -202,7 +204,7 @@ function SelectedPanel({
       >
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold" style={{ color: "var(--text)" }}>
-            Override pour ce symbole
+            {c("Override pour ce symbole")}
           </span>
           {hasOverride && (
             <button
@@ -210,17 +212,17 @@ function SelectedPanel({
               className="text-xs px-2 py-0.5 rounded"
               style={{ background: "rgba(206,17,38,0.1)", color: "#CE1126", border: "1px solid rgba(206,17,38,0.2)" }}
             >
-              Effacer
+              {c("Effacer")}
             </button>
           )}
         </div>
         <div className="space-y-2">
           <div>
             <div className="text-xs mb-1" style={{ color: "var(--text-muted)" }}>
-              Épaisseur: <span className="font-mono font-bold" style={{ color: "#009E49" }}>{resolved.strokeWidth}</span>
+              {c("Épaisseur")}: <span className="font-mono font-bold" style={{ color: "#009E49" }}>{resolved.strokeWidth}</span>
             </div>
             <input
-              aria-label="Épaisseur du trait pour ce symbole"
+              aria-label={c("Épaisseur du trait pour ce symbole")}
               type="range" min={5} max={180} step={1}
               value={resolved.strokeWidth}
               onChange={(e) => onUpdateOverride(symbol.id, { strokeWidth: Number(e.target.value) })}
@@ -246,7 +248,7 @@ function SelectedPanel({
           className="flex-1 text-xs py-2 rounded-lg font-semibold transition-all disabled:opacity-40"
           style={{ background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)" }}
         >
-          <span role="status">{copied ? "Copié !" : "Copier SVG"}</span>
+          <span role="status">{copied ? c("Copié !") : c("Copier SVG")}</span>
         </button>
       </div>
     </div>
@@ -255,6 +257,7 @@ function SelectedPanel({
 
 // ── Main studio ──────────────────────────────────────────────────────────────
 export default function FontStudio() {
+  const c = useC();
   const [families, setFamilies] = useState<FontFamily[]>(PRESET_FAMILIES);
   const [activeFamilyId, setActiveFamilyId] = useState("regular");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -304,13 +307,13 @@ export default function FontStudio() {
   }, [activeFamilyId]);
 
   function createFamily() {
-    const name = newFamilyName.trim() || "Nouvelle famille";
+    const name = newFamilyName.trim() || c("Nouvelle famille");
     const base = activeFamily;
     const newF: FontFamily = {
       ...base,
       id: uid(),
       name,
-      description: "Famille personnalisée",
+      description: c("Famille personnalisée"),
       overrides: {},
       isPreset: false,
     };
@@ -366,10 +369,10 @@ export default function FontStudio() {
     <div>
       {/* ── Header ───────────────────────────────────────────── */}
       <div className="mb-6">
-        <div className="badge badge-green mb-2">Font Studio</div>
-        <h2 className="heading-lg" style={{ color: "var(--text)" }}>Atelier de polices Manjaku</h2>
+        <div className="badge badge-green mb-2">{c("Font Studio")}</div>
+        <h2 className="heading-lg" style={{ color: "var(--text)" }}>{c("Atelier de polices Manjaku")}</h2>
         <p className="body-sm mt-1" style={{ color: "var(--text-muted)" }}>
-          Ajustez les poids, les tracés et créez des familles typographiques. Exportez en SVG.
+          {c("Ajustez les poids, les tracés et créez des familles typographiques. Exportez en SVG.")}
         </p>
       </div>
 
@@ -379,7 +382,7 @@ export default function FontStudio() {
         style={{ border: "1px solid var(--border)", background: "var(--surface)" }}
       >
         <div className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--text-muted)" }}>
-          Familles typographiques
+          {c("Familles typographiques")}
         </div>
         <div className="flex flex-wrap gap-2 mb-3">
           {families.map((f) => {
@@ -428,16 +431,16 @@ export default function FontStudio() {
             <div className="flex items-center gap-1">
               <input
                 autoFocus
-                aria-label="Nom de la nouvelle famille"
+                aria-label={c("Nom de la nouvelle famille")}
                 value={newFamilyName}
                 onChange={(e) => setNewFamilyName(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") createFamily(); if (e.key === "Escape") setAddingFamily(false); }}
-                placeholder="Nom de la famille…"
+                placeholder={c("Nom de la famille…")}
                 className="text-sm px-3 py-1.5 rounded-lg outline-none"
                 style={{ border: "1px solid #009E49", background: "var(--surface2)", color: "var(--text)", width: 180 }}
               />
-              <button onClick={createFamily} className="text-xs px-2 py-1.5 rounded-lg font-semibold" style={{ background: GREEN, color: "#fff" }}>OK</button>
-              <button onClick={() => setAddingFamily(false)} className="text-xs px-2 py-1.5 rounded-lg" style={{ background: "var(--surface2)", color: "var(--text-muted)", border: "1px solid var(--border)" }} aria-label="Annuler"><span aria-hidden="true">✕</span></button>
+              <button onClick={createFamily} className="text-xs px-2 py-1.5 rounded-lg font-semibold" style={{ background: GREEN, color: "#fff" }}>{c("OK")}</button>
+              <button onClick={() => setAddingFamily(false)} className="text-xs px-2 py-1.5 rounded-lg" style={{ background: "var(--surface2)", color: "var(--text-muted)", border: "1px solid var(--border)" }} aria-label={c("Annuler")}><span aria-hidden="true">✕</span></button>
             </div>
           ) : (
             <button
@@ -445,7 +448,7 @@ export default function FontStudio() {
               className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm transition-all"
               style={{ background: "var(--surface2)", color: "var(--text-muted)", border: "1px dashed var(--border)" }}
             >
-              + Nouvelle famille
+              {c("+ Nouvelle famille")}
             </button>
           )}
         </div>
@@ -453,7 +456,7 @@ export default function FontStudio() {
         {/* Active family description */}
         {activeFamily && (
           <p className="text-xs italic" style={{ color: "var(--text-muted)" }}>
-            {activeFamily.description}
+            {c(activeFamily.description ?? "")}
           </p>
         )}
       </div>
@@ -474,11 +477,11 @@ export default function FontStudio() {
             {/* Stroke width */}
             <div className="mb-4">
               <div className="flex justify-between items-center mb-1">
-                <span className="text-xs" style={{ color: "var(--text-muted)" }}>Épaisseur du trait</span>
+                <span className="text-xs" style={{ color: "var(--text-muted)" }}>{c("Épaisseur du trait")}</span>
                 <span className="font-mono text-sm font-bold" style={{ color: GREEN }}>{activeFamily?.strokeWidth}</span>
               </div>
               <input
-                aria-label="Épaisseur du trait de la famille"
+                aria-label={c("Épaisseur du trait de la famille")}
                 type="range" min={5} max={180} step={1}
                 value={activeFamily?.strokeWidth ?? 60}
                 onChange={(e) => updateFamily({ strokeWidth: Number(e.target.value) })}
@@ -486,30 +489,30 @@ export default function FontStudio() {
               />
               {/* Stroke width reference markers */}
               <div className="flex justify-between text-[9px] mt-0.5" style={{ color: "var(--text-muted)", opacity: 0.6 }}>
-                <span>Thin</span><span>Regular</span><span>Bold</span><span>Heavy</span>
+                <span>{c("Thin")}</span><span>{c("Regular")}</span><span>{c("Bold")}</span><span>{c("Heavy")}</span>
               </div>
             </div>
 
             {/* Linecap */}
             <div className="mb-4">
-              <div className="text-xs mb-1.5" style={{ color: "var(--text-muted)" }}>Terminaison (linecap)</div>
+              <div className="text-xs mb-1.5" style={{ color: "var(--text-muted)" }}>{c("Terminaison (linecap)")}</div>
               <Cap value={activeFamily?.strokeLinecap ?? "round"} onChange={(v) => updateFamily({ strokeLinecap: v })} />
             </div>
 
             {/* Linejoin */}
             <div className="mb-4">
-              <div className="text-xs mb-1.5" style={{ color: "var(--text-muted)" }}>Jonction (linejoin)</div>
+              <div className="text-xs mb-1.5" style={{ color: "var(--text-muted)" }}>{c("Jonction (linejoin)")}</div>
               <Join value={activeFamily?.strokeLinejoin ?? "round"} onChange={(v) => updateFamily({ strokeLinejoin: v })} />
             </div>
 
             {/* Colors */}
             <div className="mb-4">
-              <div className="text-xs mb-2" style={{ color: "var(--text-muted)" }}>Couleurs</div>
+              <div className="text-xs mb-2" style={{ color: "var(--text-muted)" }}>{c("Couleurs")}</div>
               <div className="flex items-center gap-2">
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[9px]" style={{ color: "var(--text-muted)" }}>Fond</span>
+                  <span className="text-[9px]" style={{ color: "var(--text-muted)" }}>{c("Fond")}</span>
                   <input
-                    aria-label="Couleur du fond"
+                    aria-label={c("Couleur du fond")}
                     type="color"
                     value={activeFamily?.bgColor ?? "#000000"}
                     onChange={(e) => updateFamily({ bgColor: e.target.value })}
@@ -518,9 +521,9 @@ export default function FontStudio() {
                   />
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[9px]" style={{ color: "var(--text-muted)" }}>Trait</span>
+                  <span className="text-[9px]" style={{ color: "var(--text-muted)" }}>{c("Trait")}</span>
                   <input
-                    aria-label="Couleur du trait"
+                    aria-label={c("Couleur du trait")}
                     type="color"
                     value={activeFamily?.fgColor ?? "#ffffff"}
                     onChange={(e) => updateFamily({ fgColor: e.target.value })}
@@ -531,7 +534,7 @@ export default function FontStudio() {
                 <button
                   onClick={() => updateFamily({ bgColor: activeFamily.fgColor, fgColor: activeFamily.bgColor })}
                   className="text-xs px-2 py-1 rounded ml-1 transition-all"
-                  aria-label="Inverser les couleurs"
+                  aria-label={c("Inverser les couleurs")}
                   style={{ background: "var(--surface2)", color: "var(--text-muted)", border: "1px solid var(--border)" }}
                 >
                   <span aria-hidden="true">⇄</span>
@@ -561,7 +564,7 @@ export default function FontStudio() {
             className="w-full text-sm py-3 rounded-xl font-semibold transition-all disabled:opacity-50"
             style={{ background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)" }}
           >
-            {exportingAll ? "Export en cours…" : `↓ Exporter tous (${filteredSymbols.length} SVG)`}
+            {exportingAll ? c("Export en cours…") : fill(c("↓ Exporter tous ({n} SVG)"), { n: filteredSymbols.length })}
           </button>
         </div>
 
@@ -596,7 +599,7 @@ export default function FontStudio() {
                   key={sym.id}
                   onClick={() => setSelectedId(isSelected ? null : sym.id)}
                   aria-pressed={isSelected}
-                  aria-label={`${sym.label} ${sym.sub ?? ""}${hasOverride ? ", réglage propre actif" : ""}`}
+                  aria-label={`${sym.label} ${sym.sub ?? ""}${hasOverride ? c(", réglage propre actif") : ""}`}
                   className="flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all"
                   style={{
                     border: isSelected ? `2px solid ${GREEN}` : "1px solid var(--border)",
@@ -608,7 +611,7 @@ export default function FontStudio() {
                     <span
                       className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full"
                       style={{ background: GREEN }}
-                      title="Override actif"
+                      title={c("Override actif")}
                     />
                   )}
                   <SymbolPreview
@@ -654,7 +657,7 @@ export default function FontStudio() {
             >
               <div className="text-3xl">↖</div>
               <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                Cliquez sur un symbole pour l&apos;éditer
+                {c("Cliquez sur un symbole pour l'éditer")}
               </p>
             </div>
           )}
@@ -664,7 +667,7 @@ export default function FontStudio() {
       {/* ── Font comparison strip ─────────────────────────────── */}
       <div className="mt-10">
         <div className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "var(--text-muted)" }}>
-          Comparaison des familles — A B S 0 1
+          {c("Comparaison des familles — A B S 0 1")}
         </div>
         <div
           className="rounded-2xl overflow-hidden"

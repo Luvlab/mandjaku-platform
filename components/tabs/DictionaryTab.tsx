@@ -1,15 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { DICTIONARY, CATEGORIES } from "@/data/dictionary";
+import { useTranslations, useLocale } from "next-intl";
+import { DICTIONARY, CATEGORIES as CATEGORIES_FR } from "@/data/dictionary";
+import { useLocalized } from "@/lib/content";
 
 export default function DictionaryTab() {
   const t = useTranslations("dictionary");
   const a = useTranslations("a11y");
+  const locale = useLocale();
+  const CATEGORIES = useLocalized(CATEGORIES_FR);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
-  const [lang, setLang] = useState<"fr" | "en" | "pt">("fr");
+  const [lang, setLang] = useState<"fr" | "en" | "pt">(locale === "en" || locale === "pt" ? locale : "fr");
 
   const filtered = DICTIONARY.filter((entry) => {
     const matchCat = category === "all" || entry.category === category;
@@ -123,7 +126,7 @@ export default function DictionaryTab() {
             <div
               key={`${entry.manjak}-${entry.category}`}
               role="listitem"
-              className="card card-hover p-4 flex flex-wrap items-center gap-5"
+              className="card card-hover p-4 flex flex-wrap items-center gap-x-5 gap-y-1"
             >
               <div className="min-w-0">
                 <div className="text-xl font-black" style={{ color: "#009E49" }}>{entry.manjak}</div>
@@ -138,7 +141,7 @@ export default function DictionaryTab() {
                 )}
               </div>
               <span
-                className="badge text-xs"
+                className="badge text-xs hidden sm:inline-flex"
                 style={{ background: "rgba(0,158,73,0.08)", color: "#009E49", border: "1px solid rgba(0,158,73,0.20)" }}
               >
                 <span aria-hidden="true">{CATEGORIES.find((c) => c.id === entry.category)?.emoji}</span>{" "}

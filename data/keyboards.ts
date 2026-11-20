@@ -169,10 +169,12 @@ export const QMK_VIA_INFO = {
 
 export const VIRTUAL_KEYBOARD_LAYOUT = {
   rows: [
-    ["ù", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "ô", "ë"],
-    ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "Ù", "Ô"],
-    ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Ë", "À"],
+    // At most ten keys in a row, so every key is wide enough for a thumb on a phone
+    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+    ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+    ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
     ["Z", "X", "C", "V", "B", "N", "M", ",", ".", "-"],
+    ["à", "ë", "ô", "ù", "À", "Ë", "Ô", "Ù"],
   ],
   specialKeys: ["mb", "nd", "ng", "nj", "ch", "dj", "gn", "th"],
 };

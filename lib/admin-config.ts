@@ -78,3 +78,40 @@ export function checkCountryAccess(
 
   return null; // allowed
 }
+
+/**
+ * Look an address up in the administrator list: first the database
+ * (table manjak_admins, through the manjak_admin_gate function), then the
+ * environment lists as a fallback while the database list is not set up.
+ */
+export async function findAdmin(
+  // Any Supabase client; the function is callable with the public key.
+  supabase: { rpc: (fn: string, args: Record<string, unknown>) => PromiseLike<{ data: unknown; error: unknown }> },
+  email: string,
+): Promise<AdminEmailEntry | null> {
+  const normalised = email.trim().toLowerCase();
+  if (!normalised) return null;
+  try {
+    const { data, error } = await supabase.rpc("manjak_admin_gate", { p_email: normalised });
+    const rows = Array.isArray(data) ? (data as { country: string | null }[]) : [];
+    if (!error && rows.length > 0) {
+      return { email: normalised, countryRestriction: rows[0].country ?? null };
+    }
+  } catch {
+    // fall through to the environment lists
+  }
+  return getAdminEntry(normalised);
+}
+
+/** Country check for an entry already looked up. Null means allowed. */
+export function countryError(entry: AdminEmailEntry, ipCountry: string | null): string | null {
+  if (!entry.countryRestriction) return null;
+  if (process.env.NODE_ENV === "development") return null;
+  if (!ipCountry) {
+    return `Accès limité à ${entry.countryRestriction}. Impossible de vérifier votre localisation.`;
+  }
+  if (ipCountry.toUpperCase() !== entry.countryRestriction.toUpperCase()) {
+    return `Accès réservé au pays ${entry.countryRestriction}. Votre connexion provient de : ${ipCountry}.`;
+  }
+  return null;
+}

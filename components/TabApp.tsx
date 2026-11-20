@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { CULTURAL_FACTS } from "@/data/history";
+import { CULTURAL_FACTS as FACTS_FR } from "@/data/history";
 import { MANJAK_ALPHABET } from "@/data/alphabet";
 import AlphabetTab from "./tabs/AlphabetTab";
 import LearnTab from "./tabs/LearnTab";
@@ -16,6 +16,7 @@ import MediaTab from "./tabs/MediaTab";
 import MarketplaceTab from "./tabs/MarketplaceTab";
 import FontStudio from "./studio/FontStudio";
 import MobileBottomNav from "./MobileBottomNav";
+import { useC, useLocalized, fill } from "@/lib/content";
 
 type Tab = "home" | "alphabet" | "learn" | "history" | "culture" | "dictionary" | "keyboard" | "media" | "market" | "studio";
 
@@ -25,6 +26,8 @@ interface TabAppProps {
 
 function HomeTab() {
   const t = useTranslations("home");
+  const c = useC();
+  const CULTURAL_FACTS = useLocalized(FACTS_FR);
   const featuredLetters = MANJAK_ALPHABET.slice(0, 8);
 
   return (
@@ -40,15 +43,14 @@ function HomeTab() {
           {t("tag")}
         </div>
         <h1 className="heading-xl mb-3">
-          <span className="text-gradient">Mandjaku</span>
+          <span className="text-gradient">{c("Mandjaku")}</span>
         </h1>
         <p className="text-lg font-medium mb-3" style={{ color: "var(--text)" }}>{t("subtitle")}</p>
         <blockquote
-          lang="en"
           className="text-sm italic mb-5 max-w-md mx-auto text-left"
           style={{ color: "var(--text-muted)", borderLeft: "3px solid #009E49", paddingLeft: "1rem" }}
         >
-          &ldquo;The Manjaku are a civilization of weavers and kings.&rdquo;
+          “{c("Les Manjaku sont une civilisation de tisserands et de rois.")}”
         </blockquote>
         <p className="body-lg max-w-xl mx-auto mb-6">
           {t("description")}{" "}
@@ -157,7 +159,7 @@ export default function TabApp({ initialTab }: TabAppProps) {
       {/* Sticky tab bar */}
       <nav
         aria-label={a("sections")}
-        className="sticky top-14 z-40 border-b"
+        className="hidden lg:block sticky top-14 z-40 border-b"
         style={{
           background: "var(--surface)",
           borderColor: "var(--border)",

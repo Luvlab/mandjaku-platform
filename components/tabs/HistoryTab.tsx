@@ -1,9 +1,13 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { HISTORY_ERAS, GEOGRAPHY } from "@/data/history";
+import { HISTORY_ERAS as ERAS_FR, GEOGRAPHY as GEO_FR } from "@/data/history";
+import { useC, useLocalized, fill } from "@/lib/content";
 
 export default function HistoryTab() {
+  const c = useC();
+  const HISTORY_ERAS = useLocalized(ERAS_FR);
+  const GEOGRAPHY = useLocalized(GEO_FR);
   const t = useTranslations("history");
 
   return (
@@ -62,7 +66,7 @@ export default function HistoryTab() {
           {GEOGRAPHY.primaryRegions.map((region) => (
             <div key={region.country} className="card p-5">
               <div className="text-2xl mb-3">
-                {region.country === "Guinée-Bissau" ? "🇬🇼" : region.country === "Sénégal" ? "🇸🇳" : "🇬🇲"}
+                {region.country === c("Guinée-Bissau") ? "🇬🇼" : region.country === c("Sénégal") ? "🇸🇳" : "🇬🇲"}
               </div>
               <div className="font-bold text-base mb-1" style={{ color: "var(--text)" }}>{region.country}</div>
               <div className="body-sm mb-2">{region.regions.join(" · ")}</div>
@@ -79,7 +83,7 @@ export default function HistoryTab() {
           {GEOGRAPHY.diaspora.map((d) => (
             <div key={d.country} className="card p-4 text-center">
               <div className="text-xl mb-2">
-                {d.country === "Portugal" ? "🇵🇹" : d.country === "France" ? "🇫🇷" : d.country === "Suède" ? "🇸🇪" : d.country === "Espagne" ? "🇪🇸" : "🇮🇹"}
+                {d.country === c("Portugal") ? "🇵🇹" : d.country === c("France") ? "🇫🇷" : d.country === c("Suède") ? "🇸🇪" : d.country === c("Espagne") ? "🇪🇸" : "🇮🇹"}
               </div>
               <div className="font-bold text-sm" style={{ color: "var(--text)" }}>{d.country}</div>
               <div className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>{d.city}</div>
@@ -95,12 +99,10 @@ export default function HistoryTab() {
         <h2 className="heading-md mb-5" style={{ color: "var(--text)" }}>{t("resistance_title")}</h2>
         <div className="grid sm:grid-cols-2 gap-5 text-left mb-6">
           <p className="body-lg">
-            Malgré des siècles de pressions extérieures — traite négrière, colonisation portugaise —
-            le peuple Manjak a préservé sa culture, sa langue et son identité.
+            {c("Malgré des siècles de pressions extérieures — traite négrière, colonisation portugaise — le peuple Manjak a préservé sa culture, sa langue et son identité.")}
           </p>
           <p className="body-lg">
-            Aujourd&apos;hui, cette résilience se manifeste dans le projet d&apos;un alphabet propre
-            au Mandjaku — un acte de souveraineté culturelle porté par les anciens.
+            {c("Aujourd'hui, cette résilience se manifeste dans le projet d'un alphabet propre au Mandjaku — un acte de souveraineté culturelle porté par les anciens.")}
           </p>
         </div>
         <div className="grid grid-cols-3 gap-3">
@@ -111,7 +113,7 @@ export default function HistoryTab() {
           ].map((item) => (
             <div key={item.text} className="card p-4">
               <div className="text-2xl mb-2">{item.icon}</div>
-              <div className="text-xs" style={{ color: "var(--text-muted)" }}>{item.text}</div>
+              <div className="text-xs" style={{ color: "var(--text-muted)" }}>{c(item.text)}</div>
             </div>
           ))}
         </div>
