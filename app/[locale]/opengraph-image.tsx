@@ -1,24 +1,10 @@
 import { ImageResponse } from "next/og";
-import { supabase } from "@/lib/supabase";
-import { SEO_DEFAULTS } from "@/data/seo";
+import { getTabSeo } from "@/lib/seo-server";
 
 export const runtime = "edge";
 export const alt = "Manjaku";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-
-async function getSeo(tab: string) {
-  try {
-    const { data } = await supabase
-      .from("manjak_seo_config")
-      .select("*")
-      .eq("id", tab)
-      .single();
-    return data ?? SEO_DEFAULTS[tab] ?? SEO_DEFAULTS.home;
-  } catch {
-    return SEO_DEFAULTS[tab] ?? SEO_DEFAULTS.home;
-  }
-}
 
 export default async function OgImage({
   params,
@@ -28,7 +14,7 @@ export default async function OgImage({
   searchParams: { tab?: string };
 }) {
   const tab = searchParams?.tab ?? "home";
-  const seo = await getSeo(tab);
+  const seo = await getTabSeo(tab, params?.locale ?? "fr");
   const headline = seo.og_image_headline ?? "Manjaku";
   const sub = seo.og_image_sub ?? "Kabu lëp Manjak";
 
@@ -132,7 +118,7 @@ export default async function OgImage({
                 fontWeight: "600",
               }}
             >
-              mandjaku.com
+              luvlab.io/manjak
             </div>
           </div>
 

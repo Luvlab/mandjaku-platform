@@ -72,10 +72,10 @@ export const SEO_DEFAULTS: Record<string, TabSeo> = {
   },
   keyboard: {
     id: "keyboard",
-    title: "Clavier Manjak — Téléchargements pour tous OS",
-    description: "Téléchargez le clavier Manjaku pour macOS, Windows, Linux, iOS, Android et HarmonyOS.",
+    title: "Clavier Manjaku — Essai en ligne",
+    description: "Essayez le clavier virtuel Manjaku en ligne. Les claviers à installer pour ordinateurs et téléphones sont en préparation.",
     og_title: "Clavier Manjak",
-    og_description: "Claviers Manjaku pour tous les systèmes d'exploitation",
+    og_description: "Clavier virtuel Manjaku, claviers à installer en préparation",
     keywords: ["clavier manjak", "keyboard layout", "QMK manjak"],
     og_image_headline: "Clavier",
     og_image_sub: "Manjaku",
