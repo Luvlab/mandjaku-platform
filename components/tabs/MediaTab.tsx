@@ -4,14 +4,14 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 
 const YOUTUBE_VIDEOS = [
-  { id: "6OqK15Pc19Y", title: "Musique Traditionnelle Manjak", channel: "Communauté Mandjaku" },
-  { id: "v38vNjGzC2M", title: "Chants & Danses Mandjaku", channel: "Culture Manjak" },
-  { id: "uP4FAnGmIRo", title: "Documentaire — Peuple Manjak", channel: "Africa Heritage" },
-  { id: "cf0gwcZMB1I", title: "Les Manjak de Guinée-Bissau", channel: "Afriques en scène" },
-  { id: "Dz7h4c2gG_E", title: "Rites et Cérémonies Manjak", channel: "Ethnologie" },
-  { id: "cdmEudPoRNQ", title: "Mandjaku — Langue Atlantique", channel: "Linguistique" },
-  { id: "6h0pMnwM9L8", title: "Diaspora Manjak en Europe", channel: "Afrique diaspora" },
-  { id: "ir9XDvuYpcY", title: "Cuisine & Traditions Manjak", channel: "Saveurs du monde" },
+  { id: "6OqK15Pc19Y", title: "Manjáku - bëjuk 1", channel: "Langue MANDJAKOU à l'écrit par Per-Nasaaju PRËLBI" },
+  { id: "v38vNjGzC2M", title: "N´donandé Kansaré", channel: "Fiche Pro" },
+  { id: "uP4FAnGmIRo", title: "Mandjak , Manjaques , Manjacu , et Les Identités", channel: "UTCHAK USSAK" },
+  { id: "cf0gwcZMB1I", title: "Américo Gomes - Nandjaco di Kafur - Ultra Deguedazz", channel: "Radio Gumbe" },
+  { id: "Dz7h4c2gG_E", title: "The Jesus Film - Mandjak / Manjaku / Kanyop / Mandjaque / Mandyak / Manjaca Language", channel: "eyong52" },
+  { id: "cdmEudPoRNQ", title: "Art du Manjaques/Mandjak/ Manjacos", channel: "UTCHAK USSAK" },
+  { id: "6h0pMnwM9L8", title: "Manjaque : Origine, Histoire et Culture", channel: "MD Sixc" },
+  { id: "ir9XDvuYpcY", title: "BECHII MANJAKU SPECIAL, GUINEA BISSAU, PT 1", channel: "John Savic Bass" },
 ];
 
 const EXTERNAL_LINKS = [

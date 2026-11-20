@@ -73,8 +73,8 @@ export default function CultureTab() {
         {/* YouTube links */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
           {[
-            { id: "6OqK15Pc19Y", title: "Musique Traditionnelle Manjak" },
-            { id: "v38vNjGzC2M", title: "Chants et Danses Mandjaku" },
+            { id: "6OqK15Pc19Y", title: "Manjáku - bëjuk 1" },
+            { id: "v38vNjGzC2M", title: "N´donandé Kansaré" },
           ].map((video) => (
             <a
               key={video.id}
